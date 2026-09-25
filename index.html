@@ -31,6 +31,23 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .hero .souslegende{font-family:var(--f-hand);font-size:20px;color:var(--bleu);margin-top:8px;transform:rotate(-1deg)}
 .btn-code{margin-top:18px;padding:9px 24px;font-family:var(--f-title);font-size:12px;letter-spacing:2px;text-transform:uppercase;background:transparent;border:1.5px solid var(--rouge);color:var(--rouge);border-radius:2px;cursor:pointer}
 .btn-code:active{background:var(--rouge);color:var(--papier)}
+.btn-code{position:relative;animation:codePulse 2.6s ease-in-out infinite}
+.btn-code::before,.btn-code::after{content:'✦';position:absolute;top:50%;font-size:11px;color:var(--rouge);transform:translateY(-50%);animation:codeEtoile 2.6s ease-in-out infinite}
+.btn-code::before{left:-18px}.btn-code::after{right:-18px}
+@keyframes codePulse{0%,100%{box-shadow:0 0 0 0 rgba(168,32,26,.35)}50%{box-shadow:0 0 0 7px rgba(168,32,26,0)}}
+@keyframes codeEtoile{0%,100%{opacity:.35}50%{opacity:1}}
+.medaillon.ouvre{animation:ouvreAnim .55s cubic-bezier(.3,1.4,.5,1)}
+@keyframes ouvreAnim{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.14) rotate(-4deg)}70%{transform:scale(.97) rotate(2deg)}100%{transform:scale(1) rotate(0)}}
+.voile.show .feuille > *{animation:ficheIn .5s ease both}
+.voile.show .feuille > *:nth-child(2){animation-delay:.05s}
+.voile.show .feuille > *:nth-child(3){animation-delay:.12s}
+.voile.show .feuille > *:nth-child(4){animation-delay:.18s}
+.voile.show .feuille > *:nth-child(5){animation-delay:.24s}
+.voile.show .feuille > *:nth-child(n+6){animation-delay:.3s}
+@keyframes ficheIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.voile.show .feuille .foto-fiche{animation:photoIn .7s ease both}
+@keyframes photoIn{from{opacity:0;filter:sepia(1) blur(3px)}to{opacity:1;filter:sepia(.15) blur(0)}}
+.carte-bonus .nom{color:var(--rouge)}
 .medaillon.secoue{animation:shk .4s}
 
 /* ---------- GRID ---------- */
@@ -314,6 +331,26 @@ function rendreGrille(){
     }
     grille.appendChild(carte);
   });
+  if(localStorage.getItem('ldd_bonus') === '1'){
+    const cb = document.createElement('button');
+    cb.className = 'card carte-bonus';
+    cb.dataset.id = 'bonus';
+    cb.innerHTML = `
+      <div class="medaillon">
+        <svg class="frame" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#efe6d2" stroke="#a8201a" stroke-width="2"/><circle cx="50" cy="50" r="41" fill="none" stroke="#1f3a5f" stroke-width="1"/></svg>
+        <div class="icone">${ICONES.star}</div>
+      </div>
+      <div class="nom">Près d'un siècle plus tard</div>
+      <div class="role">Le carnet de bal</div>`;
+    cb.addEventListener('click', ()=>{
+      const med = cb.querySelector('.medaillon');
+      med.classList.add('ouvre'); setTimeout(()=>med.classList.remove('ouvre'), 600);
+      cb.querySelector('.icone').classList.add('play');
+      setTimeout(()=> cb.querySelector('.icone').classList.remove('play'), 900);
+      setTimeout(ouvrirBonus, 250);
+    });
+    grille.appendChild(cb);
+  }
 }
 rendreGrille();
 
@@ -329,6 +366,9 @@ function ouvrirFiche(p, carte){
   document.body.style.overflow = 'hidden';
   retirerNouveaute(p.id);
   carte.classList.remove('nouveau');
+  const medO = carte.querySelector('.medaillon');
+  medO.classList.remove('ouvre'); void medO.offsetWidth; medO.classList.add('ouvre');
+  setTimeout(()=> medO.classList.remove('ouvre'), 600);
   const icone = carte.querySelector('.icone');
   icone.classList.add('play');
   setTimeout(()=> icone.classList.remove('play'), 900);
@@ -400,6 +440,7 @@ function validerPass(){
     if(val==='0000'){
       localStorage.removeItem(cle);
       localStorage.removeItem(cleNouveau);
+      localStorage.removeItem('ldd_bonus');
       fermerVoiles();
       rendreGrille();
     } else erreurGraphique();
@@ -442,6 +483,9 @@ document.getElementById('etoileSecrete').addEventListener('click', ()=> ouvrirPa
 
 function ouvrirBonus(){
   document.body.style.overflow = 'hidden';
+  const dejaVu = localStorage.getItem('ldd_bonus') === '1';
+  try{ localStorage.setItem('ldd_bonus','1'); }catch(e){}
+  if(!dejaVu) setTimeout(rendreGrille, 300);
   feuilleFiche.innerHTML = `
     <button class="ferm" aria-label="Fermer">×</button>
     <div class="bonus-contenu">
