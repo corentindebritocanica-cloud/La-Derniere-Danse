@@ -119,8 +119,8 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 @keyframes tap{0%,100%{transform:rotate(0)}50%{transform:rotate(-15deg)}}
 
 /* ---------- MODALES ---------- */
-.voile{position:fixed;inset:0;background:rgba(26,21,18,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
-.voile.show{opacity:1;pointer-events:auto}
+.voile{position:fixed;inset:0;background:rgba(26,21,18,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility 0s linear .25s}
+.voile.show{opacity:1;pointer-events:auto;visibility:visible;transition:opacity .25s,visibility 0s}
 @media(min-width:600px){.voile{align-items:center}}
 
 .feuille{background:var(--papier);width:100%;max-width:420px;border-radius:14px 14px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));
@@ -195,7 +195,7 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
     <button class="ferm" id="fermPass" aria-label="Fermer">×</button>
     <h3 id="titrePass" style="color:var(--brun)">Un chiffre ferme ce visage</h3>
     <p id="textePass">Un code à 4 chiffres, quelque part dans une enveloppe.</p>
-    <input id="champPass" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="· · · ·">
+    <input id="champPass" disabled type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="· · · ·">
     <button class="valider" id="btnValider">Déverrouiller</button>
     <div class="erreur" id="erreurPass"></div>
   </div>
@@ -353,6 +353,7 @@ function rendreGrille(){
   }
 }
 rendreGrille();
+if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
 
 (function(){
   const p = new URLSearchParams(location.search).get('cb');
@@ -412,6 +413,7 @@ function ouvrirPass(bonus){
     document.getElementById('titrePass').textContent = 'Un chiffre ferme ce visage';
     document.getElementById('textePass').textContent = "Un code à 4 chiffres, quelque part dans une enveloppe.";
   }
+  champPass.disabled = false;
   voilePass.classList.add('show');
 }
 function ouvrirReset(){
@@ -424,6 +426,7 @@ function ouvrirReset(){
   champPass.placeholder = '· · · ·';
   document.getElementById('titrePass').textContent = 'Tout réinitialiser ?';
   document.getElementById('textePass').textContent = "Entrez le code pour tout remettre à zéro.";
+  champPass.disabled = false;
   voilePass.classList.add('show');
 }
 document.getElementById('btnReset').addEventListener('click', ouvrirReset);
@@ -499,6 +502,8 @@ function ouvrirBonus(){
 }
 
 function fermerVoiles(){
+  champPass.blur();
+  champPass.disabled = true;
   document.body.style.overflow = '';
   voileFiche.classList.remove('show');
   voilePass.classList.remove('show');
