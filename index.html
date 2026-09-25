@@ -129,6 +129,8 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 
 footer{text-align:center;padding:34px 20px calc(34px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--brun);letter-spacing:1px}
 footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color:var(--brun);opacity:.55;cursor:pointer;user-select:none}
+.btn-reset{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:34px;height:34px;border-radius:50%;background:var(--papier);border:1px solid var(--brun);color:var(--brun);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.5;box-shadow:0 1px 4px var(--ombre);z-index:20}
+.btn-reset:active{opacity:.9}
 
 /* ---------- Page bonus (carnet de bal) ---------- */
 .bonus-contenu{text-align:center;padding:10px 4px 4px}
@@ -158,6 +160,7 @@ footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color
   1925 · Toulouse<br>
   <span class="etoile-secrete" id="etoileSecrete">✦</span>
 </footer>
+<button class="btn-reset" id="btnReset" aria-label="Réinitialiser">⟲</button>
 
 <div class="voile" id="voileFiche"><div class="feuille" id="feuilleFiche"></div></div>
 <div class="voile" id="voilePass">
@@ -327,10 +330,12 @@ const voilePass = document.getElementById('voilePass');
 const champPass = document.getElementById('champPass');
 const erreurPass = document.getElementById('erreurPass');
 let modeBonus = false;
+let modeReset = false;
 
 function ouvrirPass(bonus){
   document.body.style.overflow = 'hidden';
   modeBonus = !!bonus;
+  modeReset = false;
   champPass.value=''; erreurPass.textContent='';
   if(modeBonus){
     champPass.setAttribute('inputmode','text');
@@ -348,6 +353,20 @@ function ouvrirPass(bonus){
   voilePass.classList.add('show');
   setTimeout(()=>champPass.focus(),200);
 }
+function ouvrirReset(){
+  document.body.style.overflow = 'hidden';
+  modeBonus = false;
+  modeReset = true;
+  champPass.value=''; erreurPass.textContent='';
+  champPass.setAttribute('inputmode','numeric');
+  champPass.setAttribute('maxlength','4');
+  champPass.placeholder = '· · · ·';
+  document.getElementById('titrePass').textContent = 'Tout réinitialiser ?';
+  document.getElementById('textePass').textContent = "Entrez le code pour tout remettre à zéro.";
+  voilePass.classList.add('show');
+  setTimeout(()=>champPass.focus(),200);
+}
+document.getElementById('btnReset').addEventListener('click', ouvrirReset);
 document.getElementById('fermPass').addEventListener('click', fermerVoiles);
 
 document.getElementById('btnValider').addEventListener('click', validerPass);
@@ -356,6 +375,15 @@ champPass.addEventListener('keydown', e=>{ if(e.key==='Enter') validerPass(); })
 function validerPass(){
   const val = champPass.value.trim().toUpperCase();
   if(!val){ return; }
+  if(modeReset){
+    if(val==='0000'){
+      localStorage.removeItem(cle);
+      localStorage.removeItem(cleNouveau);
+      fermerVoiles();
+      rendreGrille();
+    } else erreurGraphique();
+    return;
+  }
   if(modeBonus){
     if(val===MOT_BONUS){ fermerVoiles(); ouvrirBonus(); }
     else erreurGraphique();
@@ -413,12 +441,7 @@ function fermerVoiles(){
 voileFiche.addEventListener('click', e=>{ if(e.target===voileFiche) fermerVoiles(); });
 voilePass.addEventListener('click', e=>{ if(e.target===voilePass) fermerVoiles(); });
 
-/* ===================== Réinitialisation discrète (appui long sur le pied de page) ===================== */
-let pressTimer;
-document.querySelector('footer').addEventListener('touchstart', ()=>{ pressTimer=setTimeout(()=>{ if(confirm('Réinitialiser tous les secrets déverrouillés ?')){ localStorage.removeItem(cle); rendreGrille(); } },1800); });
-document.querySelector('footer').addEventListener('touchend', ()=> clearTimeout(pressTimer));
-document.querySelector('footer').addEventListener('mousedown', ()=>{ pressTimer=setTimeout(()=>{ if(confirm('Réinitialiser tous les secrets déverrouillés ?')){ localStorage.removeItem(cle); rendreGrille(); } },1800); });
-document.querySelector('footer').addEventListener('mouseup', ()=> clearTimeout(pressTimer));
+/* ===================== Bouton de réinitialisation (code 0000) ===================== */
 </script>
 </body>
 </html>
