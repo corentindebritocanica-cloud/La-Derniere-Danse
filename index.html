@@ -207,7 +207,7 @@ const PERSONNAGES = [
  bio:`<p>Elle tient la boulangerie au rez-de-chaussée de l'immeuble où loge Célestin, et lui garde toujours un croissant tiède. Elle voit tout ce qui monte et descend son escalier — et n'en dit jamais rien à personne.</p>`},
 {id:'baylac',tier:1,icon:'pen',photo:'assets/baylac.jpg',nom:'Monsieur Baylac',role:"Chef du bureau d'études, Latécoère",
  bio:`<p>Rigueur, équerre et patience limitée : c'est lui qui dirige le bureau d'études de Montaudran où Célestin passe ses journées à dessiner des pièces d'avion, la tête ailleurs.</p>`},
-{id:'solange',tier:1,icon:'fan',photo:'assets/solange.jpg',cadrage:32,nom:'Solange',role:'Ancienne danseuse du Moulin-Rouge',
+{id:'solange',tier:1,icon:'fan',photo:'assets/solange.jpg',cadrage:32,cadrageFiche:100,nom:'Solange',role:'Ancienne danseuse du Moulin-Rouge',
  bio:`<p>Elle a dansé sur les scènes parisiennes avant de donner, à Toulouse, des leçons plus discrètes que légales. C'est chez elle que Louise apprend en secret ce que ses grands-parents ne doivent jamais savoir.</p>`},
 {id:'maurice',tier:1,icon:'mustache',photo:'assets/maurice.jpg',nom:'Maurice',role:'Patron du Cabaret des Étoiles',
  bio:`<p>Jovial, bonimenteur, la moustache toujours en mouvement : c'est lui qui annonce les concours, sert les consommations obligatoires et règne — sans grande autorité, mais avec beaucoup de cœur — sur la salle.</p>`},
@@ -296,7 +296,7 @@ function ouvrirFiche(p, carte){
   if((p.id==='celestin' || p.id==='louise') && estDebloque(ETOILE_TIER)) extra += `<div class="ajout">${AJOUT_ETOILE}</div>`;
   feuilleFiche.innerHTML = `
     <button class="ferm" aria-label="Fermer">×</button>
-    <img class="foto-fiche" style="object-position:50% ${p.cadrage ?? 18}%" src="${p.photo}" alt="${p.nom}" onerror="this.style.display='none'">
+    <img class="foto-fiche" style="object-position:50% ${p.cadrageFiche ?? p.cadrage ?? 18}%" src="${p.photo}" alt="${p.nom}" onerror="this.style.display='none'">
     <h3>${p.nom}</h3>
     <div class="sousrole">${p.role}</div>
     ${p.bio}
