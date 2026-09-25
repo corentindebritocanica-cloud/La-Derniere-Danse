@@ -131,7 +131,10 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
 footer{text-align:center;padding:34px 20px calc(34px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--brun);letter-spacing:1px}
-footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color:var(--brun);opacity:.55;cursor:pointer;user-select:none}
+footer .etoile-secrete{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px;cursor:pointer;user-select:none}
+footer .etoile-secrete .symbole{font-size:26px;color:var(--rouge);animation:etoilePulse 2.6s ease-in-out infinite}
+footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:var(--rouge);opacity:.75}
+@keyframes etoilePulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
 .btn-reset{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:34px;height:34px;border-radius:50%;background:var(--papier);border:1px solid var(--brun);color:var(--brun);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.5;box-shadow:0 1px 4px var(--ombre);z-index:20}
 .btn-reset:active{opacity:.9}
 
@@ -162,7 +165,10 @@ footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color
 
 <footer>
   1925 · Toulouse<br>
-  <span class="etoile-secrete" id="etoileSecrete">✦</span>
+  <span class="etoile-secrete" id="etoileSecrete">
+    <span class="symbole">✦</span>
+    <span class="indice">il reste une page à découvrir</span>
+  </span>
 </footer>
 <button class="btn-reset" id="btnReset" aria-label="Réinitialiser">⟲</button>
 
