@@ -29,6 +29,9 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .hero h1{font-family:var(--f-title);margin:10px 0 2px;font-size:15px;letter-spacing:6px;text-transform:uppercase;color:var(--encre)}
 .hero h2{font-family:var(--f-title);margin:0;font-size:44px;letter-spacing:2px;color:var(--rouge);line-height:1.05}
 .hero .souslegende{font-family:var(--f-hand);font-size:20px;color:var(--bleu);margin-top:8px;transform:rotate(-1deg)}
+.btn-code{margin-top:18px;padding:9px 24px;font-family:var(--f-title);font-size:12px;letter-spacing:2px;text-transform:uppercase;background:transparent;border:1.5px solid var(--rouge);color:var(--rouge);border-radius:2px;cursor:pointer}
+.btn-code:active{background:var(--rouge);color:var(--papier)}
+.medaillon.secoue{animation:shk .4s}
 
 /* ---------- GRID ---------- */
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 14px;padding:28px 18px 10px;max-width:640px;margin:0 auto}
@@ -152,6 +155,7 @@ footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color
   <h1>Cabaret des</h1>
   <h2 id="titreEtoiles">Étoiles</h2>
   <div class="souslegende">— la galerie de ceux qu'on y croise —</div>
+  <button class="btn-code" id="btnCode">Entrer un code</button>
 </div>
 
 <div class="grid" id="grille"></div>
@@ -294,7 +298,14 @@ function rendreGrille(){
       </div>
       <div class="nom">${ouvert ? p.nom : 'Vous ferez bientôt sa connaissance'}</div>
       <div class="role">${ouvert ? p.role : ''}</div>`;
-    carte.addEventListener('click', ()=> ouvert ? ouvrirFiche(p, carte) : ouvrirPass());
+    if(ouvert){
+      carte.addEventListener('click', ()=> ouvrirFiche(p, carte));
+    } else {
+      carte.addEventListener('click', ()=>{
+        const med = carte.querySelector('.medaillon');
+        med.classList.remove('secoue'); void med.offsetWidth; med.classList.add('secoue');
+      });
+    }
     grille.appendChild(carte);
   });
 }
@@ -367,6 +378,7 @@ function ouvrirReset(){
   setTimeout(()=>champPass.focus(),200);
 }
 document.getElementById('btnReset').addEventListener('click', ouvrirReset);
+document.getElementById('btnCode').addEventListener('click', ()=> ouvrirPass(false));
 document.getElementById('fermPass').addEventListener('click', fermerVoiles);
 
 document.getElementById('btnValider').addEventListener('click', validerPass);
