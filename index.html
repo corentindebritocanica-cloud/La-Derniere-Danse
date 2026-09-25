@@ -373,7 +373,6 @@ function ouvrirPass(bonus){
     document.getElementById('textePass').textContent = "Un code à 4 chiffres, quelque part dans une enveloppe.";
   }
   voilePass.classList.add('show');
-  setTimeout(()=>champPass.focus(),200);
 }
 function ouvrirReset(){
   document.body.style.overflow = 'hidden';
@@ -386,7 +385,6 @@ function ouvrirReset(){
   document.getElementById('titrePass').textContent = 'Tout réinitialiser ?';
   document.getElementById('textePass').textContent = "Entrez le code pour tout remettre à zéro.";
   voilePass.classList.add('show');
-  setTimeout(()=>champPass.focus(),200);
 }
 document.getElementById('btnReset').addEventListener('click', ouvrirReset);
 document.getElementById('btnCode').addEventListener('click', ()=> ouvrirPass(false));
