@@ -364,14 +364,19 @@ function validerPass(){
   let tierTrouve = null;
   for(const t in MOTS_DE_PASSE){ if(!estDebloque(+t) && MOTS_DE_PASSE[t]===val){ tierTrouve=+t; break; } }
   if(tierTrouve){
-    debloquerTier(tierTrouve);
-    const ids = PERSONNAGES.filter(p=>p.tier===tierTrouve).map(p=>p.id);
-    if(tierTrouve===ETOILE_TIER) ids.push('celestin','louise');
-    PERSONNAGES.forEach(p=>{ if(p.ajoutTier===tierTrouve) ids.push(p.id); });
-    marquerNouveaute(ids);
+    const idsTotal = [];
+    for(let t=1; t<=tierTrouve; t++){
+      if(estDebloque(t)) continue;
+      debloquerTier(t);
+      const ids = PERSONNAGES.filter(p=>p.tier===t).map(p=>p.id);
+      if(t===ETOILE_TIER) ids.push('celestin','louise');
+      PERSONNAGES.forEach(p=>{ if(p.ajoutTier===t) ids.push(p.id); });
+      idsTotal.push(...ids);
+    }
+    marquerNouveaute(idsTotal);
     fermerVoiles();
     rendreGrille();
-    ids.forEach(id=>{
+    idsTotal.forEach(id=>{
       const med = grille.querySelector('[data-id="'+id+'"] .medaillon');
       if(med){ med.classList.add('eclat'); setTimeout(()=>med.classList.remove('eclat'), 1300); }
     });
