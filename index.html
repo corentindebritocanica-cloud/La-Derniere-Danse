@@ -49,7 +49,14 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .card .role{font-size:10px;font-style:italic;color:var(--brun);text-align:center;letter-spacing:.3px}
 
 .card.locked .medaillon{opacity:.55}
-.card.locked .nom{font-family:var(--f-body);font-style:italic;color:var(--brun);font-size:11px}
+.card.nouveau .medaillon::after{content:'✦';position:absolute;top:-4px;left:-4px;width:24px;height:24px;border-radius:50%;background:var(--rouge);color:var(--papier);font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px var(--ombre);animation:pulseBadge 1.6s ease-in-out infinite;z-index:3}
+@keyframes pulseBadge{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.medaillon.eclat{animation:eclatAnim 1.2s ease}
+@keyframes eclatAnim{
+  0%{box-shadow:0 0 0 0 rgba(168,32,26,.55);transform:scale(1)}
+  35%{box-shadow:0 0 0 12px rgba(168,32,26,.25);transform:scale(1.09)}
+  100%{box-shadow:0 0 0 26px rgba(168,32,26,0);transform:scale(1)}
+}.card.locked .nom{font-family:var(--f-body);font-style:italic;color:var(--brun);font-size:11px}
 .card.locked .role{visibility:hidden}
 .card:active .medaillon{transform:scale(.96)}
 
@@ -156,9 +163,9 @@ footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color
 <div class="voile" id="voilePass">
   <div class="feuille pass-feuille">
     <button class="ferm" id="fermPass" aria-label="Fermer">×</button>
-    <h3 style="color:var(--brun)">Un secret ferme ce visage</h3>
-    <p>On vous a confié un mot, quelque part dans une enveloppe. Écrivez-le ici.</p>
-    <input id="champPass" type="text" autocomplete="off" autocapitalize="characters" placeholder="· · · · · · · ·">
+    <h3 id="titrePass" style="color:var(--brun)">Un chiffre ferme ce visage</h3>
+    <p id="textePass">Un code à 4 chiffres, quelque part dans une enveloppe.</p>
+    <input id="champPass" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="· · · ·">
     <button class="valider" id="btnValider">Déverrouiller</button>
     <div class="erreur" id="erreurPass"></div>
   </div>
@@ -237,7 +244,7 @@ const PERSONNAGES = [
 const ETOILE_TIER = 4; /* mise à jour Célestin/Louise : l'étoile filante */
 const AJOUT_ETOILE = `<p><strong>Cette nuit-là :</strong> une étoile filante, le 16 décembre à 0 h 48, au-dessus de Toulouse — et des conversations qui ont duré jusqu'à l'aube.</p>`;
 
-const MOTS_DE_PASSE = {1:'PARRAINS',2:'CARNET',3:'GLYCINE',4:'GEMINIDES',5:'ENCRE',6:'FRANGE'};
+const MOTS_DE_PASSE = {1:'1412',2:'1899',3:'0714',4:'0048',5:'1897',6:'1925'};
 const MOT_BONUS = 'TOUJOURS';
 
 /* ===================== ÉTAT ===================== */
@@ -245,6 +252,12 @@ const cle = 'ldd_tiers_debloques';
 function tiersDebloques(){ try{ return JSON.parse(localStorage.getItem(cle))||[0]; }catch(e){ return [0]; } }
 function debloquerTier(t){ const l=tiersDebloques(); if(!l.includes(t)){ l.push(t); localStorage.setItem(cle,JSON.stringify(l)); } }
 function estDebloque(t){ return tiersDebloques().includes(t); }
+
+const cleNouveau = 'ldd_nouveautes';
+function nouveautes(){ try{ return JSON.parse(localStorage.getItem(cleNouveau))||[]; }catch(e){ return []; } }
+function marquerNouveaute(ids){ const l=nouveautes(); ids.forEach(id=>{ if(!l.includes(id)) l.push(id); }); localStorage.setItem(cleNouveau, JSON.stringify(l)); }
+function estNouveau(id){ return nouveautes().includes(id); }
+function retirerNouveaute(id){ const l=nouveautes().filter(x=>x!==id); localStorage.setItem(cleNouveau, JSON.stringify(l)); }
 
 let comptTaps = 0, tapsTimer = null;
 document.getElementById('titreEtoiles').addEventListener('click', ()=>{
@@ -265,7 +278,8 @@ function rendreGrille(){
   PERSONNAGES.forEach(p=>{
     const ouvert = estDebloque(p.tier);
     const carte = document.createElement('button');
-    carte.className = 'card' + (ouvert?'':' locked');
+    carte.className = 'card' + (ouvert?'':' locked') + (ouvert && estNouveau(p.id) ? ' nouveau' : '');
+    carte.dataset.id = p.id;
     carte.innerHTML = `
       <div class="medaillon">
         <svg class="frame" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#efe6d2" stroke="${ouvert?'#5a3e1b':'#a89877'}" stroke-width="2"/></svg>
@@ -288,6 +302,8 @@ const voileFiche = document.getElementById('voileFiche');
 const feuilleFiche = document.getElementById('feuilleFiche');
 function ouvrirFiche(p, carte){
   document.body.style.overflow = 'hidden';
+  retirerNouveaute(p.id);
+  carte.classList.remove('nouveau');
   const icone = carte.querySelector('.icone');
   icone.classList.add('play');
   setTimeout(()=> icone.classList.remove('play'), 900);
@@ -316,6 +332,19 @@ function ouvrirPass(bonus){
   document.body.style.overflow = 'hidden';
   modeBonus = !!bonus;
   champPass.value=''; erreurPass.textContent='';
+  if(modeBonus){
+    champPass.setAttribute('inputmode','text');
+    champPass.removeAttribute('maxlength');
+    champPass.placeholder = '· · · · · · · ·';
+    document.getElementById('titrePass').textContent = 'Un secret ferme ce visage';
+    document.getElementById('textePass').textContent = "On vous a confié un mot, quelque part. Écrivez-le ici.";
+  } else {
+    champPass.setAttribute('inputmode','numeric');
+    champPass.setAttribute('maxlength','4');
+    champPass.placeholder = '· · · ·';
+    document.getElementById('titrePass').textContent = 'Un chiffre ferme ce visage';
+    document.getElementById('textePass').textContent = "Un code à 4 chiffres, quelque part dans une enveloppe.";
+  }
   voilePass.classList.add('show');
   setTimeout(()=>champPass.focus(),200);
 }
@@ -334,7 +363,19 @@ function validerPass(){
   }
   let tierTrouve = null;
   for(const t in MOTS_DE_PASSE){ if(!estDebloque(+t) && MOTS_DE_PASSE[t]===val){ tierTrouve=+t; break; } }
-  if(tierTrouve){ debloquerTier(tierTrouve); fermerVoiles(); rendreGrille(); }
+  if(tierTrouve){
+    debloquerTier(tierTrouve);
+    const ids = PERSONNAGES.filter(p=>p.tier===tierTrouve).map(p=>p.id);
+    if(tierTrouve===ETOILE_TIER) ids.push('celestin','louise');
+    PERSONNAGES.forEach(p=>{ if(p.ajoutTier===tierTrouve) ids.push(p.id); });
+    marquerNouveaute(ids);
+    fermerVoiles();
+    rendreGrille();
+    ids.forEach(id=>{
+      const med = grille.querySelector('[data-id="'+id+'"] .medaillon');
+      if(med){ med.classList.add('eclat'); setTimeout(()=>med.classList.remove('eclat'), 1300); }
+    });
+  }
   else erreurGraphique();
 }
 function erreurGraphique(){
