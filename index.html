@@ -38,7 +38,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .card{background:none;border:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:inherit;color:inherit}
 .medaillon{position:relative;width:100%;aspect-ratio:1;max-width:132px}
 .medaillon svg.frame{position:absolute;inset:0;width:100%;height:100%}
-.medaillon .foto{position:absolute;inset:6%;width:88%;height:88%;border-radius:50%;object-fit:cover;border:3px solid var(--brun);box-shadow:0 2px 6px var(--ombre);background:#d8c9a3}
+.medaillon .foto{position:absolute;inset:6%;width:88%;height:88%;border-radius:50%;object-fit:cover;object-position:50% 18%;border:3px solid var(--brun);box-shadow:0 2px 6px var(--ombre);background:#d8c9a3}
 .medaillon .silhouette{position:absolute;inset:6%;width:88%;height:88%;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .medaillon .silhouette svg{width:70%;height:70%;overflow:visible}
 .medaillon .badge{position:absolute;right:-2%;bottom:-2%;width:40%;height:40%;border-radius:50%;background:var(--papier);border:2px solid var(--rouge);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px var(--ombre)}
@@ -101,7 +101,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 @media(min-width:600px){.feuille{border-radius:6px;border:1px solid var(--brun);border-top:3px solid var(--rouge)}}
 .voile.show .feuille{transform:translateY(0)}
 .feuille .ferm{float:right;font-family:var(--f-body);font-size:22px;color:var(--brun);background:none;border:none;cursor:pointer;line-height:1;padding:4px}
-.feuille .foto-fiche{width:100%;max-height:260px;object-fit:cover;border:1px solid var(--brun);margin-bottom:14px;filter:sepia(.15)}
+.feuille .foto-fiche{width:100%;max-height:260px;object-fit:cover;object-position:50% 18%;border:1px solid var(--brun);margin-bottom:14px;filter:sepia(.15)}
 .feuille h3{font-family:var(--f-title);color:var(--rouge);font-size:24px;margin:0 0 2px;letter-spacing:.5px}
 .feuille .sousrole{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--brun);margin-bottom:14px}
 .feuille p{line-height:1.55;font-size:15px;margin:0 0 12px}
