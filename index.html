@@ -317,6 +317,11 @@ function rendreGrille(){
 }
 rendreGrille();
 
+(function(){
+  const p = new URLSearchParams(location.search).get('cb');
+  if(p === MOT_BONUS){ setTimeout(()=> ouvrirBonus(), 400); }
+})();
+
 /* ===================== FICHE PERSONNAGE ===================== */
 const voileFiche = document.getElementById('voileFiche');
 const feuilleFiche = document.getElementById('feuilleFiche');
