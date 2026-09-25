@@ -140,7 +140,7 @@ footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color
     <path d="M150 14 L154 26 L166 26 L156 33 L160 45 L150 38 L140 45 L144 33 L134 26 L146 26 Z" fill="#a8201a"/>
   </svg>
   <h1>Cabaret des</h1>
-  <h2>Étoiles</h2>
+  <h2 id="titreEtoiles">Étoiles</h2>
   <div class="souslegende">— la galerie de ceux qu'on y croise —</div>
 </div>
 
@@ -241,13 +241,21 @@ const MOT_BONUS = 'TOUJOURS';
 
 /* ===================== ÉTAT ===================== */
 const cle = 'ldd_tiers_debloques';
-(function(){
-  const p = new URLSearchParams(location.search).get('admin');
-  if(p === '1b40c18cfa14'){ localStorage.setItem(cle, JSON.stringify([0,1,2,3,4,5,6])); }
-})();
 function tiersDebloques(){ try{ return JSON.parse(localStorage.getItem(cle))||[0]; }catch(e){ return [0]; } }
 function debloquerTier(t){ const l=tiersDebloques(); if(!l.includes(t)){ l.push(t); localStorage.setItem(cle,JSON.stringify(l)); } }
 function estDebloque(t){ return tiersDebloques().includes(t); }
+
+let comptTaps = 0, tapsTimer = null;
+document.getElementById('titreEtoiles').addEventListener('click', ()=>{
+  comptTaps++;
+  clearTimeout(tapsTimer);
+  tapsTimer = setTimeout(()=>{ comptTaps = 0; }, 1500);
+  if(comptTaps >= 4){
+    comptTaps = 0;
+    localStorage.setItem(cle, JSON.stringify([0,1,2,3,4,5,6]));
+    rendreGrille();
+  }
+});
 
 /* ===================== RENDU GRILLE ===================== */
 const grille = document.getElementById('grille');
