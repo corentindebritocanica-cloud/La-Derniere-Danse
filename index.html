@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le Cabaret des Étoiles — Galerie, 1925</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Limelight&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;0,6..96,700;1,6..96,400&family=La+Belle+Aurore&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fond:#f1e7d3; --encre:#1a1512; --rouge:#a8201a; --bleu:#1f3a5f; --brun:#5a3e1b;
+  --papier:#e9dcc0; --ombre:rgba(26,21,18,.35);
+  --f-title:'Limelight',serif; --f-body:'Bodoni Moda',Didot,serif; --f-hand:'La Belle Aurore',cursive; --f-type:'Special Elite',monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--fond);color:var(--encre);font-family:var(--f-body);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.05;
+  background-image:radial-gradient(circle at 20% 30%, #000 0, transparent 1px), radial-gradient(circle at 70% 60%, #000 0, transparent 1px), radial-gradient(circle at 40% 80%, #000 0, transparent 1px);
+  background-size:60px 60px, 90px 90px, 75px 75px;}
+
+/* ---------- HERO ---------- */
+.hero{padding:36px 20px 26px;text-align:center;position:relative;border-bottom:1px solid var(--brun)}
+.hero .lieu{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--brun);margin-bottom:10px}
+.hero svg.rays{display:block;margin:0 auto}
+.hero h1{font-family:var(--f-title);margin:10px 0 2px;font-size:15px;letter-spacing:6px;text-transform:uppercase;color:var(--encre)}
+.hero h2{font-family:var(--f-title);margin:0;font-size:44px;letter-spacing:2px;color:var(--rouge);line-height:1.05}
+.hero .souslegende{font-family:var(--f-hand);font-size:20px;color:var(--bleu);margin-top:8px;transform:rotate(-1deg)}
+
+/* ---------- GRID ---------- */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 14px;padding:28px 18px 10px;max-width:640px;margin:0 auto}
+@media(min-width:480px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr);max-width:900px}}
+
+.card{background:none;border:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:inherit;color:inherit}
+.medaillon{position:relative;width:100%;aspect-ratio:1;max-width:132px}
+.medaillon svg.frame{position:absolute;inset:0;width:100%;height:100%}
+.medaillon .foto{position:absolute;inset:6%;width:88%;height:88%;border-radius:50%;object-fit:cover;border:3px solid var(--brun);box-shadow:0 2px 6px var(--ombre);background:#d8c9a3}
+.medaillon .silhouette{position:absolute;inset:6%;width:88%;height:88%;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.medaillon .silhouette svg{width:70%;height:70%;overflow:visible}
+.medaillon .badge{position:absolute;right:-2%;bottom:-2%;width:40%;height:40%;border-radius:50%;background:var(--papier);border:2px solid var(--rouge);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px var(--ombre)}
+.medaillon .badge svg{width:62%;height:62%;overflow:visible}
+.medaillon .icone{position:absolute;inset:22%;width:56%;height:56%;display:flex;align-items:center;justify-content:center}
+.medaillon .icone svg{width:100%;height:100%;overflow:visible}
+.card .nom{font-family:var(--f-title);font-size:12.5px;letter-spacing:1px;text-align:center;line-height:1.25;min-height:2.4em}
+.card .role{font-size:10px;font-style:italic;color:var(--brun);text-align:center;letter-spacing:.3px}
+
+.card.locked .medaillon{opacity:.55}
+.card.locked .nom{font-family:var(--f-body);font-style:italic;color:var(--brun);font-size:11px}
+.card.locked .role{visibility:hidden}
+.card:active .medaillon{transform:scale(.96)}
+
+/* ---------- ANIMATIONS (jouées au tap) ---------- */
+.icone svg{transform-origin:50% 50%}
+.play .p-brush{animation:brush .6s ease}
+.play .p-owleye{animation:owl .6s ease}
+.play .p-star-rays{animation:starspin .8s ease}
+.play .p-flash{animation:flash .5s ease}
+.play .p-croissant{animation:bob .6s ease}
+.play .p-pennib{animation:scribble .6s ease}
+.play .p-fan{animation:fan .6s ease}
+.play .p-mustache{animation:wiggle .5s ease}
+.play .p-trumpet{animation:raise .6s ease}
+.play .p-page{animation:flip .6s ease}
+.play .p-tail{animation:wag .7s ease}
+.play .p-broom{animation:sweep .6s ease}
+.play .p-glint{animation:glint .6s ease}
+.play .p-wheel{animation:spin .6s linear}
+.play .p-blossom{animation:sway .8s ease}
+.play .p-book{animation:pageturn .6s ease}
+.play .p-baton{animation:tap .5s ease}
+
+@keyframes brush{0%,100%{transform:rotate(0)}30%{transform:rotate(-22deg)}60%{transform:rotate(14deg)}}
+@keyframes owl{0%,100%{transform:scaleY(1)}45%,55%{transform:scaleY(.15)}}
+@keyframes starspin{from{transform:rotate(0)}to{transform:rotate(150deg)}}
+@keyframes flash{0%,100%{opacity:0}20%{opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes scribble{0%{stroke-dashoffset:40}100%{stroke-dashoffset:0}}
+@keyframes fan{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(-18deg) scale(1.05)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
+@keyframes raise{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-6deg)}}
+@keyframes flip{0%,100%{transform:rotateY(0)}50%{transform:rotateY(60deg)}}
+@keyframes wag{0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-14deg)}}
+@keyframes sweep{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
+@keyframes glint{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(9deg)}}
+@keyframes pageturn{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.1)}}
+@keyframes tap{0%,100%{transform:rotate(0)}50%{transform:rotate(-15deg)}}
+
+/* ---------- MODALES ---------- */
+.voile{position:fixed;inset:0;background:rgba(26,21,18,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+.voile.show{opacity:1;pointer-events:auto}
+@media(min-width:600px){.voile{align-items:center}}
+
+.feuille{background:var(--papier);width:100%;max-width:420px;border-radius:14px 14px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));
+  transform:translateY(30px);transition:transform .3s;max-height:80vh;overflow-y:auto;border-top:3px solid var(--rouge);box-shadow:0 -4px 24px var(--ombre)}
+@media(min-width:600px){.feuille{border-radius:6px;border:1px solid var(--brun);border-top:3px solid var(--rouge)}}
+.voile.show .feuille{transform:translateY(0)}
+.feuille .ferm{float:right;font-family:var(--f-body);font-size:22px;color:var(--brun);background:none;border:none;cursor:pointer;line-height:1;padding:4px}
+.feuille .foto-fiche{width:100%;max-height:260px;object-fit:cover;border:1px solid var(--brun);margin-bottom:14px;filter:sepia(.15)}
+.feuille h3{font-family:var(--f-title);color:var(--rouge);font-size:24px;margin:0 0 2px;letter-spacing:.5px}
+.feuille .sousrole{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--brun);margin-bottom:14px}
+.feuille p{line-height:1.55;font-size:15px;margin:0 0 12px}
+.feuille .citation{font-family:var(--f-hand);font-size:21px;color:var(--bleu);margin:16px 0 4px;transform:rotate(-.6deg)}
+.feuille .ajout{border-top:1px dashed var(--brun);margin-top:14px;padding-top:12px}
+
+.pass-feuille{max-width:340px;text-align:center}
+.pass-feuille p{font-size:14px;color:var(--brun);font-style:italic}
+.pass-feuille input{font-family:var(--f-type);font-size:18px;letter-spacing:3px;text-align:center;text-transform:uppercase;
+  width:100%;padding:12px;border:1px solid var(--brun);background:#fffdf6;color:var(--encre);border-radius:2px;margin:10px 0}
+.pass-feuille input:focus{outline:2px solid var(--bleu)}
+.pass-feuille button.valider{width:100%;padding:12px;font-family:var(--f-title);letter-spacing:2px;background:var(--rouge);color:var(--papier);border:none;border-radius:2px;cursor:pointer;font-size:14px}
+.pass-feuille button.valider:active{opacity:.85}
+.erreur{color:var(--rouge);font-size:12px;min-height:16px;margin-top:6px}
+.shake{animation:shk .4s}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+footer{text-align:center;padding:34px 20px calc(34px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--brun);letter-spacing:1px}
+footer .etoile-secrete{display:inline-block;margin-top:14px;font-size:15px;color:var(--brun);opacity:.55;cursor:pointer;user-select:none}
+
+/* ---------- Page bonus (carnet de bal) ---------- */
+.bonus-contenu{text-align:center;padding:10px 4px 4px}
+.bonus-contenu h3{color:var(--bleu)}
+.bonus-contenu .siecle{font-family:var(--f-hand);font-size:26px;color:var(--rouge);margin:14px 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="lieu">Rue des Teinturiers · Toulouse</div>
+  <svg class="rays" width="220" height="34" viewBox="0 0 300 46" aria-hidden="true">
+    <g fill="none" stroke="#1a1512" stroke-width="1">
+      <line x1="150" y1="44" x2="20" y2="10"/><line x1="150" y1="44" x2="60" y2="4"/><line x1="150" y1="44" x2="105" y2="1"/>
+      <line x1="150" y1="44" x2="150" y2="0"/><line x1="150" y1="44" x2="195" y2="1"/><line x1="150" y1="44" x2="240" y2="4"/><line x1="150" y1="44" x2="280" y2="10"/>
+    </g>
+    <path d="M150 14 L154 26 L166 26 L156 33 L160 45 L150 38 L140 45 L144 33 L134 26 L146 26 Z" fill="#a8201a"/>
+  </svg>
+  <h1>Cabaret des</h1>
+  <h2>Étoiles</h2>
+  <div class="souslegende">— la galerie de ceux qu'on y croise —</div>
+</div>
+
+<div class="grid" id="grille"></div>
+
+<footer>
+  1925 · Toulouse<br>
+  <span class="etoile-secrete" id="etoileSecrete">✦</span>
+</footer>
+
+<div class="voile" id="voileFiche"><div class="feuille" id="feuilleFiche"></div></div>
+<div class="voile" id="voilePass">
+  <div class="feuille pass-feuille">
+    <button class="ferm" id="fermPass" aria-label="Fermer">×</button>
+    <h3 style="color:var(--brun)">Un secret ferme ce visage</h3>
+    <p>On vous a confié un mot, quelque part dans une enveloppe. Écrivez-le ici.</p>
+    <input id="champPass" type="text" autocomplete="off" autocapitalize="characters" placeholder="· · · · · · · ·">
+    <button class="valider" id="btnValider">Déverrouiller</button>
+    <div class="erreur" id="erreurPass"></div>
+  </div>
+</div>
+
+<script>
+/* ===================== ICONES (art déco, ligne, un détail animé) ===================== */
+const ICONES = {
+brush:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4" stroke-linecap="round"><g class="p-brush" transform-origin="70 30"><path d="M68 20 L86 8" stroke="#5a3e1b"/><path d="M84 6 L92 14 L78 24 Z" fill="#1a1512" stroke="none"/></g><path d="M68 22 L34 56" /><path d="M30 60 C22 68 20 78 24 84 C30 88 40 86 48 78 C54 72 58 62 66 26" fill="none"/></g><circle cx="24" cy="84" r="4" fill="#a8201a"/></svg>`,
+owl:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4"><path d="M20 46 C20 20 40 10 50 10 C60 10 80 20 80 46 C80 72 66 88 50 88 C34 88 20 72 20 46 Z"/><path d="M20 46 L6 30 M80 46 L94 30"/></g><g class="p-owleye"><circle cx="38" cy="46" r="10" fill="#f1e7d3" stroke="#1a1512" stroke-width="3"/><circle cx="62" cy="46" r="10" fill="#f1e7d3" stroke="#1a1512" stroke-width="3"/><circle cx="38" cy="46" r="4" fill="#1f3a5f"/><circle cx="62" cy="46" r="4" fill="#1f3a5f"/></g><path d="M46 58 L50 64 L54 58 Z" fill="#a8201a"/></svg>`,
+star:`<svg viewBox="0 0 100 100"><g class="p-star-rays" stroke="#1a1512" stroke-width="3" transform-origin="50 50"><line x1="50" y1="50" x2="50" y2="8"/><line x1="50" y1="50" x2="84" y2="26"/><line x1="50" y1="50" x2="92" y2="60"/><line x1="50" y1="50" x2="68" y2="90"/><line x1="50" y1="50" x2="32" y2="90"/><line x1="50" y1="50" x2="8" y2="60"/><line x1="50" y1="50" x2="16" y2="26"/></g><path d="M50 32 L56 48 L74 48 L60 58 L65 76 L50 65 L35 76 L40 58 L26 48 L44 48 Z" fill="#a8201a"/></svg>`,
+camera:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4" stroke-linejoin="round"><rect x="14" y="34" width="72" height="48" rx="4"/><path d="M36 34 L42 22 H58 L64 34"/><circle cx="50" cy="58" r="16"/><circle cx="72" cy="44" r="3" fill="#1a1512"/></g><circle class="p-flash" cx="50" cy="58" r="22" fill="#f1e7d3" opacity="0"/></svg>`,
+croissant:`<svg viewBox="0 0 100 100"><g class="p-croissant"><path d="M20 60 C20 34 42 20 62 24 C48 30 40 42 40 56 C40 70 48 82 62 88 C42 92 20 82 20 60 Z" fill="none" stroke="#5a3e1b" stroke-width="4" stroke-linejoin="round"/><path d="M28 46 L34 44 M30 58 L38 57 M32 70 L40 71" stroke="#5a3e1b" stroke-width="2.5" stroke-linecap="round"/></g></svg>`,
+pen:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4" stroke-linecap="round"><path d="M30 76 L64 30 L74 40 L40 86 L26 90 Z"/><path d="M64 30 L74 40"/></g><path class="p-pennib" d="M18 92 C 30 92, 40 90, 50 90 S 68 94, 80 92" fill="none" stroke="#1f3a5f" stroke-width="3" stroke-dasharray="40" stroke-dashoffset="40" stroke-linecap="round"/></svg>`,
+fan:`<svg viewBox="0 0 100 100"><g class="p-fan" transform-origin="50 86"><g fill="none" stroke="#1a1512" stroke-width="3"><path d="M50 86 L14 34"/><path d="M50 86 L32 20"/><path d="M50 86 L50 14"/><path d="M50 86 L68 20"/><path d="M50 86 L86 34"/></g><path d="M14 34 C 30 46, 70 46, 86 34" fill="none" stroke="#a8201a" stroke-width="3"/></g></svg>`,
+mustache:`<svg viewBox="0 0 100 100"><circle cx="50" cy="46" r="34" fill="none" stroke="#1a1512" stroke-width="4"/><circle cx="38" cy="40" r="3.5" fill="#1a1512"/><circle cx="62" cy="40" r="3.5" fill="#1a1512"/><path class="p-mustache" transform-origin="50 62" d="M20 62 C32 54 44 62 50 60 C56 62 68 54 80 62 C70 58 60 66 50 64 C40 66 30 58 20 62 Z" fill="#1a1512"/></svg>`,
+trumpet:`<svg viewBox="0 0 100 100"><g class="p-trumpet" transform-origin="30 70" fill="none" stroke="#a8201a" stroke-width="4" stroke-linejoin="round"><path d="M14 78 L54 58 L82 46 C88 44 92 50 86 54 L60 66"/><path d="M54 58 L58 68 L46 74 L42 64 Z"/><circle cx="50" cy="55" r="2.5" fill="#a8201a" stroke="none"/><circle cx="56" cy="52" r="2.5" fill="#a8201a" stroke="none"/><circle cx="62" cy="49" r="2.5" fill="#a8201a" stroke="none"/></g></svg>`,
+salon:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#5a3e1b" stroke-width="4" stroke-linejoin="round"><path d="M18 56 V40 C18 34 24 30 30 30 H70 C76 30 82 34 82 40 V56"/><path d="M14 56 H86 V78 H14 Z"/><path d="M14 78 V88 M86 78 V88"/></g><g class="p-page" transform-origin="70 62"><rect x="58" y="56" width="20" height="14" fill="#f1e7d3" stroke="#1a1512" stroke-width="2"/><line x1="61" y1="60" x2="75" y2="60" stroke="#1a1512" stroke-width="1"/><line x1="61" y1="64" x2="75" y2="64" stroke="#1a1512" stroke-width="1"/></g><path d="M30 64 C30 58 38 58 38 64 C38 70 30 74 30 78 M38 64 C38 58 46 58 46 64 C46 70 38 74 38 78" fill="none" stroke="#1f3a5f" stroke-width="2.5"/></svg>`,
+cat:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4" stroke-linejoin="round"><path d="M30 78 C20 78 16 66 20 54 C14 50 14 40 20 34 C22 42 28 44 32 42 C40 36 50 36 58 40 C64 36 72 34 76 38 C80 44 78 50 72 54 C78 62 74 78 62 78 Z"/><path d="M28 40 L24 28 L34 36 M60 38 L66 26 L68 38"/></g><circle cx="40" cy="56" r="2.5" fill="#1a1512"/><circle cx="54" cy="56" r="2.5" fill="#1a1512"/><path class="p-tail" transform-origin="76 70" d="M76 70 C90 66 94 50 86 38" fill="none" stroke="#1a1512" stroke-width="4" stroke-linecap="round"/></svg>`,
+broom:`<svg viewBox="0 0 100 100"><g class="p-broom" transform-origin="30 86"><path d="M30 86 L70 26" stroke="#5a3e1b" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M12 92 L30 86 L48 92 L44 74 L16 74 Z" fill="none" stroke="#1a1512" stroke-width="3.5" stroke-linejoin="round"/><path d="M18 74 L14 92 M24 74 L20 92 M36 74 L40 92 M42 74 L46 92" stroke="#1a1512" stroke-width="2"/></g></svg>`,
+glasses:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4"><circle cx="32" cy="52" r="18"/><circle cx="68" cy="52" r="18"/><path d="M50 50 H50" /><path d="M14 48 L4 44 M86 48 L96 44"/></g><circle class="p-glint" cx="26" cy="46" r="3" fill="#f1e7d3" opacity=".3"/><circle class="p-glint" cx="62" cy="46" r="3" fill="#f1e7d3" opacity=".3" style="animation-delay:.15s"/></svg>`,
+car:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4" stroke-linejoin="round"><path d="M10 66 L18 44 C20 38 26 34 34 34 H64 C72 34 78 38 80 44 L88 66"/><path d="M10 66 H88 V72 H10 Z"/></g><circle class="p-wheel" cx="30" cy="76" r="8" fill="none" stroke="#1a1512" stroke-width="3"/><circle class="p-wheel" cx="70" cy="76" r="8" fill="none" stroke="#1a1512" stroke-width="3"/><line x1="30" y1="70" x2="30" y2="82" stroke="#1a1512" stroke-width="2"/><line x1="70" y1="70" x2="70" y2="82" stroke="#1a1512" stroke-width="2"/><rect x="34" y="42" width="30" height="14" fill="#f1e7d3" stroke="#1a1512" stroke-width="2"/></svg>`,
+glycine:`<svg viewBox="0 0 100 100"><path d="M20 12 C40 12 34 30 50 30 C66 30 60 12 80 12" fill="none" stroke="#5a3e1b" stroke-width="4" stroke-linecap="round"/><g class="p-blossom" transform-origin="50 30"><path d="M50 30 C46 44 54 44 50 58 C46 72 54 72 50 86" fill="none" stroke="#5a3e1b" stroke-width="3"/><circle cx="46" cy="40" r="4" fill="#1f3a5f"/><circle cx="54" cy="48" r="4" fill="#1f3a5f"/><circle cx="45" cy="58" r="4" fill="#1f3a5f"/><circle cx="55" cy="66" r="4" fill="#1f3a5f"/><circle cx="46" cy="76" r="4" fill="#1f3a5f"/></g></svg>`,
+book:`<svg viewBox="0 0 100 100"><g fill="none" stroke="#1a1512" stroke-width="4" stroke-linejoin="round"><path d="M50 24 C42 18 26 16 16 20 V74 C26 70 42 72 50 78 C58 72 74 70 84 74 V20 C74 16 58 18 50 24 Z"/><line x1="50" y1="24" x2="50" y2="78"/></g><g class="p-book" transform-origin="50 48"><line x1="24" y1="34" x2="42" y2="30" stroke="#5a3e1b" stroke-width="2"/><line x1="24" y1="44" x2="42" y2="41" stroke="#5a3e1b" stroke-width="2"/><line x1="24" y1="54" x2="42" y2="52" stroke="#5a3e1b" stroke-width="2"/></g></svg>`,
+baton:`<svg viewBox="0 0 100 100"><g class="p-baton" transform-origin="70 26" stroke="#1a1512" stroke-width="4" stroke-linecap="round"><line x1="70" y1="26" x2="30" y2="70"/></g><circle cx="70" cy="26" r="4" fill="#a8201a"/><path d="M20 82 C 34 74, 46 74, 60 82 S 86 90, 96 82" fill="none" stroke="#1f3a5f" stroke-width="3"/></svg>`
+};
+
+/* ===================== DONNÉES ===================== */
+const PERSONNAGES = [
+{id:'celestin',tier:0,icon:'brush',photo:'assets/celestin.jpg',nom:'Célestin Delacroix',role:'Dessinateur & peintre',
+ bio:`<p>28 ans, né le 12 mars 1897 à Castres. Le jour, il est dessinateur au bureau d'études des ateliers Latécoère, à Montaudran, sous les ordres de monsieur Baylac. La nuit, il peint et il danse.</p>
+ <p>Il loge dans un grenier au-dessus de la boulangerie de madame Fabre, rue de la République — une fenêtre en demi-lune ouverte sur la Garonne et le Pont-Neuf. Cheveux bruns en bataille, lunettes rondes, un sourire de travers qui commence toujours dans les yeux, et du bleu de Prusse coincé sous l'ongle du pouce.</p>
+ <p>Il conduit une Citroën Type C jaune canari, qu'il a baptisée « le Petit Citron ». Au Cabaret, on ne l'appelle que « le peintre ». C'est sa mère, avant de mourir, qui lui a appris à valser dans la cuisine.</p>`,
+ citation:`« Une valse, ça se danse avec les yeux avant les pieds. »`},
+{id:'louise',tier:0,icon:'owl',photo:'assets/louise.jpg',nom:'Louise Élisabeth Sarrail',role:'« Le petit hibou »',
+ bio:`<p>26 ans, née le 16 avril 1899 à Toulouse. Elle vit chez ses grands-parents, à Purpan. Un carré brun coupé court, à la garçonne, et de grands yeux sombres — un peu étonnés, un peu en colère, très attentifs — qui lui ont valu son surnom.</p>
+ <p>Noctambule dans l'âme, elle lit Freud en cachette et rêve de soigner les âmes plutôt que les corps. Officiellement, elle prend des leçons de piano chez madame Castaing. En réalité, elle apprend à danser en secret, chez Solange.</p>`,
+ citation:`« On me dit rêveuse. Je ne fais qu'écouter plus fort que les autres. »`},
+{id:'cabaret',tier:0,icon:'star',photo:'assets/cabaret.jpg',nom:'Le Cabaret des Étoiles',role:'Rue des Teinturiers',
+ bio:`<p>Une salle enfumée, une estrade, un parquet ciré par des centaines de semelles. On y vient danser le samedi soir, sous la direction jamais très sérieuse de Maurice, et sur les cuivres de l'orchestre de Léon.</p>
+ <p>C'est là, un certain 14 décembre, qu'un tirage au sort a mêlé un danseur confirmé et une débutante — et qu'est née une danse qui n'existait pas encore.</p>`},
+
+{id:'julien',tier:1,icon:'camera',photo:'assets/julien.jpg',nom:'Julien Mercier',role:'Photographe, meilleur ami de Célestin',
+ bio:`<p>Il tire le portrait des mariés le samedi après-midi, et la ville la nuit — les façades, les silhouettes, les néons du Cabaret. C'est le témoin discret de toute l'histoire, celui qui a l'œil sur tout sans jamais rien raconter.</p>`},
+{id:'fabre',tier:1,icon:'croissant',photo:'assets/fabre.jpg',nom:'Madame Fabre',role:'Boulangère, rue de la République',
+ bio:`<p>Elle tient la boulangerie au rez-de-chaussée de l'immeuble où loge Célestin, et lui garde toujours un croissant tiède. Elle voit tout ce qui monte et descend son escalier — et n'en dit jamais rien à personne.</p>`},
+{id:'baylac',tier:1,icon:'pen',photo:'assets/baylac.jpg',nom:'Monsieur Baylac',role:"Chef du bureau d'études, Latécoère",
+ bio:`<p>Rigueur, équerre et patience limitée : c'est lui qui dirige le bureau d'études de Montaudran où Célestin passe ses journées à dessiner des pièces d'avion, la tête ailleurs.</p>`},
+{id:'solange',tier:1,icon:'fan',photo:'assets/solange.jpg',nom:'Solange',role:'Ancienne danseuse du Moulin-Rouge',
+ bio:`<p>Elle a dansé sur les scènes parisiennes avant de donner, à Toulouse, des leçons plus discrètes que légales. C'est chez elle que Louise apprend en secret ce que ses grands-parents ne doivent jamais savoir.</p>`},
+{id:'maurice',tier:1,icon:'mustache',photo:'assets/maurice.jpg',nom:'Maurice',role:'Patron du Cabaret des Étoiles',
+ bio:`<p>Jovial, bonimenteur, la moustache toujours en mouvement : c'est lui qui annonce les concours, sert les consommations obligatoires et règne — sans grande autorité, mais avec beaucoup de cœur — sur la salle.</p>`},
+{id:'leon',tier:1,icon:'trumpet',photo:'assets/leon.jpg',nom:'Léon',role:"Chef d'orchestre, trompettiste",
+ bio:`<p>Martiniquais, trompette au poing, il dirige l'orchestre de jazz du Cabaret. C'est lui qui compose, sans jamais le nommer tout à fait, « le morceau sans nom » — celui qui accompagne les instants qu'on n'oublie pas.</p>`},
+{id:'grandparents',tier:1,icon:'salon',photo:'assets/grandparents.jpg',nom:'Édouard & Amélie Sarrail',role:'Les grands-parents de Louise, à Purpan',
+ bio:`<p>Édouard, ancien avoué, lit La Dépêche jusqu'à minuit dans son fauteuil. Amélie, née de Castelbajac, a des migraines qui arrivent toujours au moment opportun, et un thé servi à 17 heures précises, immuablement.</p>
+ <p>Chez eux, on ne parle jamais des parents de Louise. On y parle encore moins de ce que fait leur petite-fille, le soir, quand elle dit aller se coucher tôt.</p>`,
+ ajoutTier:6,ajout:`<p><strong>Ce que l'on apprend plus tard :</strong> Édouard Sarrail, avoué sévère en apparence, a été violoniste — une vie entière avant La Dépêche et les dossiers, il tenait un archet.</p>`},
+{id:'chopin',tier:1,icon:'cat',photo:'assets/chopin.jpg',nom:'Chopin',role:'Chat gris, Purpan',
+ bio:`<p>Grand chat gris aux yeux jaunes, indépendant la plupart du temps, réclamant des câlins quand ça lui chante. Madame Sarrail l'a baptisé ainsi : « le seul musicien convenable de cette maison ».</p>`},
+
+{id:'marthe',tier:2,icon:'broom',photo:'assets/marthe.jpg',nom:'Marthe',role:'Bonne des Sarrail',
+ bio:`<p>Vieille bonne de la maison de Purpan, elle a vu grandir Louise et ferme les yeux sur beaucoup de choses — les fenêtres ouvertes tard, les pas discrets dans l'escalier, les carnets glissés sous l'oreiller.</p>`},
+
+{id:'henri',tier:3,icon:'glasses',photo:'assets/henri.jpg',nom:'Henri Lasserre',role:'Notaire, prétendant officiel — puis allié',
+ bio:`<p>Jeune notaire à lunettes rondes, présenté comme le parti idéal pour Louise. Ce que personne ne sait, c'est qu'Henri a lui-même le cœur ailleurs — du côté de Jeanne — ce qui fait de lui, très vite, un allié plutôt qu'un rival.</p>`},
+{id:'mini',tier:3,icon:'car',photo:'assets/mini.jpg',nom:'La Mini',role:'Citroën Type C jaune de Célestin',
+ bio:`<p>« Le Petit Citron » pour Célestin, « la Mini » pour Louise, qui a décidé un jour que ce nom lui allait mieux. Petite automobile jaune, témoin de toutes les routes prises un peu trop vite entre Toulouse et Purpan.</p>`},
+{id:'glycine',tier:3,icon:'glycine',photo:'assets/glycine.jpg',nom:'La glycine',role:'Façade de la maison de Purpan',
+ bio:`<p>Une treille ancienne, contre le mur de la maison des Sarrail, dont les branches solides ont un usage que ni Édouard ni Amélie n'ont jamais soupçonné : une échelle discrète, pour qui sait où poser le pied.</p>`},
+
+{id:'jeanne',tier:5,icon:'book',photo:'assets/jeanne.jpg',nom:'Jeanne',role:'Institutrice, Blagnac',
+ bio:`<p>Institutrice à Blagnac, amie de Louise, elle est de celles qui la poussent vers la médecine plutôt que vers le mariage. C'est aussi, discrètement, la femme qu'aime Henri Lasserre.</p>`},
+];
+
+const ETOILE_TIER = 4; /* mise à jour Célestin/Louise : l'étoile filante */
+const AJOUT_ETOILE = `<p><strong>Cette nuit-là :</strong> une étoile filante, le 16 décembre à 0 h 48, au-dessus de Toulouse — et des conversations qui ont duré jusqu'à l'aube.</p>`;
+
+const MOTS_DE_PASSE = {1:'PARRAINS',2:'CARNET',3:'GLYCINE',4:'GEMINIDES',5:'ENCRE',6:'FRANGE'};
+const MOT_BONUS = 'TOUJOURS';
+
+/* ===================== ÉTAT ===================== */
+const cle = 'ldd_tiers_debloques';
+function tiersDebloques(){ try{ return JSON.parse(localStorage.getItem(cle))||[0]; }catch(e){ return [0]; } }
+function debloquerTier(t){ const l=tiersDebloques(); if(!l.includes(t)){ l.push(t); localStorage.setItem(cle,JSON.stringify(l)); } }
+function estDebloque(t){ return tiersDebloques().includes(t); }
+
+/* ===================== RENDU GRILLE ===================== */
+const grille = document.getElementById('grille');
+function rendreGrille(){
+  grille.innerHTML='';
+  PERSONNAGES.forEach(p=>{
+    const ouvert = estDebloque(p.tier);
+    const carte = document.createElement('button');
+    carte.className = 'card' + (ouvert?'':' locked');
+    carte.innerHTML = `
+      <div class="medaillon">
+        <svg class="frame" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#efe6d2" stroke="${ouvert?'#5a3e1b':'#a89877'}" stroke-width="2"/></svg>
+        ${ouvert
+          ? `<img class="foto" src="${p.photo}" alt="${p.nom}" onerror="this.style.display='none'">
+             <div class="badge"><div class="icone">${ICONES[p.icon]}</div></div>`
+          : `<div class="silhouette">${ICONES.owl.replace(/#1f3a5f|#a8201a/g,'#a89877')}</div>`
+        }
+      </div>
+      <div class="nom">${ouvert ? p.nom : 'Vous ferez bientôt sa connaissance'}</div>
+      <div class="role">${ouvert ? p.role : ''}</div>`;
+    carte.addEventListener('click', ()=> ouvert ? ouvrirFiche(p, carte) : ouvrirPass());
+    grille.appendChild(carte);
+  });
+}
+rendreGrille();
+
+/* ===================== FICHE PERSONNAGE ===================== */
+const voileFiche = document.getElementById('voileFiche');
+const feuilleFiche = document.getElementById('feuilleFiche');
+function ouvrirFiche(p, carte){
+  const icone = carte.querySelector('.icone');
+  icone.classList.add('play');
+  setTimeout(()=> icone.classList.remove('play'), 900);
+  let extra = '';
+  if(p.ajoutTier && estDebloque(p.ajoutTier)) extra += `<div class="ajout">${p.ajout}</div>`;
+  if((p.id==='celestin' || p.id==='louise') && estDebloque(ETOILE_TIER)) extra += `<div class="ajout">${AJOUT_ETOILE}</div>`;
+  feuilleFiche.innerHTML = `
+    <button class="ferm" aria-label="Fermer">×</button>
+    <img class="foto-fiche" src="${p.photo}" alt="${p.nom}" onerror="this.style.display='none'">
+    <h3>${p.nom}</h3>
+    <div class="sousrole">${p.role}</div>
+    ${p.bio}
+    ${p.citation ? `<div class="citation">${p.citation}</div>` : ''}
+    ${extra}`;
+  feuilleFiche.querySelector('.ferm').addEventListener('click', fermerVoiles);
+  setTimeout(()=> voileFiche.classList.add('show'), 250);
+}
+
+/* ===================== MOT DE PASSE ===================== */
+const voilePass = document.getElementById('voilePass');
+const champPass = document.getElementById('champPass');
+const erreurPass = document.getElementById('erreurPass');
+let modeBonus = false;
+
+function ouvrirPass(bonus){
+  modeBonus = !!bonus;
+  champPass.value=''; erreurPass.textContent='';
+  voilePass.classList.add('show');
+  setTimeout(()=>champPass.focus(),200);
+}
+document.getElementById('fermPass').addEventListener('click', fermerVoiles);
+
+document.getElementById('btnValider').addEventListener('click', validerPass);
+champPass.addEventListener('keydown', e=>{ if(e.key==='Enter') validerPass(); });
+
+function validerPass(){
+  const val = champPass.value.trim().toUpperCase();
+  if(!val){ return; }
+  if(modeBonus){
+    if(val===MOT_BONUS){ fermerVoiles(); ouvrirBonus(); }
+    else erreurGraphique();
+    return;
+  }
+  let tierTrouve = null;
+  for(const t in MOTS_DE_PASSE){ if(!estDebloque(+t) && MOTS_DE_PASSE[t]===val){ tierTrouve=+t; break; } }
+  if(tierTrouve){ debloquerTier(tierTrouve); fermerVoiles(); rendreGrille(); }
+  else erreurGraphique();
+}
+function erreurGraphique(){
+  erreurPass.textContent = 'Ce mot ne correspond à aucun secret pour l\u2019instant.';
+  const feuille = voilePass.querySelector('.feuille'); feuille.classList.remove('shake'); void feuille.offsetWidth; feuille.classList.add('shake');
+}
+
+/* ===================== BONUS — carnet de bal ===================== */
+document.getElementById('etoileSecrete').addEventListener('click', ()=> ouvrirPass(true));
+
+function ouvrirBonus(){
+  feuilleFiche.innerHTML = `
+    <button class="ferm" aria-label="Fermer">×</button>
+    <div class="bonus-contenu">
+      <h3>Le carnet de bal</h3>
+      <p>Une dernière page, glissée entre les autres.</p>
+      <div class="siecle">Toulouse, près d'un siècle plus tard.</div>
+      <p>Les mêmes rues, la même Garonne, et une dernière danse qui, cette fois, ne s'arrête pas.</p>
+    </div>`;
+  feuilleFiche.querySelector('.ferm').addEventListener('click', fermerVoiles);
+  setTimeout(()=> voileFiche.classList.add('show'), 50);
+}
+
+function fermerVoiles(){
+  voileFiche.classList.remove('show');
+  voilePass.classList.remove('show');
+}
+voileFiche.addEventListener('click', e=>{ if(e.target===voileFiche) fermerVoiles(); });
+voilePass.addEventListener('click', e=>{ if(e.target===voilePass) fermerVoiles(); });
+
+/* ===================== Réinitialisation discrète (appui long sur le pied de page) ===================== */
+let pressTimer;
+document.querySelector('footer').addEventListener('touchstart', ()=>{ pressTimer=setTimeout(()=>{ if(confirm('Réinitialiser tous les secrets déverrouillés ?')){ localStorage.removeItem(cle); rendreGrille(); } },1800); });
+document.querySelector('footer').addEventListener('touchend', ()=> clearTimeout(pressTimer));
+document.querySelector('footer').addEventListener('mousedown', ()=>{ pressTimer=setTimeout(()=>{ if(confirm('Réinitialiser tous les secrets déverrouillés ?')){ localStorage.removeItem(cle); rendreGrille(); } },1800); });
+document.querySelector('footer').addEventListener('mouseup', ()=> clearTimeout(pressTimer));
+</script>
+</body>
+</html>
