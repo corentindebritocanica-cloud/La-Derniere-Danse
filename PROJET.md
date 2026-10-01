@@ -162,7 +162,7 @@ Personnages, décors et musique sont partagés : une modification faite une fois
 | Fichier | Contenu |
 |---|---|
 | `film/lib/moteur.js` | Outils communs, cartons de cinéma muet, grain de pellicule, lecteur (lecture, son, plein écran) |
-| `film/lib/personnages.js` | Pantins de Célestin et Louise (poses : debout, timide, invite, tenue, bras levé, promenade, renversé, assis…), la Mini, Léon, Chopin |
+| `film/lib/personnages.js` | Pantins de Célestin et Louise (poses : debout, timide, invite, tenue, bras levé, promenade, renversé, assis, peint…), la Mini, Léon, Maurice, Chopin |
 | `film/lib/decors.js` | Ciel de nuit et étoiles (avec les Gémeaux), silhouette de Toulouse, collines et cyprès, scène du Cabaret des Étoiles, public, soleil art déco |
 | `film/lib/musique.js` | Instruments (piano, contrebasse, batterie, trompette, violon, cloches, gramophone, projecteur) et le thème « le morceau sans nom » |
 | `film/src/plan-XX.js` | Le déroulé propre à chaque plan (chorégraphie, temps, partition) |
@@ -182,7 +182,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | 01 | 0:00–0:20 | Ouverture : soleil art déco, étoile rouge, titre. Gramophone puis trompette seule. **Réalisé.** |
 | 02 | 0:20–0:42 | Toulouse la nuit, Garonne, Pont-Neuf ; travelling jusqu'à la fenêtre en demi-lune où Célestin peint. **Réalisé.** |
 | 03 | 0:42–1:05 | Louise lit Freud à la bougie, Chopin à ses pieds ; elle part « à sa leçon de piano ». **Réalisé.** |
-| 04 | 0:55–1:15 | Cabaret des Étoiles, Léon, Maurice tire au sort : le peintre et la débutante. Carton « Samedi 14 décembre ». |
+| 04 | 1:05–1:25 | Cabaret des Étoiles, Léon, Maurice tire au sort : le peintre et la débutante. Carton « Samedi 14 décembre ». **Réalisé.** |
 | 05 | 1:15–1:50 | La danse qui n'existe pas encore. **Réalisé.** |
 
 **Acte II — Les nuits volées** (1:50 → 3:15, ch. 4 à 8)
@@ -217,7 +217,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
 | Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
 
-### Plans réalisés (5/13)
+### Plans réalisés (6/13) — l'acte I est complet
 
 **Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
 1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
@@ -241,6 +241,14 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 5. Dans la nuit bleue, elle prend son manteau et ses partitions « PIANO » ; l'alibi s'écrit à la main : « leçon de piano chez madame Castaing ».
 6. La porte s'entrouvre sur la lumière du couloir et se referme. Dans le noir, il ne reste que les yeux jaunes de Chopin, qui cligne.
 
+**Plan 04 — Le tirage au sort** (20 s) · https://claude.ai/artifact/HVcQ2emeSSPQm1fkdffTi4 · `film/plan-04-tirage.html`
+1. Carton « Samedi 14 décembre. Soir de concours. »
+2. Rue des Teinturiers : façade de brique, l'étoile rouge et l'enseigne au néon s'allument en grésillant ; l'affiche « Grand concours de danse » (la même que dans l'enveloppe 0) ; ampoules qui clignotent autour de la porte ; jazz étouffé derrière.
+3. On fonce vers la porte, éclair doré, on est dedans.
+4. Maurice (nouveau personnage dans les fichiers communs) tinte son verre, roulement de caisse claire, il tire un premier papier de son haut-de-forme : « CONFIRMÉ · le peintre ». Fanfare de Léon. Le projecteur trouve Célestin dans le public ; il se lève et lève la main.
+5. Deuxième papier : « DÉBUTANTE · Mlle L. Sarrail ». Le projecteur trouve Louise, timide, qui relève la tête.
+6. Les deux papiers s'envolent et tombent vers nous au ralenti.
+
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».
 2. La Mini arrive sur la route ; décors en couches, Saint-Sernin à l'horizon ; trompette.
@@ -262,7 +270,7 @@ Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
 ### Prochaines étapes du film
 
 - [x] Regrouper personnages, décors et musique en fichiers communs.
-- [ ] Animer les plans restants : 04, 06, 07, 08, 09, 11, 12, 13.
+- [ ] Animer les plans restants : 06, 07, 08, 09, 11, 12, 13.
 - [ ] Tester l'export en vidéo MP4.
 - [ ] Assembler le film complet avec le thème musical continu.
 - [ ] Voix off (facultatif, enregistrée par Corentin).

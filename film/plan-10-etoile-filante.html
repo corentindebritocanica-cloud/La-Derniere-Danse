@@ -357,6 +357,34 @@ L.leon=function(c,x,y,leve,saut){
   c.fillStyle=L.C.or;c.beginPath();c.moveTo(-9,56);c.lineTo(9,56);c.lineTo(3,42);c.lineTo(-3,42);c.closePath();c.fill();c.restore();
 };
 
+/* Maurice, patron du Cabaret des Étoiles : tout en rondeur, moustache claire, nœud papillon rouge,
+   chaîne de montre dorée. o = {main:{x,y} (main droite, coordonnées locales depuis les pieds), chapeau:true, rire 0..1}.
+   Renvoie la position de la main droite. */
+L.maurice=function(c,x,sol,o){
+  o=o||{};const col='#120d0a',r=(o.rire||0)*Math.abs(Math.sin((o.t||0)*11))*4;
+  c.save();c.translate(x,sol);c.fillStyle=col;c.strokeStyle=col;c.lineCap='round';
+  c.fillRect(-30,-64,24,64);c.fillRect(6,-64,24,64);
+  c.beginPath();c.ellipse(-20,-2,18,6,0,0,7);c.fill();c.beginPath();c.ellipse(20,-2,18,6,0,0,7);c.fill();
+  c.beginPath();c.ellipse(0,-118-r,48,56,0,0,7);c.fill();
+  c.strokeStyle=L.C.or;c.lineWidth=1.6;c.beginPath();c.moveTo(-26,-110-r);c.quadraticCurveTo(0,-92-r,22,-112-r);c.stroke();
+  c.fillStyle=L.C.or;c.beginPath();c.arc(22,-112-r,3,0,7);c.fill();
+  c.fillStyle=col;c.fillRect(-10,-178-r,20,12);
+  c.beginPath();c.arc(0,-194-r,21,0,7);c.fill();
+  c.beginPath();c.ellipse(0,-210-r,22,9,0,Math.PI,0);c.fill();
+  c.fillStyle='#e8dcc2';c.beginPath();c.moveTo(-18,-186-r);c.quadraticCurveTo(-9,-194-r,0,-188-r);c.quadraticCurveTo(9,-194-r,18,-186-r);c.quadraticCurveTo(9,-180-r,0,-184-r);c.quadraticCurveTo(-9,-180-r,-18,-186-r);c.fill();
+  c.fillStyle=L.C.rouge;c.beginPath();c.moveTo(-12,-170-r);c.lineTo(0,-165-r);c.lineTo(-12,-160-r);c.closePath();c.fill();c.beginPath();c.moveTo(12,-170-r);c.lineTo(0,-165-r);c.lineTo(12,-160-r);c.closePath();c.fill();
+  // bras gauche : tient le chapeau haut-de-forme retourné devant lui
+  c.strokeStyle=col;c.lineWidth=13;c.beginPath();c.moveTo(-40,-148-r);c.lineTo(-50,-110);c.lineTo(-20,-96);c.stroke();
+  if(o.chapeau!==false){c.fillStyle='#050403';c.fillRect(-40,-96,44,40);c.beginPath();c.ellipse(-18,-96,32,7,0,0,7);c.fill();
+    c.fillStyle='#2a1d14';c.beginPath();c.ellipse(-18,-96,22,4,0,0,7);c.fill();c.fillStyle=L.C.rouge;c.fillRect(-40,-66,44,5)}
+  // bras droit
+  const m=o.main||{x:52,y:-96};
+  c.strokeStyle=col;c.lineWidth=13;c.beginPath();c.moveTo(40,-148-r);const ex=(40+m.x)/2+18,ey=(-148-r+m.y)/2+10;c.quadraticCurveTo(ex,ey,m.x,m.y);c.stroke();
+  c.fillStyle=col;c.beginPath();c.arc(m.x,m.y,7,0,7);c.fill();
+  c.restore();
+  return{x:x+m.x,y:sol+m.y};
+};
+
 /* Chopin, grand chat gris assis, de face. queue = phase, cligne = 0..1 */
 L.chopin=function(c,x,y,s,queue,cligne){
   c.save();c.translate(x,y);c.scale(s,s);const g=L.C.grisChat;

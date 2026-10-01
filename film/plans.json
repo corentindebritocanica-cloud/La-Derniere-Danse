@@ -23,6 +23,14 @@
     "DESCRIPTION": "Plan animé : Louise lit Freud à la bougie, cache le livre, souffle la bougie et s'éclipse ; Chopin reste dans le noir",
     "NOTE": "Freud finit sous l'oreiller, les partitions servent d'alibi, et dans le noir il ne reste que les yeux jaunes de Chopin."
   },
+  "04": {
+    "fichier": "plan-04-tirage.html",
+    "TITRE": "Le tirage au sort",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 04",
+    "SOUSTITRE": "Cabaret des Étoiles, rue des Teinturiers. Vingt secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : l'enseigne au néon du cabaret, puis Maurice tire au sort le peintre et la débutante",
+    "NOTE": "L'affiche du concours est la même que celle de l'enveloppe 0. Le projecteur trouve Célestin, puis Louise, dans le public."
+  },
   "05": {
     "fichier": "plan-05-danse.html",
     "TITRE": "La danse qui n'existe pas encore",
