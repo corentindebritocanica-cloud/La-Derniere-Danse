@@ -162,7 +162,7 @@ Personnages, décors et musique sont partagés : une modification faite une fois
 | Fichier | Contenu |
 |---|---|
 | `film/lib/moteur.js` | Outils communs, cartons de cinéma muet, grain de pellicule, lecteur (lecture, son, plein écran) |
-| `film/lib/personnages.js` | Pantins de Célestin et Louise (poses : debout, timide, invite, tenue, bras levé, promenade, renversé, assis, peint…), la Mini, Léon, Maurice, Chopin |
+| `film/lib/personnages.js` | Pantins de Célestin et Louise (poses : debout, timide, invite, tenue, bras levé, promenade, renversé, assis, peint…), la Mini, Léon, Maurice, Amélie, Chopin |
 | `film/lib/decors.js` | Ciel de nuit et étoiles (avec les Gémeaux), silhouette de Toulouse, collines et cyprès, scène du Cabaret des Étoiles, public, soleil art déco |
 | `film/lib/musique.js` | Instruments (piano, contrebasse, batterie, trompette, violon, cloches, gramophone, projecteur) et le thème « le morceau sans nom » |
 | `film/src/plan-XX.js` | Le déroulé propre à chaque plan (chorégraphie, temps, partition) |
@@ -190,7 +190,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Plan | Temps | Contenu |
 |---|---|---|
 | 06 | 1:58–2:21 | Marche jusqu'à Purpan, les réverbères s'allument à leur passage. **Réalisé.** |
-| 07 | 2:15–2:35 | Écran partagé : Célestin peint le portrait / Louise enfermée. Carton « Élisabeth ! ». |
+| 07 | 2:21–2:43 | Écran partagé : Célestin peint le portrait / Louise enfermée. Carton « Élisabeth ! ». **Réalisé.** |
 | 08 | 2:35–2:55 | Évasion par la glycine, la Mini attend phares allumés. |
 | 09 | 2:55–3:15 | Premier baiser : deux profils qui deviennent une seule ombre, fond rouge, « 15 décembre ». |
 
@@ -217,7 +217,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
 | Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
 
-### Plans réalisés (7/13) — l'acte I est complet
+### Plans réalisés (8/13) — l'acte I est complet
 
 **Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
 1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
@@ -259,6 +259,14 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 
 *Les répliques sont inventées pour le film : à ajuster si elles ne collent pas au roman.*
 
+**Plan 07 — Le portrait et la chambre fermée** (22 s) · https://claude.ai/artifact/PyBENh3VDyeHMTJViiMCWu · `film/plan-07-portrait.html`
+1. Carton « Le lendemain soir. Il la peint de mémoire. »
+2. Le grenier de Célestin : il peint Louise au bleu de Prusse, trait après trait (ovale, carré à la garçonne, frange, cou) ; son bras suit le pinceau.
+3. L'écran se partage (filet doré) : à droite, la fenêtre de Louise à Purpan, la glycine sur le mur. Une seule lune, à cheval sur les deux moitiés.
+4. La porte s'ouvre : Amélie (nouveau personnage commun) pointe du doigt. « Élisabeth ! » en lettres rouges qui tremblent, accord grinçant.
+5. Gros plan sur la serrure : la clé tourne « à double tour », deux déclics.
+6. Louise souffle sur la vitre et y trace une étoile du doigt ; à gauche, Célestin peint les yeux du petit hibou en dernier, puis lève la tête vers la lune. Le thème au violon.
+
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».
 2. La Mini arrive sur la route ; décors en couches, Saint-Sernin à l'horizon ; trompette.
@@ -280,7 +288,7 @@ Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
 ### Prochaines étapes du film
 
 - [x] Regrouper personnages, décors et musique en fichiers communs.
-- [ ] Animer les plans restants : 07, 08, 09, 11, 12, 13.
+- [ ] Animer les plans restants : 08, 09, 11, 12, 13.
 - [ ] Tester l'export en vidéo MP4.
 - [ ] Assembler le film complet avec le thème musical continu.
 - [ ] Voix off (facultatif, enregistrée par Corentin).

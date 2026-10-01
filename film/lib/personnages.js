@@ -158,6 +158,23 @@ L.maurice=function(c,x,sol,o){
   return{x:x+m.x,y:sol+m.y};
 };
 
+/* Amélie Sarrail, la grand-mère : chignon haut, robe longue, ras-de-cou de perles.
+   o = {F (sens), s (échelle), pointe 0..1 (bras tendu, doigt accusateur), tempe 0..1 (main sur la tempe : la migraine stratégique)} */
+L.amelie=function(c,x,sol,o){
+  o=o||{};const F=o.F||1,s=o.s||1,col='#100b09';
+  c.save();c.translate(x,sol);c.scale(s,s);c.fillStyle=col;c.strokeStyle=col;c.lineCap='round';c.lineJoin='round';
+  c.beginPath();c.moveTo(-14,-118);c.lineTo(14,-118);c.lineTo(36,0);c.lineTo(-36,0);c.closePath();c.fill();
+  c.beginPath();c.moveTo(-15,-170);c.lineTo(15,-170);c.lineTo(13,-116);c.lineTo(-13,-116);c.closePath();c.fill();
+  c.fillRect(-5,-184,10,16);c.beginPath();c.arc(F*2,-196,13,0,7);c.fill();
+  c.beginPath();c.arc(-F*4,-214,9,0,7);c.fill();
+  c.fillStyle='#e8dcc2';[-6,-2,2,6].forEach(d=>{c.beginPath();c.arc(d,-180,1.3,0,7);c.fill()});
+  const p=o.pointe||0,tp=o.tempe||0;c.lineWidth=7;
+  const ap=lerp(.25,1.75,p);c.beginPath();c.moveTo(F*6,-164);c.lineTo(F*(6+Math.sin(ap)*30),-164+Math.cos(ap)*30);c.lineTo(F*(6+Math.sin(ap)*58),-164+Math.cos(ap)*58-(p*6));c.stroke();
+  if(tp>0){c.beginPath();c.moveTo(-F*6,-164);c.lineTo(-F*(14+10*tp),-150-20*tp);c.lineTo(F*lerp(-12,-4,tp),lerp(-130,-198,tp));c.stroke()}
+  else{c.beginPath();c.moveTo(-F*6,-164);c.lineTo(-F*12,-136);c.lineTo(-F*6,-112);c.stroke()}
+  c.restore();
+};
+
 /* Chopin, grand chat gris assis, de face. queue = phase, cligne = 0..1 */
 L.chopin=function(c,x,y,s,queue,cligne){
   c.save();c.translate(x,y);c.scale(s,s);const g=L.C.grisChat;

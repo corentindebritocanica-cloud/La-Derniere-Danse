@@ -47,6 +47,14 @@
     "DESCRIPTION": "Plan animé : Célestin et Louise marchent côte à côte dans la nuit, les réverbères s'allument à leur passage, jusqu'au portail de Purpan",
     "NOTE": "Chaque réverbère s'allume quand ils passent. Sur le mur de Purpan, la glycine attend déjà le chapitre 7."
   },
+  "07": {
+    "fichier": "plan-07-portrait.html",
+    "TITRE": "Le portrait et la chambre fermée",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 07",
+    "SOUSTITRE": "Le grenier de Célestin et la chambre de Purpan. Vingt-deux secondes, avec le son.",
+    "DESCRIPTION": "Plan animé en écran partagé : Célestin peint Louise de mémoire pendant que la grand-mère l'enferme à double tour",
+    "NOTE": "Le portrait se peint trait après trait au bleu de Prusse, les yeux du petit hibou en dernier. Une seule lune éclaire les deux moitiés de l'écran."
+  },
   "10": {
     "fichier": "plan-10-etoile-filante.html",
     "TITRE": "L'étoile filante",
