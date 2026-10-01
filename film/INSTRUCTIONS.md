@@ -175,46 +175,18 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 | 03 Purpan | 2 | `plan-03-purpan.html` | https://claude.ai/artifact/NRF43SQmRMwvM5ioeHAiG8 | ✅ refait |
 | 04 Le tirage | 3 (début) | `plan-04-tirage.html` | https://claude.ai/artifact/HVcQ2emeSSPQm1fkdffTi4 | ✅ refait |
 | 05 La danse | 3 (fin) | `plan-05-danse.html` | https://claude.ai/artifact/8i5uzu5MYxhB1KYspFrEjU | ✅ refait (liberté : fil d'or au sol) |
-| 06 L'heure des hiboux | 4 | `plan-06-marche.html` | https://claude.ai/artifact/933jod6ATQTFY5Mm2NxAVz | 🟡 **réécrit, pas encore publié** (voir ci-dessous) |
+| 06 L'heure des hiboux | 4 | `plan-06-marche.html` | https://claude.ai/artifact/933jod6ATQTFY5Mm2NxAVz | ✅ refait et publié (perron ajouté devant la façade) |
 | 07 Le portrait / enfermée | 5 | `plan-07-portrait.html` | https://claude.ai/artifact/PyBENh3VDyeHMTJViiMCWu | ❌ à refaire (écarts dans PROJET.md) |
 | 08 La glycine | 7 | `plan-08-glycine.html` | https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC | ❌ à refaire |
 | 09 Soirée des lendemains | 8 | — | — | ⬜ à créer (nouvel artefact) |
 | 10 L'étoile filante | 9 | `plan-10-etoile-filante.html` | https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy | ❌ à refaire |
 | 11, 12, épilogue | 10–12 | — | — | ⬜ à créer (voir storyboard) |
 
-### Plan 06 : où on en est
+### Plan 06 : terminé (1er octobre)
 
-`src/plan-06.js` a été réécrit pour le chapitre 4. Il dure 79 s. Il se construit et ne produit aucune erreur JS.
-
-**Scènes**
-
-| Scène | Temps | Contenu |
-|---|---|---|
-| A | 3–14,4 s | Sortie du cabaret, givre : « Où habitez-vous ? »… « Alors on marche. » |
-| B1 | 14,4–20,2 s | Rue de la République, fenêtre en demi-lune éteinte, il la montre du doigt. |
-| B2 | 20,2–27,2 s | Avenue de Grande-Bretagne, platanes, Cartoucherie : « Je crois que je cherche un visage. » |
-| B3 | 27,2–35,4 s | Carrefour, réverbère qui grésille : « D'étouffement, je crois. » |
-| C | 35,4–49,4 s | Banc près du lavoir, mousseux au goulot : « Un petit hibou. » Rire de Louise. |
-| D | 49,4–73 s | Purpan, la grille : « Pour les hiboux, si. » Elle traverse le jardin, ils lèvent la main. |
-| Fin | après 73 s | Carton « Il savait enfin quoi peindre. » |
-
-**Reste à corriger avant de publier** (constaté sur la planche-contact) :
-
-Scène D, Purpan :
-- La maison est trop petite et trop loin. Il faut l'agrandir (KM ≈ 0,6) et faire commencer l'allée de platanes à la grille.
-- La lueur de la lanterne est trop forte et masque la porte. La réduire et la placer au-dessus d'un **perron de six marches**.
-- Le livre donne des **volets gris** et une **grille de fer forgé peinte en vert** ; dans le plan, la grille est noire.
-- À 71 s, Louise est déjà invisible quand elle lève la main. Il faut qu'elle reste visible au coin de la maison, lève la main, puis disparaisse.
-
-Scène B1 :
-- Le couple masque l'enseigne « BOULANGERIE · FABRE ». Le décaler, ou faire passer le couple devant la vitrine plus tard.
-
-Toutes les scènes :
-- Vérifier sur la planche que les répliques ne chevauchent pas la lueur des réverbères.
-
-**Après correction** :
-- Publier sur l'artefact du plan 06.
-- Mettre à jour `plans.json` (entrée `06` : titre « L'heure des hiboux », durée, description, note) et le tableau ci-dessus.
+79 s, six tableaux (rue des Teinturiers, rue de la République, avenue de Grande-Bretagne, carrefour, lavoir, Purpan) puis carton « Il savait enfin quoi peindre. »
+Décor partagé modifié : les volets de la maison Sarrail sont désormais **gris à lames** (`decors.js`), ce qui vaut aussi pour 03, 04, 07 et 08.
+Le perron de six marches est dessiné dans le plan 06 seulement (en avant de la façade, le plan coté reste intact). Grille de fer forgé verte : fonction `grille()` du plan 06, à reprendre pour 08 et 10.
 
 ## 6. Repères dans le roman (`roman/la-derniere-danse.txt`)
 

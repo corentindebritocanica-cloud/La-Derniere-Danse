@@ -114,7 +114,8 @@ L.maisonSarrail=function(c,o){
   c.strokeStyle='rgba(0,0,0,.2)';c.lineWidth=.5;for(let y=f.y+8;y<S.sol;y+=8){c.beginPath();c.moveTo(f.x,y);c.lineTo(f.x+f.w,y);c.stroke()}
   c.fillStyle='#4a3d30';c.fillRect(f.x-4,S.cordon-3,f.w+8,6);c.fillRect(f.x-6,f.y-4,f.w+12,6);
   const fen=(r,lum,ouv)=>{c.fillStyle=lum>0?L.mix('#0c0908','#c99a52',lum):'#0c0908';c.fillRect(r.x,r.y,r.w,r.h);
-    c.fillStyle='#2a1a10';const lw=r.w/2*(1-.85*(ouv||0));c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    c.fillStyle='#3b3f45';const lw=r.w/2*(1-.85*(ouv||0)); /* volets gris (ch. 4) */c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;for(let y=r.y+8;y<r.y+r.h;y+=9){c.beginPath();c.moveTo(r.x,y);c.lineTo(r.x+lw,y);c.moveTo(r.x+r.w-lw,y);c.lineTo(r.x+r.w,y);c.stroke()}
     if(lum>0&&lw>4){c.fillStyle=`rgba(255,200,120,${.35*lum})`;c.fillRect(r.x+3,r.y+3,lw-6,r.h-6);c.fillRect(r.x+r.w-lw+3,r.y+3,lw-6,r.h-6)}
     c.strokeStyle='#2a1a10';c.lineWidth=3;c.strokeRect(r.x,r.y,r.w,r.h);c.fillStyle='#4a3d30';c.fillRect(r.x-6,r.y+r.h,r.w+12,5)};
   S.etage.forEach((r,i)=>fen(r,i===S.louise?(o.lumLouise||0):0,i===S.louise?o.ouvre:0));

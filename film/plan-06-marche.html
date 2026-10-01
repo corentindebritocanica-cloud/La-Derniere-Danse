@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>La marche jusqu'à Purpan</title>
+<title>L'heure des hiboux</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
@@ -49,12 +49,12 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <div class="wrap">
   <header>
     <div class="eyebrow">LA DERNIÈRE DANSE · PLAN 06</div>
-    <h1>La marche jusqu'à Purpan</h1>
-    <p class="sub">De la rue des Teinturiers à Purpan, la nuit. Vingt-trois secondes, avec le son.</p>
+    <h1>L'heure des hiboux</h1>
+    <p class="sub">Chapitre 4. De la rue des Teinturiers à Purpan, de minuit à quatre heures moins dix. Soixante-dix-neuf secondes, avec le son.</p>
   </header>
 
   <div class="screen" id="screen">
-    <canvas id="film" width="1280" height="720" aria-label="Plan animé : Célestin et Louise marchent côte à côte dans la nuit, les réverbères s&#x27;allument à leur passage, jusqu&#x27;au portail de Purpan"></canvas>
+    <canvas id="film" width="1280" height="720" aria-label="Plan animé : Célestin offre son bras à Louise ; rue de la République, avenue de Grande-Bretagne, le réverbère qui grésille, le mousseux au goulot près du lavoir, « un petit hibou », puis la grille de Purpan."></canvas>
     <button class="play" id="play" aria-label="Lancer le plan">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>
     </button>
@@ -68,7 +68,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <button class="ctl" id="fs" type="button">Plein écran</button>
   </div>
 
-  <p class="note">Chaque réverbère s'allume quand ils passent. La maison de Purpan est celle du plan coté de l'enveloppe 3, glycine comprise.</p>
+  <p class="note">Répliques du chapitre 4, coupées mais mot pour mot. La maison est celle du plan coté de l'enveloppe 3 ; le perron de six marches, ajouté d'après le livre, est dessiné en avant de la façade. Liberté : une partie des échanges du livre (la mère, la Cartoucherie, le tango) n'est pas dite à l'écran.</p>
 </div>
 <script>
 /* La Dernière Danse — moteur commun des plans
@@ -552,7 +552,8 @@ L.maisonSarrail=function(c,o){
   c.strokeStyle='rgba(0,0,0,.2)';c.lineWidth=.5;for(let y=f.y+8;y<S.sol;y+=8){c.beginPath();c.moveTo(f.x,y);c.lineTo(f.x+f.w,y);c.stroke()}
   c.fillStyle='#4a3d30';c.fillRect(f.x-4,S.cordon-3,f.w+8,6);c.fillRect(f.x-6,f.y-4,f.w+12,6);
   const fen=(r,lum,ouv)=>{c.fillStyle=lum>0?L.mix('#0c0908','#c99a52',lum):'#0c0908';c.fillRect(r.x,r.y,r.w,r.h);
-    c.fillStyle='#2a1a10';const lw=r.w/2*(1-.85*(ouv||0));c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    c.fillStyle='#3b3f45';const lw=r.w/2*(1-.85*(ouv||0)); /* volets gris (ch. 4) */c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;for(let y=r.y+8;y<r.y+r.h;y+=9){c.beginPath();c.moveTo(r.x,y);c.lineTo(r.x+lw,y);c.moveTo(r.x+r.w-lw,y);c.lineTo(r.x+r.w,y);c.stroke()}
     if(lum>0&&lw>4){c.fillStyle=`rgba(255,200,120,${.35*lum})`;c.fillRect(r.x+3,r.y+3,lw-6,r.h-6);c.fillRect(r.x+r.w-lw+3,r.y+3,lw-6,r.h-6)}
     c.strokeStyle='#2a1a10';c.lineWidth=3;c.strokeRect(r.x,r.y,r.w,r.h);c.fillStyle='#4a3d30';c.fillRect(r.x-6,r.y+r.h,r.w+12,5)};
   S.etage.forEach((r,i)=>fen(r,i===S.louise?(o.lumLouise||0):0,i===S.louise?o.ouvre:0));
@@ -691,11 +692,11 @@ function pave(c,y0,givre,ox){
   for(let r=0;r<6;r++){const off=((r%2)*20-(ox||0))%40;for(let x=off-40;x<W+40;x+=40){c.beginPath();c.ellipse(x,y0+22+r*20,17,7,0,0,7);c.stroke()}}
   if(givre){for(let k=0;k<160;k++){const x=((k*97.3-(ox||0))%W+W)%W,y=y0+8+((k*53)%110);c.fillStyle=`rgba(230,238,250,${.08+.1*((k*7)%5)/5})`;c.fillRect(x,y,2,1.5)}}
 }
-function reverbere(c,x,top,on){
+function reverbere(c,x,top,on,k){k=k==null?1:k;
   c.fillStyle='#0b0706';c.fillRect(x-3,top+28,6,SOL-top-28);c.fillRect(x-12,top+18,24,14);c.beginPath();c.moveTo(x-14,top+18);c.lineTo(x,top);c.lineTo(x+14,top+18);c.fill();
   c.fillStyle=`rgba(255,226,150,${.2+.8*on})`;c.fillRect(x-9,top+20,18,10);
   if(on>0){c.save();c.globalCompositeOperation='lighter';
-    const g=c.createRadialGradient(x,top+25,2,x,top+25,130);g.addColorStop(0,`rgba(255,214,130,${.6*on})`);g.addColorStop(1,'rgba(255,214,130,0)');c.fillStyle=g;c.beginPath();c.arc(x,top+25,130,0,7);c.fill();
+    const g=c.createRadialGradient(x,top+25,2,x,top+25,130);g.addColorStop(0,`rgba(255,214,130,${.6*on*k})`);g.addColorStop(1,'rgba(255,214,130,0)');c.fillStyle=g;c.beginPath();c.arc(x,top+25,130,0,7);c.fill();
     const p=c.createRadialGradient(x,SOL,2,x,SOL,170);p.addColorStop(0,`rgba(255,214,130,${.25*on})`);p.addColorStop(1,'rgba(255,214,130,0)');c.fillStyle=p;c.beginPath();c.ellipse(x,SOL,170,28,0,0,7);c.fill();c.restore()}
 }
 function platane(c,x,base,h,k,sc){ // platane nu, écorce tachée
@@ -722,7 +723,7 @@ function sceneA(c,t){
   L.ciel(c,0,300);L.etoiles(c,t,0,0,false,120);
   c.fillStyle='#2c1712';c.fillRect(0,120,W,SOL-120);c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=1;
   for(let y=126;y<SOL;y+=12){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();for(let x=((y/12)%2)*15;x<W;x+=30){c.beginPath();c.moveTo(x,y-12);c.lineTo(x,y);c.stroke()}}
-  c.save();c.translate(140,300);c.rotate(-.03);c.scale(.32,.32);L.afficheConcours(c);c.restore();
+  c.save();c.translate(60,300);c.rotate(-.03);c.scale(.32,.32);L.afficheConcours(c);c.restore();
   c.fillStyle='#0b0a0a';c.fillRect(470,170,340,86);c.strokeStyle='#3a3530';c.lineWidth=4;c.strokeRect(476,176,328,74);
   c.fillStyle=L.C.or;c.font="27px "+L.F.titre;c.textAlign='center';L.setLS(c,'3px');c.fillText('CABARET DES ÉTOILES',640,224);L.setLS(c,'0px');
   [[492,190],[788,190],[500,238],[780,238],[640,190]].forEach(([x,y],i)=>L.star(c,x,y,i===4?7:6,i===4?3:2.5,L.C.or));
@@ -781,9 +782,12 @@ function sceneB1(c,t){
     }}
   reverbere(c,1000-ox,330,1);
   pave(c,SOL,true,ox);
-  const x=lerp(80,640,seg(t,14.4,20.2));
-  const pt=Math.sin(Math.PI*seg(t,16.4,19.2));
-  const r=couple(c,x,(t-14.4)*9,.32,{pointe:clamp(pt*1.6,0,1)});
+  // ils arrivent par la gauche, s'arrêtent presque avant la boulangerie (l'enseigne reste lisible), il montre la fenêtre, puis ils repartent devant la vitrine
+  const s1=seg(t,14.4,16.6),s2=seg(t,16.6,19.2),s3=seg(t,19.2,20.2);
+  const x=s3>0?lerp(150,330,s3):s2>0?lerp(118,150,s2):lerp(-90,118,eoc(s1));
+  const ph=s2>0&&s3<=0?(16.6-14.4)*9+(t-16.6)*3:(t-14.4)*9,amp=s2>0&&s3<=0?.12:.32;
+  const pt=Math.sin(Math.PI*seg(t,16.6,19.2));
+  const r=couple(c,x,ph,amp,{pointe:clamp(pt*1.6,0,1)});
   bouteille(c,r.C.main,.1);
   heure(c,'RUE DE LA RÉPUBLIQUE',env(t,14.6,5.4));
 }
@@ -807,7 +811,7 @@ function sceneB2(c,t){
   pave(c,SOL,true,ox);
   // platanes nus, en rangée, tous les 300 px
   for(let k=-1;k<9;k++){const x=k*300+160-ox;if(x<-260||x>W+260)continue;platane(c,x,SOL,420,k+3,1)}
-  for(let k=0;k<5;k++){const x=k*600+460-ox;if(x<-200||x>W+200)continue;reverbere(c,x,360,1)}
+  for(let k=0;k<5;k++){const x=k*700+500-ox;if(x<-200||x>W+200)continue;reverbere(c,x,360,1,.55)}
   const r=couple(c,500,(t-20.2)*9,.32);
   bouteille(c,r.C.main,.1);
   souffles(c,t,LB2,{C:r.C.tete,L:r.L.tete},{C:1,L:1});
@@ -824,7 +828,7 @@ function sceneB3(c,t){
   c.fillStyle='#262019';c.fillRect(440,500,400,112);c.fillStyle='#3a3026';c.fillRect(436,494,408,8);
   c.fillStyle='#08100c';[[500,500,120],[620,500,150],[760,500,110]].forEach(([x,y,h])=>{c.beginPath();c.ellipse(x,y-h/2,18,h/2,0,0,7);c.fill()});
   const n=Math.floor(t*14),on=(t>28&&((n*7)%11<2||(n*13)%17===0))?.25:1;
-  reverbere(c,640,300,on);
+  reverbere(c,600,170,on);
   pave(c,SOL,true,0);
   const arr=seg(t,27.2,29.3);
   if(arr<1){const r=couple(c,lerp(380,560,eio(arr)),(t-27.2)*9*(1-arr*.6),.32*(1-arr));bouteille(c,r.C.main,.1);dire(c,t,LB3,{C:r.C.tete,L:r.L.tete});heure(c,'UN CARREFOUR',env(t,27.4,8));return}
@@ -874,56 +878,80 @@ function sceneC(c,t){
 }
 
 /* ---------- D. Purpan, l'allée de platanes, quatre heures moins dix ---------- */
+const KM=.6,HS=520,HX=640-390*KM,HY=HS-640*KM; // la maison du plan coté, au bout d'une courte allée
+const GX0=575,GW=130,GTOP=402,GBAS=600; // la grille de fer forgé peinte en vert
+function grille(c,ouv){
+  c.save();c.strokeStyle='#1f3a2c';c.fillStyle='#1f3a2c';c.lineWidth=3;
+  for(let x=4;x<W;x+=14){if(x>GX0-8&&x<GX0+GW+8)continue;c.beginPath();c.moveTo(x,GBAS);c.lineTo(x,GTOP+10);c.stroke();c.beginPath();c.moveTo(x-4,GTOP+12);c.lineTo(x,GTOP-4);c.lineTo(x+4,GTOP+12);c.fill()}
+  c.lineWidth=4;[[0,GX0-8],[GX0+GW+8,W]].forEach(([a,b])=>[GTOP+34,GBAS-30].forEach(y=>{c.beginPath();c.moveTo(a,y);c.lineTo(b,y);c.stroke()}));
+  c.strokeStyle='rgba(150,200,160,.18)';c.lineWidth=1;for(let x=5;x<W;x+=14){if(x>GX0-8&&x<GX0+GW+8)continue;c.beginPath();c.moveTo(x,GBAS);c.lineTo(x,GTOP+12);c.stroke()}
+  // piliers de pierre
+  [[GX0-22],[GX0+GW+6]].forEach(([x])=>{c.fillStyle='#4a4238';c.fillRect(x,GTOP-24,18,GBAS-GTOP+24);c.fillStyle='#5a5246';c.fillRect(x-4,GTOP-30,26,8)});
+  // le vantail, qui s'ouvre vers le jardin (ne grince pas)
+  c.translate(GX0+2,0);c.scale(1-.85*ouv,1);c.strokeStyle='#1f3a2c';c.fillStyle='#1f3a2c';c.lineWidth=3;
+  for(let x=6;x<GW-4;x+=12){c.beginPath();c.moveTo(x,GBAS);c.lineTo(x,GTOP+18);c.stroke();c.beginPath();c.moveTo(x-4,GTOP+20);c.lineTo(x,GTOP+4);c.lineTo(x+4,GTOP+20);c.fill()}
+  c.lineWidth=4;[GTOP+34,GBAS-30].forEach(y=>{c.beginPath();c.moveTo(0,y);c.lineTo(GW-4,y);c.stroke()});c.beginPath();c.arc(GW/2-2,(GTOP+GBAS)/2+8,18,0,7);c.stroke();
+  c.restore();
+}
+function lanterne(c,x,y){
+  c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(x,y,1,x,y,46);g.addColorStop(0,'rgba(235,225,200,.42)');g.addColorStop(1,'rgba(235,225,200,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,46,0,7);c.fill();c.restore();
+  c.fillStyle='#0b0706';c.fillRect(x-1,y-16,2,8);c.beginPath();c.moveTo(x-7,y-8);c.lineTo(x+7,y-8);c.lineTo(x+5,y+6);c.lineTo(x-5,y+6);c.closePath();c.fill();
+  c.fillStyle='rgba(250,232,190,.9)';c.fillRect(x-4,y-5,8,9);
+}
+function perron(c){ // six marches de pierre devant la porte
+  const px=HX+390*KM;
+  for(let k=0;k<6;k++){const y=HS+k*6,w=56+k*12;c.fillStyle=k%2?'#463e34':'#4c443a';c.fillRect(px-w/2,y,w,6);c.fillStyle='rgba(235,225,200,.12)';c.fillRect(px-w/2,y,w,1)}
+}
 const LD=[[52.3,'C','Maurice organise une soirée demain.',1.8],[54.2,'L','Demain, c’est ce soir.',1.5],[55.8,'L','Je ne sais pas si je pourrai.',1.6],
   [57.6,'L','Mais j’essaierai.',1.4],[59.5,'C','Bonne nuit, petit hibou.',1.6],[61.3,'L','Il est quatre heures du matin, monsieur le peintre.',2.1],
   [63.5,'L','Ce n’est plus la nuit.',1.5],[65.3,'C','Pour les hiboux, si.',1.7]];
-const KM=.42,HX=640-390*KM,HY=548-640*KM; // la maison du plan coté, au fond de l'allée
 function sceneD(c,t){
   L.ciel(c,0,540);L.etoiles(c,t,0,0,false,300);
-  c.fillStyle='#0d1712';c.fillRect(0,540,W,80);
-  // la maison noire ; seule une lanterne au-dessus du perron ; la fenêtre de sa chambre entrouverte. Glycine d'hiver, sans grappes.
+  // le jardin, givré
+  c.fillStyle='#0d1712';c.fillRect(0,HS-4,W,GBAS-HS+4);
+  // la maison noire ; seule une lanterne au-dessus du perron ; la fenêtre de sa chambre entrouverte. Glycine d'hiver.
   c.save();c.translate(HX,HY);c.scale(KM,KM);L.maisonSarrail(c,{lumLouise:0,ouvre:.25,grappes:false});c.restore();
-  const lx=HX+390*KM,ly=HY+478*KM;
-  c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(lx,ly,1,lx,ly,60);g.addColorStop(0,'rgba(255,214,130,.85)');g.addColorStop(1,'rgba(255,214,130,0)');c.fillStyle=g;c.beginPath();c.arc(lx,ly,60,0,7);c.fill();c.restore();
-  // l'allée de platanes, en perspective
-  for(let k=4;k>=0;k--){const s=lerp(.42,1.05,k/4),y=lerp(552,SOL+20,k/4);platane(c,640-lerp(200,520,k/4),y,330,k+1,s);platane(c,640+lerp(200,520,k/4),y,330,k+6,s)}
-  pave(c,SOL,true,0);
-  // la grille, haute, sans grincement
-  const ouv=eio(seg(t,67.2,67.6))*(1-eio(seg(t,68.6,69)));
+  perron(c);lanterne(c,HX+390*KM,HY+438*KM);
+  // l'allée, du perron à la grille
+  c.fillStyle='#29251e';c.beginPath();c.moveTo(HX+390*KM-46,HS+36);c.lineTo(HX+390*KM+46,HS+36);c.lineTo(GX0+GW,GBAS);c.lineTo(GX0,GBAS);c.closePath();c.fill();
+  for(let k=0;k<70;k++){const x=((k*131.7)%W),y=HS+4+((k*37)%(GBAS-HS-6));c.fillStyle='rgba(225,235,245,.09)';c.fillRect(x,y,2,1.5)}
+  // l'allée de platanes, qui commence à la grille
+  [[.78,570,215],[1.04,604,262]].forEach(([s,y,o],i)=>{platane(c,640-o,y,330,i+1,s);platane(c,640+o,y,330,i+6,s)});
   // Louise : arrivée, face à face, puis la grille, le jardin en courant sur la pointe des pieds, le coin de la maison
-  const arr=seg(t,49.5,51.8),fuite=seg(t,67.5,70.2);
-  let rc,rl;
-  if(arr<1){const r=couple(c,lerp(220,560,eio(arr)),(t-49.5)*9*(1-arr*.5),.32*(1-arr));rc=r.C;rl=r.L;bouteille(c,rc.main,.1)}
+  const arr=seg(t,49.5,51.8),f1=seg(t,67.4,68.1),f2=seg(t,68.1,70);
+  const ouv=eio(seg(t,67.5,67.9))*(1-eio(seg(t,68.8,69.2)));
+  let rc,rl=null,dedans=null;
+  const CX=470;
+  // Louise dans le jardin (derrière la grille)
+  if(f2>0&&t<72.6){
+    const coin=HX+(S.facade.x+S.facade.w)*KM+14,u=eio(f2);
+    let x=lerp(GX0+GW/2,coin,u);const sol=lerp(GBAS+4,HS+2,u),s=lerp(.92,.6,u);
+    const dis=seg(t,72.1,72.5);x+=dis*30;
+    const pl=f2<1?L.pas(P.debout,(t-68.1)*13,.26,0):JSON.parse(JSON.stringify(P.debout));
+    const tour=seg(t,70.1,70.5),F=lerp(1,-1,eio(tour));
+    const lv=seg(t,71.3,71.7)*(1-seg(t,72.2,72.5));if(lv>0)pl.aF=[lerp(.12,2.6,lv),lerp(.15,.2,lv)];
+    c.save();c.globalAlpha=1-dis;dedans=L.pantin(c,{x,F:Math.abs(F)<.02?.02:F,p:pl,s,sol,levres:true},'L');c.restore();
+  }
+  pave(c,GBAS,true,0);
+  grille(c,ouv);
+  if(arr<1){const r=couple(c,lerp(200,CX,eio(arr)),(t-49.5)*9*(1-arr*.5),.32*(1-arr));rc=r.C;rl=r.L}
   else{
     const pc=JSON.parse(JSON.stringify(P.debout));pc.hd=-.06;
-    // les mains dans les poches à la fin, puis il lève la main
+    // les mains dans les poches, immobile ; il lève la main le premier
     if(t>67)pc.aF=[.15,.6],pc.aB=[-.05,.6];
-    const leve=seg(t,71.1,71.5)*(1-seg(t,72.6,73));if(leve>0)pc.aF=[lerp(.15,2.6,leve),lerp(.6,.3,leve)];
-    rc=L.pantin(c,{x:520,F:1,p:pc},'C');
-    if(fuite<=0){const pl=JSON.parse(JSON.stringify(P.debout));pl.aF=[.2,.3];pl.hd=-.08;rl=L.pantin(c,{x:610,F:-1,p:pl,levres:true},'L')}
+    if(t>68.2)pc.hd=-.16;
+    const leve=seg(t,70.8,71.2)*(1-seg(t,72.5,72.9));if(leve>0)pc.aF=[lerp(.15,2.5,leve),lerp(.6,.3,leve)];
+    rc=L.pantin(c,{x:CX,F:1,p:pc},'C');
+    if(f2<=0){
+      const ap=seg(t,51.8,52.4);let pl,x,F;
+      if(f1>0){x=lerp(CX+90,GX0+GW/2,eio(f1));pl=L.pas(P.debout,(t-67.4)*13,.26,0);F=1}
+      else{x=lerp(CX+34,CX+90,eio(ap));pl=ap<1?L.pas(P.debout,(t-51.8)*10,.2,0):JSON.parse(JSON.stringify(P.debout));pl.aF=[.2,.3];pl.hd=-.08;F=lerp(1,-1,eio(seg(t,52,52.4)))}
+      rl=L.pantin(c,{x,F:Math.abs(F)<.02?.02:F,p:pl,levres:true},'L');
+    }
   }
-  if(fuite>0&&t<72.8){
-    // elle file vers le coin gauche de la maison (S.facade.x), en rapetissant
-    const u=eio(fuite),cxh=HX+(S.facade.x+10)*KM;
-    const x=lerp(640,cxh,u),sol=lerp(SOL,548,u),s=lerp(1,KM*1.15,u);
-    let pl=fuite<1?L.pas(P.debout,(t-67.5)*13,.28,0):JSON.parse(JSON.stringify(P.debout));
-    let F=-1;
-    if(t>70.5)F=lerp(-1,1,eio(seg(t,70.5,70.9))); // elle se retourne
-    const lv=seg(t,70.9,71.3)*(1-seg(t,72,72.3));if(lv>0)pl.aF=[lerp(.12,2.6,lv),lerp(.15,.2,lv)];
-    c.save();c.globalAlpha=1-seg(t,72.3,72.8);rl=L.pantin(c,{x,F:F===0?.01:F,p:pl,s,sol,levres:true},'L');c.restore();
-  }
-  // grille au premier plan, entre eux et la maison
-  c.save();c.strokeStyle='#07090c';c.lineWidth=3;
-  const gx0=580,gw=140;
-  for(let x=0;x<W;x+=14){if(x>gx0&&x<gx0+gw)continue;c.beginPath();c.moveTo(x,SOL-6);c.lineTo(x,420);c.stroke();c.beginPath();c.moveTo(x-3,424);c.lineTo(x,410);c.lineTo(x+3,424);c.fill()}
-  c.lineWidth=4;[[0,gx0],[gx0+gw,W]].forEach(([a,b])=>[450,560].forEach(y=>{c.beginPath();c.moveTo(a,y);c.lineTo(b,y);c.stroke()}));
-  c.fillStyle='#1e1915';c.fillRect(gx0-14,400,16,SOL-400);c.fillRect(gx0+gw-2,400,16,SOL-400);
-  c.translate(gx0+2,0);c.scale(1-.85*ouv,1);c.lineWidth=3;for(let x=6;x<gw-4;x+=12){c.beginPath();c.moveTo(x,SOL-6);c.lineTo(x,430);c.stroke()}
-  c.lineWidth=4;[450,560].forEach(y=>{c.beginPath();c.moveTo(0,y);c.lineTo(gw-4,y);c.stroke()});c.beginPath();c.arc(gw/2-2,505,16,0,7);c.stroke();
-  c.restore();
-  if(rc&&rl){souffles(c,t,LD,{C:rc.tete,L:rl.tete},{C:1,L:-1});
+  if(rc&&rl){const FL=t<52.2||t>67.4?1:-1;souffles(c,t,LD,{C:rc.tete,L:rl.tete},{C:1,L:FL});
     // leurs souffles se mêlent entre eux, même sans parler
-    if(arr>=1&&t<67){const m={x:(rc.tete.x+rl.tete.x)/2,y:rc.tete.y+10};const a=.12+.06*Math.sin(t*2.2);c.fillStyle=`rgba(225,232,240,${a})`;c.beginPath();c.ellipse(m.x,m.y,14+6*Math.sin(t*1.7),7,0,0,7);c.fill()}
+    if(arr>=1&&t>52.4&&t<67){const m={x:(rc.tete.x+rl.tete.x)/2,y:rc.tete.y+10};const a=.12+.06*Math.sin(t*2.2);c.fillStyle=`rgba(225,232,240,${a})`;c.beginPath();c.ellipse(m.x,m.y,14+6*Math.sin(t*1.7),7,0,0,7);c.fill()}
     dire(c,t,LD,{C:rc.tete,L:rl.tete})}
   heure(c,'PURPAN · QUATRE HEURES MOINS DIX',env(t,49.6,6));
 }
