@@ -311,7 +311,7 @@ L.pantin=function(c,st,kind,flare){
     if(st.levres&&aF>.3){c.fillStyle=L.C.rouge;c.beginPath();c.ellipse(F*10.5,7,2.6,1.6,0,0,7);c.fill();c.fillStyle=INK}
   }
   c.restore();c.restore();
-  return{tete:{x:st.x+s*Hc.x,y:hipY+s*Hc.y},main:{x:st.x+s*hF.x,y:hipY+s*hF.y},hanche:{x:st.x,y:hipY}};
+  return{tete:{x:st.x+s*Hc.x,y:hipY+s*Hc.y},main:{x:st.x+s*hF.x,y:hipY+s*hF.y},mainDos:{x:st.x+s*hB.x,y:hipY+s*hB.y},hanche:{x:st.x,y:hipY}};
 };
 
 /* La Mini (Citroën Type C jaune), tournée vers la droite.

@@ -1,120 +1,162 @@
-/* Plan 05 — La danse qui n'existe pas encore (33 s) */
+/* Plan 05 — La danse qui n'existe pas encore (58 s) — chapitre 3, seconde partie
+   Trois danses : un fox-trot (« Ne comptez pas »), un tango (l'erreur devenue figure, deux mesures de regard),
+   puis le morceau de Léon, lent, chaloupé, qui n'a pas de nom. « Faites-moi confiance. » Il l'envoie au bout de son bras
+   comme un cerf-volant, le long d'une ligne invisible, et la ramène. Silence, puis toute la salle se lève.
+   Ils ne gagnent pas ; Maurice leur donne une bouteille « pour la plus belle troisième danse ».
+   Interprétation visuelle (à signaler) : la ligne invisible apparaît en filet d'or sur le parquet. */
 (function(){
-const L=LDD,{clamp,lerp,eio,eoc,seg}=L,P=L.POSES,SOL=L.SOL,B=.5;
+const L=LDD,{clamp,lerp,eio,eoc,seg}=L,W=L.W,H=L.H,P=L.POSES,SOLP=640,S=1.05;
 
-/* ---------- chorégraphie ---------- */
-function danseurs(t){
-  let C={x:470,F:1,p:P.debout,z:0},Lo={x:820,F:-1,p:P.timide,z:1},flare=0;
-  const souffle=Math.sin(t*2.2)*.02;
-  if(t<7){C.p=L.melange(P.debout,P.debout,0);C.p.tA+=souffle;Lo.p=L.melange(P.timide,P.timide,0);Lo.p.tA+=souffle}
-  else if(t<10){
-    const w=seg(t,7,8.1);C.x=lerp(470,570,eio(w));C.p=w<1&&w>0?L.pas(P.debout,(t-7)*9,.32,0):P.debout;
-    C.p=L.melange(C.p,P.invite,eio(seg(t,8.1,8.7)));
-    Lo.p=L.melange(P.timide,P.debout,eio(seg(t,8.6,9.1)));
-    const lw=seg(t,9,9.7);Lo.x=lerp(820,684,eio(lw));if(lw>0&&lw<1)Lo.p=L.pas(Lo.p,(t-9)*9,.3,0);
-    const h=eio(seg(t,9.6,10));C.p=L.melange(C.p,P.tenue,h);Lo.p=L.melange(Lo.p,P.tenue,h);
+const TANGO_C={tA:-.12,hd:-.1,aF:[1.3,.35],aB:[1.15,.95],lF:[.42,-.08],lB:[-.5,.1]};
+const TANGO_L={tA:-.36,hd:-.32,aF:[1.6,.2],aB:[1.0,1.0],lF:[.62,-.2],lB:[-.3,.1]};
+const COUPLES=[{x:300,ph:0},{x:930,ph:1.7},{x:1110,ph:3.1}];
+
+function parole(c,s,x,y,a,taille){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font=(taille||27)+"px "+L.F.main;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(s,x,y);c.fillStyle='#fbf3e2';c.fillText(s,x,y);c.restore()}
+const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
+
+/* ---------- le couple ---------- */
+function couple(t){
+  let C={x:585,F:1,p:L.melange(P.tenue,P.tenue,0),s:S,sol:SOLP},Lo={x:695,F:-1,p:L.melange(P.tenue,P.tenue,0),s:S,sol:SOLP,levres:true},fil=null,flare=.1,ligne=0,yeux=0;
+  if(t<16){
+    // le fox-trot
+    const arret=t>6.15&&t<6.7,raide=t>6.7&&t<11.4,lib=eio(seg(t,11.4,12.6)),ph=(t-3.6)/.5*Math.PI;
+    const X=640+(arret?0:42*Math.sin((t-3.6)*.9));C.x=X-55;Lo.x=X+55;
+    const amp=arret?0:raide?.14:.3;
+    C.p=L.pas(P.tenue,ph,amp,0);Lo.p=L.pas(P.tenue,ph+Math.PI,amp,0);
+    if(arret){Lo.p.hd=.42;Lo.p.tA=.06}else if(raide){Lo.p.hd=.22;Lo.p.tA=.03}
+    if(t>11.5&&t<12.4)Lo.p.tA=-.14;
+    if(t>15.6){const u=eio(seg(t,15.6,16));C.p=L.melange(C.p,P.debout,u);Lo.p=L.melange(Lo.p,P.debout,u)}
+  }else if(t<17.4){
+    // la musique s'arrête : il ne lui lâche pas la main… puis il la lâche
+    const lache=eio(seg(t,16.8,17.3));C.x=600-lache*12;Lo.x=680+lache*12;
+    C.p=L.melange(P.debout,P.debout,0);Lo.p=L.melange(P.debout,P.debout,0);C.p.aF=[lerp(1.2,.15,lache),.1];Lo.p.aF=[lerp(1.2,.15,lache),.1];Lo.p.hd=-.08;
+  }else if(t<30.2){
+    // le tango
+    const ph=(t-17.6)/.62*Math.PI;let X=640+60*Math.sin((t-17.6)*.5);
+    const faux=eio(seg(t,20.2,20.9))*(1-eio(seg(t,21.8,22.3)));X+=faux*-90;
+    C.x=X-58;Lo.x=X+58;
+    const pose=seg(t,22.5,22.8)*(1-seg(t,25,25.3));
+    C.p=L.pas(TANGO_C,ph,.42*(1-pose),0);Lo.p=L.pas(TANGO_L,ph+Math.PI,.42*(1-pose),0);
+    const tour=seg(t,20.9,21.7);if(tour>0&&tour<1)Lo.F=-Math.cos(2*Math.PI*eio(tour));
+    if(pose>0){C.p=L.melange(C.p,{...TANGO_C,tA:-.18,hd:-.2,lF:[.55,-.05],lB:[-.6,.1]},pose);Lo.p=L.melange(Lo.p,{...TANGO_L,tA:-.5,hd:-.42,lF:[.85,-.15]},pose);C.x+=8*pose;Lo.x-=8*pose;yeux=pose}
+    if(t>29.6){const u=eio(seg(t,29.6,30.2));C.p=L.melange(C.p,P.debout,u);Lo.p=L.melange(Lo.p,P.debout,u)}
+  }else if(t<34.2){
+    // Léon lance le morceau sans nom ; Célestin écoute deux mesures, les yeux fermés
+    C.x=600;Lo.x=690;C.p=L.melange(P.debout,P.debout,0);Lo.p=L.melange(P.debout,P.debout,0);
+    C.p.hd=lerp(0,.35,eio(seg(t,31.4,31.8)))*(1-eio(seg(t,33,33.3)));Lo.p.hd=-.05;
+    const tend=eio(seg(t,33.4,34));C.p.aF=[lerp(.15,1.25,tend),lerp(.1,.15,tend)];
+    const prend=eio(seg(t,33.8,34.2));Lo.p.aF=[lerp(.15,1.25,prend),.15];
+  }else if(t<48.2){
+    // la troisième danse : la ligne invisible
+    const Xc=520;C.x=Xc;C.F=1;ligne=seg(t,34.3,35);
+    const per=2.6,u=((t-34.2)%per)/per,cyc=Math.floor((t-34.2)/per);
+    const d=70+130*Math.sin(Math.PI*u)**1.4;
+    Lo.x=Xc+d;const sortant=u<.5;
+    const tourne=sortant?0:1;Lo.F=sortant?(u<.08?-Math.cos(Math.PI*u/.08):1):(u<.58?Math.cos(Math.PI*(u-.5)/.08):-1);
+    const ph=(t-34.2)/.36*Math.PI;
+    C.p=L.pas(P.debout,ph*.5,.08,0);C.p.tA=.04*Math.sin(t*2.4);C.p.aF=[1.35,.1];C.p.hd=-.05;
+    Lo.p=L.pas(P.debout,ph,.32,0);
+    if(Lo.F>0){Lo.p.aB=[-1.3,-.1];Lo.p.aF=[.5+.3*Math.sin(t*3),.6]}else{Lo.p.aF=[1.35,.1];Lo.p.aB=[-.4,.5]}
+    const audace=seg(t,40,42);Lo.p.tA=.08*Math.sin(t*4.2)*audace;Lo.p.hd=-.08+.08*Math.sin(t*2)*audace;flare=.15+.25*audace*Math.abs(Math.sin(t*4.2));
+    if(t>47.6){const v=eio(seg(t,47.6,48.2));Lo.x=lerp(Lo.x,Xc+95,v);Lo.F=-1;Lo.p=L.melange(Lo.p,P.debout,v);C.p=L.melange(C.p,P.debout,v);Lo.p.aF=[lerp(1.35,.15,v),.1];C.p.aF=[lerp(1.35,.15,v),.1]}
+    fil=true;
+  }else{
+    const Xc=520;C.x=Xc;Lo.x=Xc+95;Lo.F=-1;C.p=L.melange(P.debout,P.debout,0);Lo.p=L.melange(P.debout,P.debout,0);
+    Lo.p.hd=-.1;C.p.hd=.02;ligne=1-seg(t,48.5,50);
+    if(t>53.2){C.p.aF=[.7,.8]}
   }
-  else if(t<14){
-    const ph=(t-10)/B*Math.PI,X=627+28*Math.sin((t-10)*Math.PI/2);
-    C.x=X-57;Lo.x=X+57;C.p=L.pas(P.tenue,ph,.3,0);Lo.p=L.pas(P.tenue,ph+Math.PI,.3,0);
-    C.p.tA+=.05*Math.sin(ph);Lo.p.tA+=.05*Math.sin(ph);
-  }
-  else if(t<16.5){
-    const p=seg(t,14,16.5),ang=eio(p)*7*Math.PI;
-    C.x=575;Lo.x=690;C.p=L.melange(P.tenue,P.bras_leve,eio(seg(t,14,14.3)));C.p=L.melange(C.p,P.promenade,eio(seg(t,16.1,16.5)));
-    Lo.F=-Math.cos(ang);Lo.p=L.melange(P.tenue,P.bras_leve,eio(seg(t,14,14.3)));Lo.p=L.pas(Lo.p,(t-14)*14,.12,0);Lo.p=L.melange(Lo.p,P.promenade,eio(seg(t,16.1,16.5)));
-    flare=Math.sin(Math.PI*p);
-  }
-  else if(t<20){
-    const p=eio(seg(t,16.5,20)),base=lerp(560,780,p),ph=(t-16.5)/B*Math.PI;
-    const temps=((t-16.5)/B)%2,coup=temps>1?Math.sin((temps-1)*Math.PI):0;
-    C.x=base;Lo.x=base+62;Lo.F=1;Lo.z=-1;
-    C.p=L.pas(P.promenade,ph,.3,coup);Lo.p=L.pas(P.promenade,ph,.3,coup);Lo.p.aF=[.6,.3];
-    flare=.25*coup;
-  }
-  else if(t<24){
-    const demi=Math.cos(Math.PI*eio(seg(t,20,20.4)));
-    const p=seg(t,20.3,24),th=Math.pow(p,1.25)*6*Math.PI,X=lerp(780,640,eio(seg(t,20,21)));
-    const cs=Math.cos(th),sn=Math.sin(th);
-    C.x=X-58*cs;Lo.x=X+58*cs;C.F=cs;Lo.F=t<20.3?demi:-cs;C.z=sn;Lo.z=-sn;
-    C.p=L.pas(P.tenue,(t-20)*16,.18,0);Lo.p=L.pas(P.tenue,(t-20)*16+Math.PI,.18,0);
-    C.p.tA-=.12*Math.min(1,p*3);Lo.p.tA-=.12*Math.min(1,p*3);
-    flare=.5+.5*Math.sin(Math.PI*p);
-  }
-  else{
-    const u=eoc(seg(t,24,24.6));C.x=600;Lo.x=lerp(698,712,u);
-    C.p=L.melange(P.tenue,P.renverse_C,u);Lo.p=L.melange(P.tenue,P.renverse_L,u);flare=.35*(1-u)+.15;
-  }
-  return{C,L:Lo,flare};
+  return{C,L:Lo,fil,flare,ligne,yeux};
 }
-
-/* ---------- chaque pas allume un rayon ---------- */
-const RR=L.rng(1412),ordre=[...Array(24).keys()].sort(()=>RR()-.5);
-function rayon(t,i){const k=ordre.indexOf(i),tk=10+k*B;let v=t<tk?0:.55+.45*Math.exp(-(t-tk)*2.5);
-  const fin=seg(t,24.2,24.5);return Math.max(v,fin*(.8+.2*Math.exp(-(t-24.3)*1.2)))}
-function etincelles(c,t){
-  c.save();c.globalCompositeOperation='lighter';
-  for(let k=0;k<28;k++){const tk=10+k*B,age=t-tk;if(age<0||age>.8)continue;
-    const st=danseurs(tk),d=k%2?st.L:st.C,x=d.x,a=1-age/.8;
-    c.strokeStyle=`rgba(255,215,120,${.8*a})`;c.lineWidth=2;c.beginPath();c.ellipse(x,SOL+2,14+age*90,3+age*14,0,0,7);c.stroke();
-    c.fillStyle=`rgba(255,235,180,${.5*a})`;for(let i=0;i<5;i++){const an=-Math.PI*(i+.5)/5;c.fillRect(x+Math.cos(an)*age*70,SOL+Math.sin(an)*age*60,2,2)}}
-  c.restore();
-}
-
-const OUVERTURE=[
-  {s:'CABARET DES ÉTOILES · SAMEDI 14 DÉCEMBRE',y:290,f:"20px "+L.F.machine,c:'#b9a98c',ls:'5px'},
-  {s:'Le peintre et la débutante.',y:372,f:"italic 50px "+L.F.texte},
-  {s:'Personne ne leur a dit quelle danse danser.',y:418,f:"italic 24px "+L.F.texte,c:'#b9a98c'}];
-const FIN=[
-  {s:'Une danse qui n’existait pas encore.',y:350,f:"italic 50px "+L.F.texte},
-  {s:'FIN DU PLAN',y:420,f:"20px "+L.F.titre,c:L.C.or,ls:'8px'}];
 
 function rendu(c,t){
-  c.fillStyle='#000';c.fillRect(0,0,L.W,L.H);
-  if(t>2.9&&t<29.4){
-    const st=danseurs(t),vac=t<4.2?(Math.random()<.3?.4:1):1,spot=eoc(seg(t,3.6,4.1))*vac,X=(st.C.x+st.L.x)/2;
-    c.save();const zm=1.2+.04*eio(seg(t,10,24));c.translate(640,560);c.scale(zm,zm);c.translate(-640,-560);
-    const es=eoc(seg(t,24.25,24.8));
-    L.cabaret(c,{spot,X,rayon:i=>rayon(t,i),etoile:es,pulse:1+.05*Math.sin((t-24.8)*5),enseigne:0});
-    const joue=t>10&&t<24.4;
-    L.leon(c,1040,556,joue?.35+(t>20&&t<24.4?.3:0):0,joue?Math.abs(Math.sin((t-10)*Math.PI/B))*-4:0);
-    c.fillStyle='rgba(0,0,0,.45)';[st.C,st.L].forEach(d=>{c.beginPath();c.ellipse(d.x,SOL+3,34,6,0,0,7);c.fill()});
-    (st.C.z<=st.L.z?[['C',st.C],['L',st.L]]:[['L',st.L],['C',st.C]]).forEach(([k,d])=>L.pantin(c,d,k,st.flare));
-    etincelles(c,t);
+  c.fillStyle='#000';c.fillRect(0,0,W,H);
+  if(t>2.9){
+    const st=couple(t),X=(st.C.x+st.L.x)/2;
+    const z=1.18,cx=lerp(640,X+30,.7),cy=420;
+    c.save();c.translate(640,360);c.scale(z,z);c.translate(-cx,-cy);
+    const silence=t>48.2&&t<49.2;
+    L.salleCabaret(c,t,{});
+    const joue=t<15.7||(t>17.5&&t<30)||(t>30.6&&t<48.2)?1:0;
+    L.orchestreSix(c,t,joue);
+    const lv=t>30.1&&t<31.5?1:joue?.25+.15*Math.sin(t*2):.05;
+    c.save();c.translate(760,L.SCENE.haut);c.scale(.82,.82);L.leon(c,0,0,lv,joue?-Math.abs(Math.sin(t*Math.PI*2))*3:0);c.restore();
+    // le clin d'œil de Léon
+    if(t>30.2&&t<30.7){c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,240,200,.9)';c.beginPath();c.arc(760+4,L.SCENE.haut-92,3,0,7);c.fill();c.restore()}
+    // Maurice remet la coupe, puis la bouteille de mousseux
+    if(t>50.2){const a=seg(t,50.2,50.8);c.save();c.globalAlpha=a;c.translate(640,L.SCENE.haut);c.scale(.8,.8);const m=L.maurice(c,0,0,{main:t>52.4?{x:68,y:-232}:{x:52,y:-96},chapeau:false,rire:t>50.8&&t<51.8?1:0,t});c.restore();
+      if(t>52.4&&t<53.6){c.fillStyle='#1f3a24';c.fillRect(640+68*.8-5,L.SCENE.haut-232*.8-36,10,34);c.fillStyle=L.C.or;c.fillRect(640+68*.8-4,L.SCENE.haut-232*.8-42,8,8)}
+      c.save();c.globalAlpha=a;L.pantin(c,{x:880,F:-1,p:{...P.debout,aF:[2.6,.1]},s:.8,sol:L.SCENE.haut},'X');L.pantin(c,{x:950,F:-1,p:{...P.debout,aF:[2.5,.1]},s:.76,sol:L.SCENE.haut},'Y');
+      c.fillStyle=L.C.or;c.beginPath();c.moveTo(870,L.SCENE.haut-205);c.lineTo(890,L.SCENE.haut-205);c.lineTo(884,L.SCENE.haut-188);c.lineTo(876,L.SCENE.haut-188);c.closePath();c.fill();c.restore()}
+    // les autres couples, au fond ; ils s'arrêtent quand Léon joue le morceau inconnu
+    COUPLES.forEach((k,i)=>{const arret=t>31.4&&t<48.2,ph=(t+k.ph)/.5*Math.PI,amp=arret?0:.25;
+      const pa=L.pas(P.tenue,ph,amp,0),pb=L.pas(P.tenue,ph+Math.PI,amp,0);if(arret){pa.aF=[.15,.2];pb.aF=[.15,.2]}
+      const dx=arret?24:0;L.pantin(c,{x:k.x-44-dx,F:1,p:pa,s:.8,sol:520},i===1?'B':'X');L.pantin(c,{x:k.x+44+dx,F:-1,p:pb,s:.78,sol:520},'Y',.1)});
+    // la ligne invisible
+    if(st.ligne>0){c.save();c.globalCompositeOperation='lighter';const g=c.createLinearGradient(500,0,760,0);g.addColorStop(0,`rgba(255,215,120,${.0})`);g.addColorStop(.15,`rgba(255,215,120,${.55*st.ligne})`);g.addColorStop(1,'rgba(255,215,120,0)');
+      c.strokeStyle=g;c.lineWidth=2;c.beginPath();c.moveTo(500,SOLP+4);c.lineTo(790,SOLP+4);c.stroke();c.restore()}
+    c.fillStyle='rgba(0,0,0,.35)';[st.C,st.L].forEach(d=>{c.beginPath();c.ellipse(d.x,SOLP+3,30,6,0,0,7);c.fill()});
+    const rc=L.pantin(c,st.C,'C'),rl=L.pantin(c,st.L,'L',st.flare);
+    if(st.fil){const a=rc.main,b=st.L.F>0?rl.mainDos:rl.main;c.save();c.strokeStyle='rgba(255,215,120,.55)';c.lineWidth=1.5;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();c.restore()}
+    if(st.yeux>.5){c.save();c.globalCompositeOperation='lighter';c.fillStyle=`rgba(255,250,235,${(st.yeux-.5)*1.4})`;c.beginPath();c.arc(rc.tete.x+8,rc.tete.y,2.5,0,7);c.fill();c.restore()}
+    const rire=(t>45&&t<45.6)||(t>33.2&&t<33.5);if(rire){c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(255,250,235,.9)';c.beginPath();c.arc(rc.tete.x+8,rc.tete.y,3,0,7);c.fill();c.restore()}
+    if(t>53.4){const m=rc.main;c.fillStyle='#1f3a24';c.save();c.translate(m.x,m.y);c.rotate(.3);c.fillRect(-5,-30,10,30);c.fillRect(-2.5,-40,5,10);c.restore()}
+    L.tablesCabaret(c,t);
     c.restore();
-    c.fillStyle=L.C.or;c.font="26px "+L.F.titre;c.textAlign='center';L.setLS(c,'6px');c.globalAlpha=.55+.45*spot;c.fillText('CABARET DES ÉTOILES',640,108);c.globalAlpha=1;L.setLS(c,'0px');
-    L.public(c,t,seg(t,24.6,25)*(1-seg(t,28.5,29.4)));
-    const fl=t>24.3?Math.exp(-(t-24.3)*6):0;if(fl>.01){c.fillStyle=`rgba(255,245,225,${.5*fl})`;c.fillRect(0,0,L.W,L.H)}
+    L.public(c,t,seg(t,49.2,49.6)*(1-seg(t,52,53)));
+    // les voix
+    const pc=x=>x;
+    parole(c,'Pardon.',760,200,env(t,6.3,.9));
+    parole(c,'Ne comptez pas.',520,200,env(t,7.2,1.1));
+    parole(c,'Si je ne compte pas, je me trompe.',760,200,env(t,8.3,1.3));
+    parole(c,'Vous vous trompez aussi en comptant.',520,190,env(t,9.6,1.1));
+    parole(c,'Au moins, sans compter, vous vous tromperez en musique.',560,190,env(t,10.6,1.3));
+    parole(c,'C’est de la peinture ?',760,200,env(t,12.5,.95));
+    parole(c,'Bleu de Prusse. Vous avez l’œil.',520,200,env(t,13.4,1));
+    parole(c,'Vous êtes peintre ?',760,200,env(t,14.35,.8));
+    parole(c,'La nuit. Le jour, je dessine des avions.',520,200,env(t,15.05,1.15));
+    parole(c,'Vous faites toujours ça ?',760,190,env(t,25.4,1));
+    parole(c,'Transformer les erreurs des autres en quelque chose de beau.',640,190,env(t,26.4,1.2));
+    parole(c,'En dessin industriel, on appelle ça la tolérance.',560,190,env(t,27.6,1.2));
+    parole(c,'C’est très romantique, votre dessin industriel.',760,190,env(t,28.8,1.1));
+    parole(c,'Vous n’avez pas idée.',520,200,env(t,29.85,1));
+    parole(c,'Faites-moi confiance.',520,200,env(t,33.5,1.2),30);
+    parole(c,'Pour la plus belle troisième danse !',640,110,env(t,52.2,1.6),30);
+    parole(c,'Qu’est-ce que c’était ? Cette danse ?',760,190,env(t,54,1.4));
+    parole(c,'Je ne sais pas. Je crois qu’elle n’existe pas encore.',600,190,env(t,55.5,2),29);
   }
-  L.noir(c,t<3?1:t<4?1-(t-3):t>28.4?(t-28.4)/.8:0);
-  L.carton(c,OUVERTURE,t<.6?t/.6:t<2.4?1:Math.max(0,1-(t-2.4)/.6),476);
-  L.carton(c,FIN,t<29.2?0:Math.min(1,(t-29.2)/.8),480);
+  L.noir(c,t<3?1:t<3.6?1-(t-3)/.6:t>57.2?(t-57.2)/.8:0);
+  L.carton(c,[{s:'UN FOX-TROT · UN TANGO · ET CE QUE L’ORCHESTRE VOUDRA',y:300,f:"19px "+L.F.machine,c:'#b9a98c',ls:'4px'},{s:'« Ne comptez pas. »',y:380,f:"italic 50px "+L.F.texte}],t<.6?t/.6:t<2.4?1:Math.max(0,1-(t-2.4)/.6),450);
 }
 
-/* ---------- son ---------- */
 function partition(ac,sortie,T){
-  const K=L.kit(ac,sortie),TH=L.THEME;
-  K.projecteur(T,33);
-  K.nappe(T+2.9,4.3,'lowpass',650,.7,[[.7,.05],[2.9,.05],[4.1,0]]);
-  K.roulement(T+4.6,T+6.9);K.cymbale(T+6.95,null,.05,.9);
-  K.piano(69,T+8.2,.05);K.piano(76,T+8.2,.03);
-  K.souffle(74,T+9.75,1.1,{g:.05,cut:1500,att:.12});
-  const orch=K.bus(),S=T+10;
-  K.orchestre(S,B,['Dm9','G13','Cmaj9','A7b9','Dm9','G13','A7'],orch);
-  [[1,69,1],[2,72,.5],[2.5,74,.5],[3,77,1],[4,76,.5],[4.5,74,.5],[5,71,.5],[5.5,72,2],
-   [8,74,.25],[8.25,76,.25],[8.5,77,.25],[8.75,79,.25],[9,81,1.5],[10.5,79,.5],
-   [12,77,.5],[12.5,76,.5],[13,74,.5],[13.5,73,1.5],
-   [16,69,.5],[16.5,72,.5],[17,74,.5],[17.5,77,.5],[18,76,1],[19,74,1],
-   [20,69,.5],[20.5,72,.5],[21,76,.5],[21.5,79,.5],[22,81,.5],[22.5,84,.5],[23,81,.5],[23.5,79,.5],
-   [24,79,.5],[24.5,81,.5],[25,84,.5],[25.5,86,2.2]].forEach(([o,m,d])=>K.trompette(m,S+o*B,d*B*.95,orch));
-  K.nappe(T+22.4,2,'highpass',5000,.5,[[0,.0001],[1.85,.05],[1.92,0]],orch);
-  orch.gain.setValueAtTime(1,T+24.2);orch.gain.linearRampToValueAtTime(0,T+24.3);
-  const fin=T+24.3;K.accord('D69',fin,.05);K.souffle(86,fin,1.3,{g:.06,cut:2200,vib:6,att:.02});K.souffle(78,fin,1.3,{g:.04,cut:2000,vib:6,att:.02});
-  K.cymbale(fin,null,.09,2.2);
-  K.applaudissements(T+24.6,4.4);
-  [[0,69],[.45,72],[.9,74],[1.35,77],[2.4,76],[2.85,74],[3.3,72]].forEach(([o,m])=>K.piano(m,T+29.4+o,.05));
-  K.finale(T,33.2);
+  const K=L.kit(ac,sortie);
+  K.projecteur(T,58);
+  K.nappe(T+2.9,55,'lowpass',700,.7,[[.5,.03],[45,.03],[45.3,0],[46.3,.03],[54,.02],[55,0]]);
+  // le fox-trot
+  const fox=K.bus();K.orchestre(T+3.6,.5,['Dm9','G13','Cmaj9','A7','Dm9','G13'],fox);
+  K.phrase(L.THEME.reponse,T+4.6,.5,'trompette',fox,.04);K.phrase(L.THEME.reponse,T+10.6,.5,'trompette',fox,.04);
+  fox.gain.setValueAtTime(1,T+15.4);fox.gain.linearRampToValueAtTime(0,T+15.7);
+  K.applaudissements(T+15.7,1.2);
+  // le tango : habanera, bandonéon imaginaire
+  const tg=K.bus(),b=.62;
+  for(let i=0;i<20;i++){const w=T+17.6+i*b*2;if(w>T+29.8)break;const pause=w>T+22.5&&w<T+25;[[0,1],[.75,.6],[1,.8],[1.5,.6]].forEach(([o,v])=>{if(!pause)K.basse([38,38,43,45][i%4],w+o*b,tg,.18*v)});
+    if(!pause){K.piano([62,65,69][i%3],w,.025,tg);K.piano([62,65,69][i%3]+12,w+b,.018,tg)}}
+  [[0,74,2],[2,72,1],[3,70,1],[4,69,4],[10,77,2],[12,76,1],[13,74,1],[14,73,3]].forEach(([o,m,d])=>K.souffle(m,T+17.6+o*b,d*b*.95,{g:.035,cut:1300,vib:4.5,att:.08},tg));
+  K.nappeAccord('A7b9',T+22.6,2.4,tg,.01);
+  K.applaudissements(T+21.8,.8);K.applaudissements(T+29.9,1);
+  // le morceau sans nom : lent, chaloupé, une basse qui traîne, une trompette qui bâille
+  const sn=K.bus(),bl=.72;
+  for(let i=0;i<5;i++){const w=T+30.8+i*bl*4;['Dm9','G13','Cmaj9','A7','Dm9'][i]&&[0,1.5,2.5].forEach(o=>K.accord(['Dm9','G13','Cmaj9','A7','Dm9'][i],w+o*bl,.02,sn));
+    (L.THEME.basses[['Dm9','G13','Cmaj9','A7','Dm9'][i]]||[38,40,41,45]).forEach((m,k)=>K.basse(m-12+12,w+k*bl+.06,sn,.22));[1,3].forEach(k=>K.charleston(w+k*bl+.08,sn,.03))}
+  K.phrase(L.THEME.lent,T+32.2,.72,'trompette',sn,.04);
+  K.phrase(L.THEME.motif.map(([o,m,d])=>[o,m+12,d]),T+40.4,.72,'trompette',sn,.03);
+  sn.gain.setValueAtTime(1,T+48.1);sn.gain.linearRampToValueAtTime(0,T+48.2);
+  // silence total… puis la salle se lève
+  K.applaudissements(T+49.2,3.6);
+  K.cloche(93,T+52.3,null,.02);
+  [[54.1,69],[54.6,72],[55.6,74],[56.2,77]].forEach(([w,m])=>K.piano(m,T+w,.035));
+  K.finale(T,58);
 }
 
-L.film({duree:33,rendu,partition,affiche:15.15});
+L.film({duree:58,rendu,partition,affiche:41.2});
 })();
