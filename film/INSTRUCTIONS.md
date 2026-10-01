@@ -176,7 +176,7 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 | 04 Le tirage | 3 (début) | `plan-04-tirage.html` | https://claude.ai/artifact/HVcQ2emeSSPQm1fkdffTi4 | ✅ refait |
 | 05 La danse | 3 (fin) | `plan-05-danse.html` | https://claude.ai/artifact/8i5uzu5MYxhB1KYspFrEjU | ✅ refait (liberté : fil d'or au sol) |
 | 06 L'heure des hiboux | 4 | `plan-06-marche.html` | https://claude.ai/artifact/933jod6ATQTFY5Mm2NxAVz | ✅ refait et publié (perron ajouté devant la façade) |
-| 07 Le portrait / enfermée | 5 | `plan-07-portrait.html` | https://claude.ai/artifact/PyBENh3VDyeHMTJViiMCWu | ❌ à refaire (écarts dans PROJET.md) |
+| 07 Le portrait / enfermée | 5 | `plan-07-portrait.html` | https://claude.ai/artifact/PyBENh3VDyeHMTJViiMCWu | ✅ refait d'après le livre (83 s) |
 | 08 La glycine | 7 | `plan-08-glycine.html` | https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC | ❌ à refaire |
 | 09 Soirée des lendemains | 8 | — | — | ⬜ à créer (nouvel artefact) |
 | 10 L'étoile filante | 9 | `plan-10-etoile-filante.html` | https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy | ❌ à refaire |
