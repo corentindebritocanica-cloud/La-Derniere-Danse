@@ -182,7 +182,7 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 | 10 L'étoile filante | 9 | `plan-10-etoile-filante.html` | https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy | ✅ refait d'après le livre (150 s) |
 | 11 Le portrait | 10 | `plan-11-portrait.html` | https://claude.ai/artifact/8wP58wSq4zjHv3bsifV4pc | ✅ créé d'après le livre (104 s) |
 | 12 Le bureau du rez-de-chaussée | 11 | `plan-12-violon.html` | https://claude.ai/artifact/3oworfu4s2fME7jAARkv1x | ✅ créé d'après le livre (122 s) |
-| 13 La dernière danse | 12 | — | — | ⬜ à créer |
+| 13 La dernière danse | 12 | `plan-13-derniere-danse.html` | https://claude.ai/artifact/LfRRsyP4chiE5dWDRUhwqh | ✅ créé d'après le livre (154 s) |
 | 14 Épilogue | épilogue | — | — | ⬜ à créer |
 
 ### Plan 06 : terminé (1er octobre)
