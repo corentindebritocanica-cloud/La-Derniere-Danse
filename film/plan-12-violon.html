@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le bureau du rez-de-chaussée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+/* Layout: one cinema screen centred on a dark projection-room ground, credits-style text above and below. Single dark look on purpose. */
+:root{
+  --room:#120e0b;
+  --frame:#1a1512;
+  --edge:#3a2e22;
+  --cream:#f1e7d3;
+  --muted:#b9a98c;
+  --gold:#e3b23c;
+  --red:#a8201a;
+  --display:'Limelight',Georgia,serif;
+  --body:'Bodoni Moda',Georgia,serif;
+  --type:'Special Elite','Courier New',monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--room);color:var(--cream)}
+body{font-family:var(--body)}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center}
+.eyebrow{font-family:var(--type);font-size:12px;letter-spacing:.22em;color:var(--muted)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,6.5vw,60px);line-height:1.05;margin:0;text-wrap:balance}
+.sub{margin:0;font-style:italic;font-size:17px;color:var(--muted)}
+.screen{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--edge);box-shadow:0 0 0 6px var(--frame),0 0 0 7px var(--edge),0 30px 80px rgba(0,0,0,.6)}
+.screen:fullscreen{border:0;box-shadow:none;background:#000}
+canvas{display:block;width:100%;height:100%}
+.play{position:absolute;inset:0;margin:auto;width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:rgba(18,14,11,.72);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:transform .2s ease,background .2s ease}
+.play:hover{transform:scale(1.06);background:rgba(18,14,11,.88)}
+.play svg{width:30px;height:30px;margin-left:5px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:var(--type);font-size:14px}
+.ctl{font-family:var(--type);font-size:14px;color:var(--cream);background:transparent;border:1px solid #5a4a36;padding:10px 16px;min-height:44px;cursor:pointer}
+.ctl:hover{border-color:var(--gold);color:var(--gold)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.bar{height:3px;background:#2c241b;flex:1 1 160px;position:relative;min-width:0}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--gold);width:0}
+.tc{color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.note{max-width:62ch;margin:0 auto;color:var(--muted);line-height:1.6;text-align:center;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">LA DERNIÈRE DANSE · PLAN 12</div>
+    <h1>Le bureau du rez-de-chaussée</h1>
+    <p class="sub">Chapitre 11. La frange dans la glycine, l'aveu, le violon du grand-père. Deux minutes, avec le son.</p>
+  </header>
+
+  <div class="screen" id="screen">
+    <canvas id="film" width="1280" height="720" aria-label="Plan animé : Marthe décroche une frange de soie noire dans la glycine ; dans le bureau du grand-père, Louise dit tout ; Édouard Sarrail sort de derrière le Dalloz un violon qu&#x27;il n&#x27;avait plus touché depuis cinquante ans."></canvas>
+    <button class="play" id="play" aria-label="Lancer le plan">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>
+    </button>
+  </div>
+
+  <div class="controls">
+    <button class="ctl" id="replay" type="button">Rejouer</button>
+    <button class="ctl" id="sound" type="button" aria-pressed="true">Son : activé</button>
+    <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+    <span class="tc" id="tc">00:00</span>
+    <button class="ctl" id="fs" type="button">Plein écran</button>
+  </div>
+
+  <p class="note">Répliques du chapitre 11, coupées mais mot pour mot. Les passages qui évoquent le mariage (la menace d'un mariage avec Henri, la vie du grand-père après Montpellier) ne sont pas repris.</p>
+</div>
+<script>
+/* La Dernière Danse — moteur commun des plans
+   Outils mathématiques, cartons, grain de pellicule, lecteur (lecture, son, plein écran). */
+(function(){
+const L=window.LDD=window.LDD||{};
+L.W=1280;L.H=720;
+L.clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+L.lerp=(a,b,t)=>a+(b-a)*t;
+L.eio=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+L.eoc=t=>1-Math.pow(1-t,3);
+L.eic=t=>t*t*t;
+L.seg=(t,a,b)=>L.clamp((t-a)/(b-a),0,1);
+L.rng=function(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}};
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+L.mix=function(a,b,t,al){const A=hex(a),B=hex(b);const r=Math.round(L.lerp(A[0],B[0],t)),g=Math.round(L.lerp(A[1],B[1],t)),bl=Math.round(L.lerp(A[2],B[2],t));return al==null?`rgb(${r},${g},${bl})`:`rgba(${r},${g},${bl},${al})`};
+L.setLS=(c,v)=>{if('letterSpacing' in c)c.letterSpacing=v};
+L.reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+/* Palette du roman */
+L.C={papier:'#f1e7d3',encre:'#1a1512',rouge:'#a8201a',bleu:'#1f3a5f',brun:'#5a3e1b',or:'#e3b23c',ombre:'#0b0907',grisChat:'#7d7a76'};
+L.F={titre:"'Limelight', Georgia, serif",texte:"'Bodoni Moda', Georgia, serif",main:"'La Belle Aurore', cursive",machine:"'Special Elite', 'Courier New', monospace"};
+
+/* Étoile à cinq branches */
+L.star=function(c,x,y,ro,ri,fill,stroke,lw){c.beginPath();for(let i=0;i<10;i++){const r=i%2?ri:ro,an=-Math.PI/2+i*Math.PI/5;c.lineTo(x+Math.cos(an)*r,y+Math.sin(an)*r)}c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||2;c.stroke()}};
+
+/* Carton de cinéma muet : lines = [{s,y,f,c,ls}], option star = y de l'étoile rouge */
+L.carton=function(c,lines,a,starY){
+  if(a<=0)return;const W=L.W,H=L.H;c.save();c.globalAlpha=a;
+  c.strokeStyle='#b88f2e';c.lineWidth=2;c.strokeRect(70,70,W-140,H-140);c.lineWidth=1;c.strokeRect(82,82,W-164,H-164);
+  [[82,82,0],[W-82,82,Math.PI/2],[W-82,H-82,Math.PI],[82,H-82,-Math.PI/2]].forEach(([x,y,r])=>{c.save();c.translate(x,y);c.rotate(r);
+    for(let i=0;i<=6;i++){const an=i*Math.PI/12;c.beginPath();c.moveTo(0,0);c.lineTo(Math.cos(an)*54,Math.sin(an)*54);c.stroke()}c.restore()});
+  c.textAlign='center';
+  for(const l of lines){c.fillStyle=l.c||L.C.papier;c.font=l.f;L.setLS(c,l.ls||'0px');c.fillText(l.s,W/2,l.y)}
+  L.setLS(c,'0px');if(starY!=null)L.star(c,W/2,starY,17,7,L.C.rouge);
+  c.restore();
+};
+/* Opacité d'un carton : apparition, tenue, disparition */
+L.fade=(t,a,b,inn,out)=>t<a||t>b?0:Math.min(1,(t-a)/(inn||.6),(b-t)/(out||.6));
+
+/* Pellicule : vignettage + grain + rayures + scintillement */
+const vg=new WeakMap();
+L.pellicule=function(c){
+  const W=L.W,H=L.H;let g=vg.get(c);
+  if(!g){g=c.createRadialGradient(W/2,H/2,H*.32,W/2,H/2,H*.95);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.58)');vg.set(c,g)}
+  c.fillStyle=g;c.fillRect(0,0,W,H);
+  if(L.reduce)return;
+  for(let i=0;i<160;i++){const v=Math.random();c.fillStyle=v<.5?`rgba(241,231,211,${.03+Math.random()*.07})`:`rgba(0,0,0,${.05+Math.random()*.1})`;const s=1+Math.random()*1.8;c.fillRect(Math.random()*W,Math.random()*H,s,s)}
+  if(Math.random()<.05){c.strokeStyle='rgba(241,231,211,.14)';c.lineWidth=1;const x=Math.random()*W;c.beginPath();c.moveTo(x,0);c.lineTo(x+Math.random()*6-3,H);c.stroke()}
+  c.fillStyle=`rgba(0,0,0,${Math.random()*.035})`;c.fillRect(0,0,W,H);
+};
+L.noir=function(c,a){if(a>0){c.fillStyle=`rgba(0,0,0,${Math.min(1,a)})`;c.fillRect(0,0,L.W,L.H)}};
+
+/* Lecteur : relie le canevas et les boutons de la page.
+   opts = {duree, rendu(c,t), partition(ac,sortie,T), affiche, polices:[...]} */
+L.film=function(opts){
+  const cv=document.getElementById('film'),c=cv.getContext('2d');
+  const playBtn=document.getElementById('play'),prog=document.getElementById('prog'),tc=document.getElementById('tc');
+  const DUR=opts.duree;let ac=null,bus=null,muted=false,t0=0,playing=false,raf=0;
+  const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');
+  const draw=t=>{c.save();opts.rendu(c,t);c.restore();L.pellicule(c)};
+  window.LDD_rendu=draw;
+  function startAudio(){
+    try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();}catch(e){ac=null;return 0}
+    if(ac.state==='suspended')ac.resume();
+    if(bus){try{bus.gain.cancelScheduledValues(0);bus.disconnect()}catch(e){}}
+    bus=ac.createGain();bus.gain.value=muted?0:1;bus.connect(ac.destination);
+    try{opts.partition(ac,bus,ac.currentTime+.08)}catch(e){console.error(e)}
+    return 80;
+  }
+  function tick(){
+    let t=(performance.now()-t0)/1000;if(t>=DUR){t=DUR;playing=false}
+    t=Math.max(0,t);draw(t);prog.style.width=(t/DUR*100)+'%';tc.textContent=fmt(t)+' / '+fmt(DUR);
+    if(playing)raf=requestAnimationFrame(tick);else{playBtn.hidden=false;playBtn.setAttribute('aria-label','Revoir le plan')}
+  }
+  function play(){cancelAnimationFrame(raf);const lag=startAudio();t0=performance.now()+lag;playing=true;playBtn.hidden=true;raf=requestAnimationFrame(tick)}
+  playBtn.addEventListener('click',play);
+  document.getElementById('replay').addEventListener('click',play);
+  const snd=document.getElementById('sound');
+  snd.addEventListener('click',()=>{muted=!muted;snd.textContent='Son : '+(muted?'coupé':'activé');snd.setAttribute('aria-pressed',String(!muted));if(bus&&ac)bus.gain.setValueAtTime(muted?0:1,ac.currentTime)});
+  document.getElementById('fs').addEventListener('click',()=>{const s=document.getElementById('screen');try{const p=document.fullscreenElement?document.exitFullscreen():(s.requestFullscreen&&s.requestFullscreen());if(p&&p.catch)p.catch(()=>{})}catch(e){}});
+  tc.textContent='00:00 / '+fmt(DUR);
+  draw(opts.affiche);
+  const fonts=opts.polices||["26px 'Limelight'","italic 22px 'Bodoni Moda'","20px 'Special Elite'","30px 'La Belle Aurore'"];
+  if(document.fonts&&document.fonts.load){Promise.all(fonts.map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{if(!playing)draw(opts.affiche)})}
+};
+})();
+
+</script>
+<script>
+/* La Dernière Danse — musique commune
+   Instruments synthétisés (Web Audio) et « le morceau sans nom » de Léon. */
+(function(){
+const L=window.LDD=window.LDD||{};
+L.mf=m=>440*Math.pow(2,(m-69)/12);
+
+/* Le thème : [temps en battements, note MIDI, durée en battements] */
+L.THEME={
+  motif:[[0,69,1],[1,72,.5],[1.5,74,.5],[2,77,1.5],[3.5,76,.5],[4,74,1],[5,71,.5],[5.5,72,1.5]],
+  reponse:[[0,72,.5],[.5,74,.5],[1,76,1],[2,79,1],[3,76,.5],[3.5,74,.5],[4,73,2]],
+  lent:[[0,69,1.5],[1.5,72,.75],[2.25,74,.75],[3,77,2.5],[5.5,76,.75],[6.25,74,.75],[7,72,1.5],[8.5,69,3]],
+  accords:{Dm9:[50,53,57,60,64],G13:[43,53,59,64],Cmaj9:[48,52,55,59,62],A7b9:[45,55,61,70],A7:[45,55,61,67],Fmaj9:[53,57,60,64,67],Bbmaj7:[46,53,57,62],Fadd9:[41,53,57,60,67],D69:[38,50,57,62,66,69,71,74]},
+  basses:{Dm9:[38,40,41,45],G13:[43,45,47,50],Cmaj9:[36,38,40,43],A7b9:[45,49,52,43],A7:[45,47,49,52]},
+  grille:['Dm9','G13','Cmaj9','A7b9']
+};
+
+/* Trousse d'instruments reliée à une sortie */
+L.kit=function(ac,sortie){
+  const out=ac.createGain();out.connect(sortie);
+  const nb=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+  const lp=f=>{const n=ac.createBiquadFilter();n.type='lowpass';n.frequency.value=f;return n};
+  const env=(g,t0,a,peak,dec)=>{g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(peak,t0+a);g.gain.exponentialRampToValueAtTime(0.0001,t0+a+dec)};
+  const K={ac,out,nb,lp,env,mf:L.mf,
+    bus(){const g=ac.createGain();g.connect(out);return g},
+    noise(w,dur,type,f,q,g0,att,dest){const s=ac.createBufferSource();s.buffer=nb;s.loop=true;const fl=ac.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;const g=ac.createGain();
+      g.gain.setValueAtTime(0.0001,w);g.gain.linearRampToValueAtTime(g0,w+att);g.gain.exponentialRampToValueAtTime(0.0001,w+att+dur);s.connect(fl).connect(g).connect(dest||out);s.start(w,Math.random()*1.5);s.stop(w+att+dur+.05);return g},
+    /* bruit continu filtré ; points = [[temps, gain], …] (paliers linéaires) */
+    nappe(T,fin,type,f,q,points,dest){const s=ac.createBufferSource();s.buffer=nb;s.loop=true;const fl=ac.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;const g=ac.createGain();
+      g.gain.setValueAtTime(0,T);points.forEach(([t,v])=>g.gain.linearRampToValueAtTime(v,T+t));s.connect(fl).connect(g).connect(dest||out);s.start(T);s.stop(T+fin);return g},
+    /* ronronnement du projecteur, avec silences [[de, à], …] */
+    projecteur(T,fin,silences){const pts=[[.6,.016]];(silences||[]).forEach(([a,b])=>{pts.push([a,.016],[a+.15,0],[b,0],[b+1,.014])});pts.push([fin-.6,.014],[fin,0]);return K.nappe(T,fin+.2,'bandpass',2400,.6,pts)},
+    gramophone(T,fin){K.nappe(T,fin,'bandpass',3200,.4,[[.3,.03],[fin-.4,.03],[fin,0]]);
+      for(let i=0;i<fin*5;i++){const w=T+Math.random()*fin;K.noise(w,.012,'highpass',3000,.5,.02+Math.random()*.05,.001)}},
+    piano(m,w,g0,dest){const o=ac.createOscillator();o.type='triangle';o.frequency.value=L.mf(m);const g=ac.createGain();env(g,w,.006,g0==null?.03:g0,1.3);o.connect(lp(2300)).connect(g).connect(dest||out);o.start(w);o.stop(w+1.5)},
+    accord(nom,w,g0,dest){L.THEME.accords[nom].forEach(m=>K.piano(m,w,g0,dest))},
+    basse(m,w,dest,g0){const o=ac.createOscillator();o.type='sine';o.frequency.value=L.mf(m);const g=ac.createGain();env(g,w,.01,g0||.2,.5);o.connect(g).connect(dest||out);o.start(w);o.stop(w+.65)},
+    grosseCaisse(w,dest){const o=ac.createOscillator();o.type='sine';o.frequency.setValueAtTime(110,w);o.frequency.exponentialRampToValueAtTime(45,w+.12);const g=ac.createGain();env(g,w,.003,.18,.18);o.connect(g).connect(dest||out);o.start(w);o.stop(w+.25)},
+    charleston(w,dest,g0){K.noise(w,.08,'highpass',7000,.7,g0||.045,.002,dest)},
+    roulement(a,b,dest){for(let w=a;w<b;w+=.045)K.noise(w,.04,'bandpass',1800,.8,.008+.03*((w-a)/(b-a)),.003,dest)},
+    cymbale(w,dest,g0,dur){K.noise(w,dur||1.8,'highpass',4500,.5,g0||.08,.004,dest)},
+    /* trompette (ou violon avec d'autres réglages) */
+    souffle(m,w,dur,o2,dest){o2=o2||{};const g0=o2.g||.05,cut=o2.cut||1700,vib=o2.vib||5.5,att=o2.att||.04;
+      const o=ac.createOscillator();o.type='sawtooth';o.frequency.value=L.mf(m);
+      const l=ac.createOscillator();l.frequency.value=vib;const lg=ac.createGain();lg.gain.setValueAtTime(0,w);lg.gain.linearRampToValueAtTime(L.mf(m)*.006,w+Math.min(.35,dur));l.connect(lg).connect(o.frequency);
+      const g=ac.createGain();g.gain.setValueAtTime(0.0001,w);g.gain.linearRampToValueAtTime(g0,w+att);g.gain.setValueAtTime(g0,w+Math.max(att,dur-.08));g.gain.linearRampToValueAtTime(0.0001,w+dur+.1);
+      const f=lp(cut);f.Q.value=1.2;o.connect(f).connect(g).connect(dest||out);o.start(w);l.start(w);o.stop(w+dur+.2);l.stop(w+dur+.2)},
+    trompette(m,w,dur,dest,g0){K.souffle(m,w,dur,{g:g0||.05,cut:1700},dest)},
+    violon(m,w,dur,dest,g0){K.souffle(m,w,dur,{g:g0||.035,cut:2600,vib:6,att:.25},dest)},
+    nappeAccord(nom,w,dur,dest,g0){L.THEME.accords[nom].forEach(m=>[-4,4].forEach(dt=>{const o=ac.createOscillator();o.type='sawtooth';o.frequency.value=L.mf(m);o.detune.value=dt;const g=ac.createGain();
+      g.gain.setValueAtTime(0.0001,w);g.gain.linearRampToValueAtTime(g0||.012,w+1.5);g.gain.setValueAtTime(g0||.012,w+dur-1);g.gain.linearRampToValueAtTime(0.0001,w+dur+.6);o.connect(lp(900)).connect(g).connect(dest||out);o.start(w);o.stop(w+dur+.7)}))},
+    cloche(m,w,dest,g0){[1,2.76].forEach((h,k)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=L.mf(m)*h;const g=ac.createGain();env(g,w,.004,k?(g0||.06)*.3:(g0||.06),3.6);o.connect(g).connect(dest||out);o.start(w);o.stop(w+3.8)})},
+    /* joue une phrase du thème : notes [[b,m,d]], battement b secondes, instrument 'trompette'|'violon'|'piano' */
+    phrase(notes,w,b,instr,dest,g0){notes.forEach(([o,m,d])=>{if(instr==='piano')K.piano(m,w+o*b,g0||.05,dest);else K[instr](m,w+o*b,d*b*.95,dest,g0)})},
+    /* l'orchestre de Léon : grille d'accords en charleston, contrebasse qui marche, batterie */
+    orchestre(w,b,grille,dest,o2){o2=o2||{};grille.forEach((nom,i)=>{const x=w+i*4*b;
+      [0,1.5].forEach(o=>K.accord(nom,x+o*b,o2.piano||.026,dest));(L.THEME.basses[nom]||L.THEME.basses.Dm9).forEach((m,k)=>K.basse(m,x+k*b,dest));
+      if(o2.batterie!==false){[0,2].forEach(k=>K.grosseCaisse(x+k*b,dest));[1,3].forEach(k=>K.charleston(x+k*b,dest));[1.5,3.5].forEach(k=>K.charleston(x+k*b,dest,.02))}})},
+    applaudissements(a,dur,dest){for(let i=0;i<120*dur;i++){const w=a+Math.pow(Math.random(),1.6)*dur;K.noise(w,.035,'bandpass',1200+Math.random()*1600,1.2,.03*(1-(w-a)/(dur+.6)),.002,dest)}},
+    finale(T,fin){out.gain.setValueAtTime(1,T+fin-.8);out.gain.linearRampToValueAtTime(0,T+fin)}
+  };
+  return K;
+};
+})();
+
+</script>
+<script>
+/* La Dernière Danse — personnages communs
+   Pantins articulés en silhouette (Célestin, Louise), la Mini, Léon, Chopin.
+   Angles en radians : 0 = vers le bas, positif = vers l'avant du personnage. */
+(function(){
+const L=window.LDD=window.LDD||{};
+const lerp=(a,b,t)=>a+(b-a)*t;
+L.SOL=612;
+
+L.POSES={
+  debout:{tA:0,hd:0,aF:[.12,.15],aB:[-.08,.12],lF:[.06,0],lB:[-.06,0]},
+  timide:{tA:.08,hd:.42,aF:[.35,.9],aB:[.3,.8],lF:[.04,0],lB:[-.02,0]},
+  invite:{tA:.22,hd:-.05,aF:[1.35,.12],aB:[-.25,.3],lF:[.18,0],lB:[-.12,0]},
+  tenue:{tA:.06,hd:-.08,aF:[1.15,.55],aB:[1.0,1.0],lF:[.1,0],lB:[-.1,0]},
+  bras_leve:{tA:.02,hd:-.25,aF:[2.75,.1],aB:[-.5,.6],lF:[.08,0],lB:[-.08,0]},
+  promenade:{tA:.05,hd:-.1,aF:[1.0,.4],aB:[-.6,.4],lF:[.1,0],lB:[-.1,0]},
+  renverse_C:{tA:.42,hd:.2,aF:[1.45,.2],aB:[1.6,.5],lF:[.42,-.12],lB:[-.38,.04]},
+  renverse_L:{tA:-1.05,hd:-.55,aF:[1.9,-.2],aB:[-2.3,-.3],lF:[1.05,-.2],lB:[-.1,.05]},
+  assis:{tA:-.08,hd:0,aF:[.7,.9],aB:[.6,1.0],lF:[1.5,-1.45],lB:[1.4,-1.35]},
+  assis_volant:{tA:-.05,hd:0,aF:[1.0,.75],aB:[.9,.85],lF:[1.5,-1.45],lB:[1.4,-1.35]},
+  peint:{tA:.04,hd:-.05,aF:[1.9,.5],aB:[.5,.9],lF:[.12,0],lB:[-.12,0]},
+  lit:{tA:.12,hd:.35,aF:[.9,1.2],aB:[.8,1.3],lF:[1.5,-1.45],lB:[1.4,-1.35]}
+};
+L.melange=function(p,q,u){const r={};for(const k in p){r[k]=Array.isArray(p[k])?p[k].map((v,i)=>lerp(v,q[k][i],u)):lerp(p[k],q[k],u)}return r};
+L.pas=function(p,ph,amp,coup){const q=JSON.parse(JSON.stringify(p));const s=Math.sin(ph);
+  q.lF=[q.lF[0]+amp*s,-.45*Math.max(0,Math.sin(ph+1.6))];q.lB=[q.lB[0]-amp*s,-.45*Math.max(0,-Math.sin(ph+1.6))];
+  if(coup>0){q.lF=[lerp(q.lF[0],.95,coup),lerp(q.lF[1],.35,coup)]}return q};
+
+const pt=(j,a,len,F)=>({x:j.x+F*Math.sin(a)*len,y:j.y+Math.cos(a)*len});
+function limb(c,a,b,w){c.lineWidth=w;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke()}
+
+/* st = {x, F (sens : 1 droite, -1 gauche, entre les deux = de face en pirouette), p (pose),
+         lift, s (échelle), hipY (hanche imposée, sinon pieds au sol), sol}
+   kind = 'C' (Célestin) ou 'L' (Louise). Renvoie la position de la tête. */
+L.pantin=function(c,st,kind,flare){
+  flare=flare||0;const isC=!(kind==='L'||kind==='S'||kind==='Y'),sc=isC?1:.93,F=st.F,aF=Math.abs(F),p=st.p,s=st.s||1,INK=L.C.ombre;
+  const T=(isC?74:66)*sc,th=(isC?52:47)*sc,sh=(isC?52:47)*sc,ua=(isC?37:32)*sc,la=(isC?35:30)*sc;
+  const hip={x:0,y:0};
+  const kF=pt(hip,p.lF[0],th,F),fF=pt(kF,p.lF[0]+p.lF[1],sh,F),kB=pt(hip,p.lB[0],th,F),fB=pt(kB,p.lB[0]+p.lB[1],sh,F);
+  const hipY=st.hipY!=null?st.hipY:(st.sol||L.SOL)-s*Math.max(fF.y,fB.y)-(st.lift||0);
+  const S={x:F*Math.sin(p.tA)*T,y:-Math.cos(p.tA)*T};
+  const ha=p.tA+p.hd,Hc={x:S.x+F*Math.sin(ha)*17*sc,y:S.y-Math.cos(ha)*17*sc};
+  const eF=pt(S,p.aF[0],ua,F),hF=pt(eF,p.aF[0]+p.aF[1],la,F),eB=pt(S,p.aB[0],ua,F),hB=pt(eB,p.aB[0]+p.aB[1],la,F);
+  c.save();c.translate(st.x,hipY);c.scale(s,s);
+  c.strokeStyle=INK;c.fillStyle=INK;c.lineCap='round';c.lineJoin='round';
+  const legW=isC?13:7.5,armW=isC?10:7;
+  const shoe=f=>{c.beginPath();c.ellipse(f.x+F*5,f.y,isC?11:8,isC?4.5:3.5,0,0,7);c.fill()};
+  const ga=c.globalAlpha;c.globalAlpha=ga*.92;limb(c,hip,kB,legW);limb(c,kB,fB,legW-1);shoe(fB);limb(c,S,eB,armW);limb(c,eB,hB,armW-1);c.globalAlpha=ga;
+  const ax=S.x,ay=S.y,al=Math.hypot(ax,ay),nx=-ay/al,ny=ax/al;
+  const shW=lerp(isC?18:13,isC?11:9,aF),hpW=lerp(isC?15:12,isC?10:9,aF);
+  c.beginPath();c.moveTo(nx*hpW,ny*hpW);c.lineTo(S.x+nx*shW,S.y+ny*shW);c.lineTo(S.x-nx*shW,S.y-ny*shW);c.lineTo(-nx*hpW,-ny*hpW);c.closePath();c.fill();
+  limb(c,hip,kF,legW);limb(c,kF,fF,legW-1);shoe(fF);
+  if(!isC){
+    const top={x:ax*.3,y:ay*.3},hemY=42-flare*12,hw=22+flare*36;
+    c.beginPath();c.moveTo(top.x-12,top.y);c.lineTo(top.x+12,top.y);
+    c.quadraticCurveTo(hw*.7,20,hw,hemY);c.quadraticCurveTo(0,hemY+8-flare*6,-hw,hemY);c.quadraticCurveTo(-hw*.7,20,top.x-12,top.y);c.fill();
+    c.lineWidth=1.6;
+    for(let i=-6;i<=6;i++){const fx=i/6*hw,fy=hemY+(1-Math.abs(i/6))*(6-flare*4);c.beginPath();c.moveTo(fx,fy-1);c.lineTo(fx+i*flare*1.6,fy+9-flare*3);c.stroke()}
+    c.fillStyle=L.C.rouge;c.fillRect(-13,-4,26,4.5);c.fillStyle=INK;
+  }
+  limb(c,S,eF,armW);limb(c,eF,hF,armW-1);c.beginPath();c.arc(hF.x,hF.y,isC?5:4,0,7);c.fill();c.beginPath();c.arc(hB.x,hB.y,isC?5:4,0,7);c.fill();
+  c.lineWidth=isC?11:8;c.beginPath();c.moveTo(S.x,S.y);c.lineTo(Hc.x,Hc.y+6);c.stroke();
+  c.save();c.translate(Hc.x,Hc.y);c.rotate(F*ha);
+  if(kind==='J'){
+    // Julien : casquette plate, écharpe rouge
+    c.beginPath();c.arc(0,0,13,0,7);c.fill();
+    c.beginPath();c.moveTo(-14,-4);c.quadraticCurveTo(-12,-18,2,-17);c.quadraticCurveTo(14,-16,15,-6);c.lineTo(F*22,-4);c.lineTo(F*22,-1);c.lineTo(-14,-1);c.closePath();c.fill();
+    c.restore();c.save();c.translate(S.x,S.y);c.fillStyle=L.C.rouge;c.beginPath();c.ellipse(0,-2,13,6,0,0,7);c.fill();c.fillRect(-F*10-3,0,7,26);c.fillStyle=INK;
+  }else if(kind==='C'){
+    c.beginPath();c.arc(0,0,13,0,7);c.fill();
+    c.beginPath();[[-13,-4],[-11,-17],[-5,-12],[0,-21],[5,-13],[11,-18],[13,-4]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();
+    if(aF>.3){c.strokeStyle=L.C.papier;c.lineWidth=1.6;c.beginPath();c.arc(F*7,1,4.4,0,7);c.stroke()}
+  }else if(isC){
+    // figurants masculins : X cheveux courts, B crâne chauve, K casquette de contrôleur
+    c.beginPath();c.arc(0,0,13,0,7);c.fill();
+    if(kind==='X'){c.beginPath();c.ellipse(-F*2,-5,14,10,0,Math.PI,0);c.fill()}
+    if(kind==='K'){c.fillRect(-14,-16,28,9);c.fillRect(F>0?0:-22,-9,22,3)}
+    if(kind==='B'&&aF>.3){c.fillStyle='rgba(241,231,211,.18)';c.beginPath();c.arc(-F*3,-8,5,0,7);c.fill();c.fillStyle=INK}
+  }else{
+    c.beginPath();c.arc(0,0,11.5,0,7);c.fill();
+    c.beginPath();c.ellipse(-F*1.5,-2,13.5,12.5,0,Math.PI,0);c.fill();c.fillRect(-13.5,-3,27,8);
+    c.fillRect(F>=0?-13.5:4.5,-3,9,15);
+    if(kind==='S'){c.fillStyle=L.C.rouge;c.fillRect(-14,-9,28,4);c.beginPath();c.moveTo(-F*4,-9);c.quadraticCurveTo(-F*10,-30,-F*2,-42);c.quadraticCurveTo(-F*2,-24,F*2,-9);c.fill();c.fillStyle=INK}
+    if(kind==='L'&&aF>.3){c.fillStyle=L.C.papier;c.beginPath();c.arc(F*6,1,2.9,0,7);c.fill();c.fillStyle=INK;c.beginPath();c.arc(F*6.9,1,1.4,0,7);c.fill()}
+    if(st.levres&&aF>.3){c.fillStyle=L.C.rouge;c.beginPath();c.ellipse(F*10.5,7,2.6,1.6,0,0,7);c.fill();c.fillStyle=INK}
+  }
+  c.restore();c.restore();
+  return{tete:{x:st.x+s*Hc.x,y:hipY+s*Hc.y},main:{x:st.x+s*hF.x,y:hipY+s*hF.y},mainDos:{x:st.x+s*hB.x,y:hipY+s*hB.y},hanche:{x:st.x,y:hipY}};
+};
+
+/* La Mini (Citroën Type C jaune), tournée vers la droite.
+   o = {roue (angle), louise:{look, lean}, celestin:{look, lean}, vide:true} ; renvoie les têtes. */
+function roue(c,cx,cy,ang){
+  c.fillStyle='#0d0b09';c.beginPath();c.arc(cx,cy,24,0,7);c.fill();
+  c.strokeStyle='#2a2420';c.lineWidth=4;c.beginPath();c.arc(cx,cy,22,0,7);c.stroke();
+  c.strokeStyle='rgba(201,161,58,.85)';c.lineWidth=2;
+  for(let i=0;i<10;i++){const a=ang+i*Math.PI/5;c.beginPath();c.moveTo(cx+Math.cos(a)*5,cy+Math.sin(a)*5);c.lineTo(cx+Math.cos(a)*19,cy+Math.sin(a)*19);c.stroke()}
+  c.fillStyle=L.C.or;c.beginPath();c.arc(cx,cy,5,0,7);c.fill();
+}
+L.mini=function(c,x,gy,o){
+  o=o||{};const ink=L.C.ombre,tetes={};
+  if(!o.vide){
+    c.save();c.beginPath();c.rect(x-60,gy-320,320,320-36);c.clip();
+    const lo=o.louise||{},ce=o.celestin||{};
+    const pl=L.melange(L.POSES.assis,L.POSES.assis,0);pl.hd=.05-.5*(lo.look||0);
+    const pc=L.melange(L.POSES.assis_volant,L.POSES.assis_volant,0);pc.hd=-.5*(ce.look||0);
+    if(o.louise!==false)tetes.louise=L.pantin(c,{x:x+56+(lo.lean||0)*5,F:1,p:pl,s:.76,hipY:gy-38},'L').tete;
+    tetes.celestin=L.pantin(c,{x:x+84-(ce.lean||0)*4,F:1,p:pc,s:.76,hipY:gy-38},'C').tete;
+    c.restore();
+  }
+  const bg=c.createLinearGradient(0,gy-74,0,gy-34);bg.addColorStop(0,'#e8bb48');bg.addColorStop(1,'#a8801f');
+  c.fillStyle=bg;c.beginPath();
+  c.moveTo(x,gy-34);c.quadraticCurveTo(x-4,gy-72,x+30,gy-74);c.lineTo(x+104,gy-68);c.lineTo(x+176,gy-60);
+  c.quadraticCurveTo(x+190,gy-58,x+190,gy-46);c.lineTo(x+188,gy-34);c.closePath();c.fill();
+  c.strokeStyle='rgba(90,62,27,.7)';c.lineWidth=1.5;
+  c.beginPath();c.moveTo(x+104,gy-66);c.lineTo(x+106,gy-36);c.stroke();
+  for(let i=0;i<4;i++){c.beginPath();c.moveTo(x+132+i*10,gy-56);c.lineTo(x+132+i*10,gy-44);c.stroke()}
+  c.fillStyle='#3a2e22';c.fillRect(x+186,gy-64,7,30);
+  c.fillStyle='rgba(241,231,211,.08)';c.beginPath();c.moveTo(x+106,gy-68);c.lineTo(x+100,gy-104);c.lineTo(x+104,gy-104);c.lineTo(x+110,gy-68);c.fill();
+  c.strokeStyle='rgba(241,231,211,.55)';c.lineWidth=2.5;c.beginPath();c.moveTo(x+108,gy-68);c.lineTo(x+101,gy-104);c.stroke();
+  c.strokeStyle=ink;c.lineWidth=3;c.beginPath();c.moveTo(x+100,gy-70);c.lineTo(x+95,gy-84);c.stroke();
+  const ang=o.roue||0;roue(c,x+40,gy-24,ang);roue(c,x+150,gy-24,ang);
+  c.strokeStyle=ink;c.lineWidth=7;c.lineCap='round';
+  c.beginPath();c.arc(x+40,gy-24,29,Math.PI*1.05,Math.PI*1.95);c.stroke();
+  c.beginPath();c.arc(x+150,gy-24,29,Math.PI*1.05,Math.PI*1.95);c.stroke();
+  c.lineWidth=4;c.beginPath();c.moveTo(x+68,gy-32);c.lineTo(x+122,gy-32);c.stroke();c.lineCap='butt';
+  c.fillStyle='#3a2e22';c.fillRect(x+180,gy-66,3,8);
+  c.fillStyle='#fff3d0';c.beginPath();c.arc(x+186,gy-70,6.5,0,7);c.fill();
+  c.save();c.globalCompositeOperation='lighter';const hg=c.createRadialGradient(x+186,gy-70,2,x+186,gy-70,34);hg.addColorStop(0,'rgba(255,230,160,.6)');hg.addColorStop(1,'rgba(255,230,160,0)');c.fillStyle=hg;c.beginPath();c.arc(x+186,gy-70,34,0,7);c.fill();c.restore();
+  return tetes;
+};
+/* faisceau des phares */
+L.phares=function(c,x,y,a){
+  c.save();c.globalCompositeOperation='lighter';
+  const g=c.createLinearGradient(x,0,x+620,0);g.addColorStop(0,`rgba(227,178,60,${.22*a})`);g.addColorStop(1,'rgba(227,178,60,0)');
+  c.fillStyle=g;c.beginPath();c.moveTo(x,y-4);c.lineTo(x+640,y-150);c.lineTo(x+640,y+70);c.closePath();c.fill();c.restore();
+};
+
+/* Léon et sa trompette dorée. leve = 0..1 (trompette vers le plafond), saut = rebond en px */
+L.leon=function(c,x,y,leve,saut){
+  y+=saut||0;const col='#22160f';
+  c.fillStyle=col;c.beginPath();c.arc(x,y-112,13,0,7);c.fill();c.fillRect(x-14,y-98,28,62);c.fillRect(x-12,y-38,10,38);c.fillRect(x+2,y-38,10,38);
+  c.save();c.translate(x-6,y-110);c.rotate(Math.PI+.35+leve*.65);
+  c.strokeStyle=col;c.lineWidth=8;c.beginPath();c.moveTo(-8,30);c.lineTo(0,8);c.stroke();
+  c.strokeStyle=L.C.or;c.lineWidth=4;c.beginPath();c.moveTo(0,0);c.lineTo(0,46);c.stroke();
+  c.fillStyle=L.C.or;c.beginPath();c.moveTo(-9,56);c.lineTo(9,56);c.lineTo(3,42);c.lineTo(-3,42);c.closePath();c.fill();c.restore();
+};
+
+/* Maurice, patron du Cabaret des Étoiles : tout en rondeur, moustache claire, nœud papillon rouge,
+   chaîne de montre dorée. o = {main:{x,y} (main droite, coordonnées locales depuis les pieds), chapeau:true, rire 0..1}.
+   Renvoie la position de la main droite. */
+L.maurice=function(c,x,sol,o){
+  o=o||{};const col='#120d0a',r=(o.rire||0)*Math.abs(Math.sin((o.t||0)*11))*4;
+  c.save();c.translate(x,sol);c.fillStyle=col;c.strokeStyle=col;c.lineCap='round';
+  c.fillRect(-30,-64,24,64);c.fillRect(6,-64,24,64);
+  c.beginPath();c.ellipse(-20,-2,18,6,0,0,7);c.fill();c.beginPath();c.ellipse(20,-2,18,6,0,0,7);c.fill();
+  c.beginPath();c.ellipse(0,-118-r,48,56,0,0,7);c.fill();
+  c.strokeStyle=L.C.or;c.lineWidth=1.6;c.beginPath();c.moveTo(-26,-110-r);c.quadraticCurveTo(0,-92-r,22,-112-r);c.stroke();
+  c.fillStyle=L.C.or;c.beginPath();c.arc(22,-112-r,3,0,7);c.fill();
+  c.fillStyle=col;c.fillRect(-10,-178-r,20,12);
+  c.beginPath();c.arc(0,-194-r,21,0,7);c.fill();
+  c.beginPath();c.ellipse(0,-210-r,22,9,0,Math.PI,0);c.fill();
+  c.fillStyle='#e8dcc2';c.beginPath();c.moveTo(-18,-186-r);c.quadraticCurveTo(-9,-194-r,0,-188-r);c.quadraticCurveTo(9,-194-r,18,-186-r);c.quadraticCurveTo(9,-180-r,0,-184-r);c.quadraticCurveTo(-9,-180-r,-18,-186-r);c.fill();
+  c.fillStyle=L.C.rouge;c.beginPath();c.moveTo(-12,-170-r);c.lineTo(0,-165-r);c.lineTo(-12,-160-r);c.closePath();c.fill();c.beginPath();c.moveTo(12,-170-r);c.lineTo(0,-165-r);c.lineTo(12,-160-r);c.closePath();c.fill();
+  // bras gauche : tient le chapeau haut-de-forme retourné devant lui
+  c.strokeStyle=col;c.lineWidth=13;c.beginPath();c.moveTo(-40,-148-r);c.lineTo(-50,-110);c.lineTo(-20,-96);c.stroke();
+  if(o.chapeau!==false){c.fillStyle='#050403';c.fillRect(-40,-96,44,40);c.beginPath();c.ellipse(-18,-96,32,7,0,0,7);c.fill();
+    c.fillStyle='#2a1d14';c.beginPath();c.ellipse(-18,-96,22,4,0,0,7);c.fill();c.fillStyle=L.C.rouge;c.fillRect(-40,-66,44,5)}
+  // bras droit
+  const m=o.main||{x:52,y:-96};
+  c.strokeStyle=col;c.lineWidth=13;c.beginPath();c.moveTo(40,-148-r);const ex=(40+m.x)/2+18,ey=(-148-r+m.y)/2+10;c.quadraticCurveTo(ex,ey,m.x,m.y);c.stroke();
+  c.fillStyle=col;c.beginPath();c.arc(m.x,m.y,7,0,7);c.fill();
+  c.restore();
+  return{x:x+m.x,y:sol+m.y};
+};
+
+/* Amélie Sarrail, la grand-mère : chignon haut, robe longue, ras-de-cou de perles.
+   o = {F (sens), s (échelle), pointe 0..1 (bras tendu, doigt accusateur), tempe 0..1 (main sur la tempe : la migraine stratégique)} */
+L.amelie=function(c,x,sol,o){
+  o=o||{};const F=o.F||1,s=o.s||1,col='#100b09';
+  c.save();c.translate(x,sol);c.scale(s,s);c.fillStyle=col;c.strokeStyle=col;c.lineCap='round';c.lineJoin='round';
+  c.beginPath();c.moveTo(-14,-118);c.lineTo(14,-118);c.lineTo(36,0);c.lineTo(-36,0);c.closePath();c.fill();
+  c.beginPath();c.moveTo(-15,-170);c.lineTo(15,-170);c.lineTo(13,-116);c.lineTo(-13,-116);c.closePath();c.fill();
+  c.fillRect(-5,-184,10,16);c.beginPath();c.arc(F*2,-196,13,0,7);c.fill();
+  c.beginPath();c.arc(-F*4,-214,9,0,7);c.fill();
+  c.fillStyle='#e8dcc2';[-6,-2,2,6].forEach(d=>{c.beginPath();c.arc(d,-180,1.3,0,7);c.fill()});
+  const p=o.pointe||0,tp=o.tempe||0;c.lineWidth=7;
+  const ap=lerp(.25,1.75,p);c.beginPath();c.moveTo(F*6,-164);c.lineTo(F*(6+Math.sin(ap)*30),-164+Math.cos(ap)*30);c.lineTo(F*(6+Math.sin(ap)*58),-164+Math.cos(ap)*58-(p*6));c.stroke();
+  if(tp>0){c.beginPath();c.moveTo(-F*6,-164);c.lineTo(-F*(14+10*tp),-150-20*tp);c.lineTo(F*lerp(-12,-4,tp),lerp(-130,-198,tp));c.stroke()}
+  else{c.beginPath();c.moveTo(-F*6,-164);c.lineTo(-F*12,-136);c.lineTo(-F*6,-112);c.stroke()}
+  c.restore();
+};
+
+/* Chopin, grand chat gris assis, de face. queue = phase, cligne = 0..1 */
+L.chopin=function(c,x,y,s,queue,cligne){
+  c.save();c.translate(x,y);c.scale(s,s);const g=L.C.grisChat;
+  c.strokeStyle=g;c.lineWidth=12;c.lineCap='round';c.beginPath();c.moveTo(40,-6);
+  c.quadraticCurveTo(80,-10+Math.sin(queue)*10,74,-48+Math.sin(queue*1.3)*14);c.quadraticCurveTo(70,-70,84+Math.sin(queue)*8,-86);c.stroke();
+  c.fillStyle=g;c.beginPath();c.moveTo(-40,0);c.quadraticCurveTo(-48,-66,-18,-96);c.lineTo(18,-96);c.quadraticCurveTo(50,-66,42,0);c.closePath();c.fill();
+  c.beginPath();c.arc(0,-124,34,0,7);c.fill();
+  c.beginPath();c.moveTo(-30,-140);c.lineTo(-34,-178);c.lineTo(-8,-154);c.closePath();c.fill();c.beginPath();c.moveTo(30,-140);c.lineTo(34,-178);c.lineTo(8,-154);c.closePath();c.fill();
+  const o=1-(cligne||0);
+  c.fillStyle=L.C.or;c.beginPath();c.ellipse(-14,-126,8,9*o+.5,0,0,7);c.fill();c.beginPath();c.ellipse(14,-126,8,9*o+.5,0,0,7);c.fill();
+  c.fillStyle=L.C.ombre;c.beginPath();c.ellipse(-14,-126,2,7*o+.3,0,0,7);c.fill();c.beginPath();c.ellipse(14,-126,2,7*o+.3,0,0,7);c.fill();
+  c.fillStyle=L.C.rouge;c.beginPath();c.moveTo(-4,-110);c.lineTo(4,-110);c.lineTo(0,-105);c.fill();
+  c.strokeStyle='rgba(241,231,211,.7)';c.lineWidth=1;[[-1,-4],[-1,4],[1,-4],[1,4]].forEach(([d,o2])=>{c.beginPath();c.moveTo(d*20,-106+o2*.6);c.lineTo(d*42,-108+o2*1.5);c.stroke()});
+  c.restore();
+};
+})();
+
+</script>
+<script>
+/* La Dernière Danse — décors communs
+   Ciel de nuit toulousain, silhouette de la ville, collines, scène du Cabaret des Étoiles, public. */
+(function(){
+const L=window.LDD=window.LDD||{};
+const W=1280,H=720;
+
+/* ---------- la nuit ---------- */
+const R=L.rng(1612);
+const ETOILES=[];for(let i=0;i<260;i++)ETOILES.push({x:R()*W*1.7-W*.35,y:R()*560-60,s:.5+R()*1.5,p:R()*6.28,sp:.6+R()*2.2});
+const GEMEAUX=[{x:318,y:104,s:3.2},{x:352,y:126,s:3.6}];
+
+/* d = 0 (pleine nuit) → 1 (aube) */
+L.ciel=function(c,d,horizon){
+  horizon=horizon||480;const g=c.createLinearGradient(0,0,0,horizon);
+  g.addColorStop(0,L.mix('#060b15','#2b3a55',d));g.addColorStop(.6,L.mix('#11203a','#6d5a6c',d));g.addColorStop(1,L.mix('#1f3a5f','#e0995a',d));
+  c.fillStyle=g;c.fillRect(0,0,W,H);
+  if(d>0){const rg=c.createRadialGradient(1060,horizon,10,1060,horizon,460);rg.addColorStop(0,`rgba(240,190,90,${.45*d})`);rg.addColorStop(1,'rgba(240,190,90,0)');c.fillStyle=rg;c.fillRect(0,0,W,H)}
+};
+/* rot = rotation de la voûte (radians), gem = afficher les Gémeaux, maxY = bas des étoiles */
+L.etoiles=function(c,t,d,rot,gem,maxY){
+  rot=rot||0;maxY=maxY||470;const px=W*.55,py=-900,cs=Math.cos(rot),sn=Math.sin(rot),base=1-.88*d;
+  const tr=(x,y)=>{const dx=x-px,dy=y-py;return[px+dx*cs-dy*sn,py+dx*sn+dy*cs]};
+  for(const s of ETOILES){const[x,y]=tr(s.x,s.y);if(x<-4||x>W+4||y<-4||y>maxY)continue;
+    c.fillStyle=`rgba(241,231,211,${base*(.5+.5*Math.sin(t*s.sp+s.p))})`;c.fillRect(x,y,s.s,s.s)}
+  if(gem!==false)for(const s of GEMEAUX){const[x,y]=tr(s.x,s.y);c.fillStyle=`rgba(255,246,225,${base})`;c.beginPath();c.arc(x,y,s.s*.6,0,7);c.fill();
+    c.strokeStyle=`rgba(255,246,225,${base*.45})`;c.lineWidth=1;c.beginPath();c.moveTo(x-s.s*2.4,y);c.lineTo(x+s.s*2.4,y);c.moveTo(x,y-s.s*2.4);c.lineTo(x,y+s.s*2.4);c.stroke()}
+};
+/* Toulouse au loin : toits, clocher de Saint-Sernin, dôme de la Grave. b = centre, y = horizon, k = échelle */
+L.toulouse=function(c,b,y,d,k,couleurs){
+  k=k||1;c.save();c.translate(b,y);c.scale(k,k);
+  c.fillStyle=couleurs&&couleurs.fond||L.mix('#15253b','#3b3446',d);
+  c.beginPath();c.moveTo(-260,0);
+  [[-260,-10],[-220,-16],[-170,-12],[-130,-20],[-90,-14],[-40,-18],[30,-12],[80,-22],[140,-14],[200,-10],[260,-6]].forEach(r=>{c.lineTo(r[0],r[1]);c.lineTo(r[0]+38,r[1])});
+  c.lineTo(300,0);c.closePath();c.fill();
+  const sx=-60;[[22,14],[18,12],[14,11],[11,10],[8,9]].reduce((yy,[w,h])=>{c.fillRect(sx-w/2,yy-h,w,h);return yy-h},-14);
+  c.beginPath();c.moveTo(sx-6,-70);c.lineTo(sx,-104);c.lineTo(sx+6,-70);c.fill();
+  c.beginPath();c.arc(120,-30,20,Math.PI,0);c.fill();c.fillRect(100,-30,40,10);c.fillRect(117,-58,6,10);
+  const lit=1-d;if(lit>0){c.fillStyle=`rgba(227,178,60,${.8*lit})`;[[-200,-8],[-118,-12],[-30,-10],[46,-6],[96,-14],[170,-8]].forEach(w=>c.fillRect(w[0],w[1],2.2,2.2))}
+  c.restore();
+};
+L.colline=(wx,base,amp,f1,f2)=>base+amp*Math.sin(wx/f1)+amp*.5*Math.sin(wx/f2+1.3);
+L.collines=function(c,ox,f,base,amp,f1,f2,col){c.fillStyle=col;c.beginPath();c.moveTo(-20,H);for(let sx=-20;sx<=W+20;sx+=16)c.lineTo(sx,L.colline(sx+ox*f,base,amp,f1,f2));c.lineTo(W+20,H);c.closePath();c.fill()};
+const CYPRES=[];for(let k=0;k<14;k++)CYPRES.push({wx:k*230+((k*97)%120)-200,h:58+((k*53)%40)});
+L.cypres=function(c,ox,f,base,amp,f1,f2,col){c.fillStyle=col;for(const cp of CYPRES){const sx=cp.wx-ox*f;if(sx<-30||sx>W+30)continue;const gy=L.colline(cp.wx,base,amp,f1,f2)+6;c.beginPath();c.ellipse(sx,gy-cp.h/2,8,cp.h/2,0,0,7);c.fill()}};
+
+/* ---------- le Cabaret des Étoiles ---------- */
+/* o = {spot 0..1, X (centre du projecteur), rayon(i) → 0..1 (rayons allumés), etoile 0..1, pulse, enseigne 0..1} */
+L.cabaret=function(c,o){
+  const RC={x:640,y:560},SOL=L.SOL;
+  const g=c.createLinearGradient(0,0,0,560);g.addColorStop(0,'#160c0a');g.addColorStop(1,'#2e1410');c.fillStyle=g;c.fillRect(0,0,W,560);
+  for(let i=0;i<24;i++){
+    const a0=Math.PI+(i+.5)*Math.PI/24-.022,a1=a0+.044,v=o.rayon?o.rayon(i):0;
+    c.fillStyle=v>0?`rgba(227,178,60,${.12+.55*v})`:'rgba(90,62,27,.35)';
+    c.beginPath();c.moveTo(RC.x,RC.y);c.lineTo(RC.x+Math.cos(a0)*760,RC.y+Math.sin(a0)*760);c.lineTo(RC.x+Math.cos(a1)*760,RC.y+Math.sin(a1)*760);c.closePath();c.fill();
+  }
+  c.strokeStyle='rgba(227,178,60,.28)';c.lineWidth=2;[120,190].forEach(r=>{c.beginPath();c.arc(RC.x,RC.y,r,Math.PI,0);c.stroke()});
+  const s=o.etoile||0;if(s>0){
+    const k=s*(o.pulse||1);c.save();c.translate(RC.x,RC.y-215);c.scale(k,k);
+    c.globalCompositeOperation='lighter';const gl=c.createRadialGradient(0,0,0,0,0,130);gl.addColorStop(0,'rgba(255,220,150,.55)');gl.addColorStop(1,'rgba(255,220,150,0)');c.fillStyle=gl;c.beginPath();c.arc(0,0,130,0,7);c.fill();
+    c.globalCompositeOperation='source-over';L.star(c,0,0,68,28,L.C.rouge,L.C.or,3);c.restore();
+  }
+  c.fillStyle=L.C.or;c.font="26px "+L.F.titre;c.textAlign='center';L.setLS(c,'6px');
+  c.globalAlpha=o.enseigne==null?1:o.enseigne;c.fillText('CABARET DES ÉTOILES',640,112);c.globalAlpha=1;L.setLS(c,'0px');
+  const fg=c.createLinearGradient(0,560,0,720);fg.addColorStop(0,'#2a1c13');fg.addColorStop(1,'#120b07');c.fillStyle=fg;c.fillRect(0,560,W,160);
+  c.strokeStyle='rgba(227,178,60,.08)';c.lineWidth=1;for(let i=-10;i<=10;i++){c.beginPath();c.moveTo(640+i*40,560);c.lineTo(640+i*130,720);c.stroke()}
+  c.fillStyle=L.C.or;c.fillRect(0,558,W,3);
+  const spot=o.spot||0,X=o.X||640;
+  if(spot>0){
+    c.save();c.globalCompositeOperation='lighter';
+    const cg=c.createLinearGradient(0,0,0,620);cg.addColorStop(0,`rgba(255,240,210,${.02*spot})`);cg.addColorStop(1,`rgba(255,240,210,${.13*spot})`);
+    c.fillStyle=cg;c.beginPath();c.moveTo(X-40,0);c.lineTo(X+40,0);c.lineTo(X+200,SOL);c.lineTo(X-200,SOL);c.closePath();c.fill();
+    const fl=c.createRadialGradient(X,SOL,10,X,SOL,220);fl.addColorStop(0,`rgba(255,240,210,${.4*spot})`);fl.addColorStop(1,'rgba(255,240,210,0)');
+    c.fillStyle=fl;c.beginPath();c.ellipse(X,SOL,220,34,0,0,7);c.fill();c.restore();
+  }
+  [[0,1],[W,-1]].forEach(([x0,dir])=>{for(let i=0;i<6;i++){const x=x0+dir*i*24;c.fillStyle=i%2?'#5e110d':'#7a1813';c.beginPath();c.moveTo(x,0);c.lineTo(x+dir*26,0);c.quadraticCurveTo(x+dir*(30+i*4),360,x+dir*(16+i*6),720);c.lineTo(x,720);c.closePath();c.fill()}});
+  c.fillStyle='#0f0a08';c.beginPath();c.moveTo(0,0);c.lineTo(W,0);c.lineTo(W,48);for(let i=0;i<=8;i++){c.lineTo(W-150-i*122,48+(i%2?14:0))}c.lineTo(0,48);c.closePath();c.fill();
+  c.strokeStyle='#b88f2e';c.lineWidth=2;c.beginPath();c.moveTo(150,60);c.lineTo(W-150,60);c.stroke();
+};
+
+/* Le public, de dos, au premier plan. bravo = 0..1 (applaudit) */
+const RP=L.rng(1412);
+const TETES=[];for(let i=0;i<22;i++)TETES.push({x:i*62+((i*37)%30)-10,r:24+((i*13)%8),chapeau:i%3===0,plume:i%7===3,ph:RP()*6});
+L.public=function(c,t,bravo){
+  c.fillStyle='#050403';
+  for(const h of TETES){const by=bravo?Math.abs(Math.sin(t*9+h.ph))*-7*bravo:Math.sin(t*1.3+h.ph)*1.5,y=724+by;
+    c.beginPath();c.arc(h.x,y-h.r*.4,h.r,0,7);c.fill();c.fillRect(h.x-h.r*1.3,y,h.r*2.6,40);
+    if(h.chapeau){c.beginPath();c.ellipse(h.x,y-h.r*.9,h.r*1.15,h.r*.55,0,Math.PI,0);c.fill()}
+    if(h.plume){c.beginPath();c.moveTo(h.x+6,y-h.r*1.2);c.quadraticCurveTo(h.x+22,y-h.r*2.6,h.x+10,y-h.r*3);c.quadraticCurveTo(h.x+14,y-h.r*2,h.x+2,y-h.r*1.2);c.fill()}
+    if(bravo>0){c.beginPath();c.arc(h.x+(Math.sin(t*18+h.ph)>0?10:4),y-h.r*1.6,6,0,7);c.fill()}}
+};
+
+/* ---------- la maison Sarrail, à Purpan ----------
+   Géométrie reprise telle quelle du plan coté de l'enveloppe 3 (« Étude de résistance — glycine »,
+   plan n° 0714) : coordonnées du plan (1 unité = 10 mm à l'échelle 1:50 du dessin). */
+L.SARRAIL={
+  facade:{x:110,y:170,w:560,h:470},sol:640,cordon:400,
+  toit:[[90,170],[390,70],[690,170]],
+  etage:[140,245,350,475,580].map(x=>({x,y:240,w:60,h:110})),
+  rdc:[140,245,475,580].map(x=>({x,y:470,w:60,h:110})),
+  porte:{x:350,y:490,w:80,h:150},
+  louise:2,grandPere:2,
+  tiges:['M432 640 C 436 590, 426 560, 434 520 C 442 480, 428 450, 432 410 C 436 370, 426 330, 430 280 C 433 250, 438 220, 452 190',
+         'M450 640 C 454 600, 462 570, 456 530 C 450 490, 462 460, 458 420 C 454 380, 464 340, 458 300 C 455 270, 470 240, 488 210'],
+  branches:['M434 520 C 410 512, 400 500, 392 486','M430 350 C 418 346, 414 338, 412 330','M458 420 C 482 410, 492 398, 500 384','M456 300 C 480 292, 494 280, 502 262'],
+  pattes:[588,528,468,408,348,288],patteBranlante:468,fourche:{x:444,y:410}
+};
+const GRAPPES_S=(function(){const R=L.rng(714),g=[];for(let i=0;i<40;i++){const y=200+R()*420,x=432+(R()-.5)*(y<300?110:80)+(y<300?20:0);g.push({x,y,l:5+R()*7,c:R()<.5?'#6b4a8a':'#8a6aaa'})}return g})();
+/* Dessine la façade de nuit, en coordonnées du plan (l'appelant choisit l'échelle).
+   o = {lumLouise 0..1, ouvre 0..1 (fenêtre de Louise), lumGP 0..1 (fenêtre du grand-père, rez-de-chaussée), ombreGP true, grappes true} */
+L.maisonSarrail=function(c,o){
+  o=o||{};const S=L.SARRAIL,f=S.facade;
+  c.fillStyle='#16121a';c.beginPath();c.moveTo(...S.toit[0]);c.lineTo(...S.toit[1]);c.lineTo(...S.toit[2]);c.closePath();c.fill();
+  c.fillStyle='#3a3026';c.fillRect(f.x,f.y,f.w,f.h);
+  c.strokeStyle='rgba(0,0,0,.2)';c.lineWidth=.5;for(let y=f.y+8;y<S.sol;y+=8){c.beginPath();c.moveTo(f.x,y);c.lineTo(f.x+f.w,y);c.stroke()}
+  c.fillStyle='#4a3d30';c.fillRect(f.x-4,S.cordon-3,f.w+8,6);c.fillRect(f.x-6,f.y-4,f.w+12,6);
+  const fen=(r,lum,ouv)=>{c.fillStyle=lum>0?L.mix('#0c0908','#c99a52',lum):'#0c0908';c.fillRect(r.x,r.y,r.w,r.h);
+    c.fillStyle='#3b3f45';const lw=r.w/2*(1-.85*(ouv||0)); /* volets gris (ch. 4) */c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;for(let y=r.y+8;y<r.y+r.h;y+=9){c.beginPath();c.moveTo(r.x,y);c.lineTo(r.x+lw,y);c.moveTo(r.x+r.w-lw,y);c.lineTo(r.x+r.w,y);c.stroke()}
+    if(lum>0&&lw>4){c.fillStyle=`rgba(255,200,120,${.35*lum})`;c.fillRect(r.x+3,r.y+3,lw-6,r.h-6);c.fillRect(r.x+r.w-lw+3,r.y+3,lw-6,r.h-6)}
+    c.strokeStyle='#2a1a10';c.lineWidth=3;c.strokeRect(r.x,r.y,r.w,r.h);c.fillStyle='#4a3d30';c.fillRect(r.x-6,r.y+r.h,r.w+12,5)};
+  S.etage.forEach((r,i)=>fen(r,i===S.louise?(o.lumLouise||0):0,i===S.louise?o.ouvre:0));
+  S.rdc.forEach((r,i)=>fen(r,i===S.grandPere?(o.lumGP||0):0,0));
+  if(o.ombreGP&&o.lumGP>0){const r=S.rdc[S.grandPere],a=o.lumGP;c.fillStyle=`rgba(20,12,8,${.85*a})`;c.beginPath();c.arc(r.x+22,r.y+40,8,0,7);c.fill();c.fillRect(r.x+14,r.y+48,16,62);
+    c.fillStyle=`rgba(240,230,210,${.9*a})`;c.fillRect(r.x+30,r.y+36,24,30)}
+  const p=S.porte;c.fillStyle='#2e1d0e';c.fillRect(p.x,p.y,p.w,p.h);c.strokeStyle='#1a1009';c.lineWidth=2;c.beginPath();c.moveTo(p.x+p.w/2,p.y);c.lineTo(p.x+p.w/2,p.y+p.h);c.stroke();
+  c.beginPath();c.arc(p.x+p.w/2,p.y,p.w/2,Math.PI,0);c.fillStyle='#3a3026';c.fill();
+  // glycine : deux tiges, branches, pattes de scellement, grappes
+  c.strokeStyle='#2a1d12';c.lineCap='round';c.lineJoin='round';
+  c.lineWidth=7;c.stroke(new Path2D(S.tiges[0]));c.lineWidth=5.5;c.stroke(new Path2D(S.tiges[1]));
+  c.lineWidth=3;S.branches.forEach(b=>c.stroke(new Path2D(b)));
+  c.fillStyle='#16110c';S.pattes.forEach(y=>c.fillRect(426,y,12,5));
+  if(o.grappes!==false)GRAPPES_S.forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x,g.y+g.l,2.6,g.l,0,0,7);c.fill()});
+};
+
+/* L'affiche du concours, identique à celle de l'enveloppe 0 (559 × 794, coordonnées de l'artefact).
+   L'appelant place et met à l'échelle. */
+L.afficheConcours=function(c){
+  const R=L.C.rouge,I=L.C.encre,P=L.C.papier,cx=279.5,TX=L.F.texte,TI=L.F.titre;
+  c.save();c.fillStyle=P;c.fillRect(0,0,559,794);
+  c.strokeStyle=R;c.lineWidth=3;c.strokeRect(23.5,23.5,512,747);c.strokeStyle=I;c.lineWidth=1;c.strokeRect(30.5,30.5,498,733);
+  c.textAlign='center';c.fillStyle=I;
+  const txt=(s,y,font,col,ls)=>{c.font=font;c.fillStyle=col||I;L.setLS(c,(ls||0)+'px');c.fillText(s,cx,y);L.setLS(c,'0px')};
+  txt('RUE DES TEINTURIERS · TOULOUSE',76,"11px "+TX,I,4);
+  c.save();c.translate(cx-150,84);c.strokeStyle=I;c.lineWidth=1;[[20,10],[60,4],[105,1],[150,0],[195,1],[240,4],[280,10]].forEach(([x,y])=>{c.beginPath();c.moveTo(150,44);c.lineTo(x,y);c.stroke()});
+  c.fillStyle=R;c.beginPath();[[150,14],[154,26],[166,26],[156,33],[160,45],[150,38],[140,45],[144,33],[134,26],[146,26]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();c.restore();
+  txt('CABARET DES',176,"30px "+TI,I,3);txt('ÉTOILES',246,"66px "+TI,R,2);
+  c.fillStyle=I;c.fillRect(60,286,120,1);c.fillRect(379,286,120,1);txt('Samedi 14 décembre',292,"italic 700 17px "+TX);
+  txt('PREMIÈRE',336,"13px "+TX,I,5);txt('GRANDE SOIRÉE',374,"700 32px "+TX,I,1);txt('DES PARRAINS',408,"700 32px "+TX,I,1);
+  c.font="25px "+TI;L.setLS(c,'3px');const wc=c.measureText('CONCOURS DE DANSE').width+44;L.setLS(c,'0px');c.fillStyle=I;c.fillRect(cx-wc/2,428,wc,46);txt('CONCOURS DE DANSE',460,"25px "+TI,P,3);
+  c.font="700 16px "+TX;L.setLS(c,'1px');const a='UN DANSEUR CONFIRMÉ',b='UN DÉBUTANT',wa=c.measureText(a).width,wb=c.measureText(b).width,ws=18,tot=wa+wb+ws*2;
+  c.textAlign='left';c.fillStyle=I;c.fillText(a,cx-tot/2,512);c.fillText(b,cx-tot/2+wa+ws*2,512);L.setLS(c,'0px');c.fillStyle=R;c.fillText('✦',cx-tot/2+wa+ws-7,512);c.textAlign='center';
+  txt('Les couples seront tirés au sort le soir même',536,"italic 15px "+TX);
+  txt('FOX-TROT · TANGO · ET CE QUE L’ORCHESTRE VOUDRA',560,"13px "+TX,I,2);
+  c.strokeStyle=I;c.strokeRect(60.5,580.5,212,58);c.strokeStyle=R;c.strokeRect(286.5,580.5,212,58);
+  c.font="11px "+TX;L.setLS(c,'3px');c.fillStyle=I;c.fillText('ORCHESTRE DE JAZZ',166,602);c.fillStyle=R;c.fillText('PRIX DU CONCOURS',392,602);L.setLS(c,'0px');
+  c.font="italic 700 16px "+TX;c.fillStyle=I;c.fillText('sous la direction de Léon',166,624);c.fillStyle=R;c.fillText('Une coupe & cinquante francs',392,624);
+  txt('TIRAGE DES COUPLES À 20 H 30',690,"12px "+TX,I,3);txt('Inscriptions au comptoir · Consommation obligatoire',710,"italic 11px "+TX);txt('LA DIRECTION : MAURICE',732,"10px "+TX,I,3);
+  c.restore();
+};
+
+/* ---------- la salle du Cabaret des Étoiles, d'après le chapitre 3 ----------
+   Ancien entrepôt de vin (voûtes de brique), tables rondes autour d'une piste de parquet ciré,
+   lampes à abat-jour rouges, une scène où l'orchestre de six joue en chemise. Piste : y 392 → 720.
+   o = {lampes 0..1, colonne true} */
+L.SCENE={g:250,d:1030,haut:300,bord:384};
+L.salleCabaret=function(c,t,o){
+  o=o||{};const SC=L.SCENE;
+  const g=c.createLinearGradient(0,0,0,400);g.addColorStop(0,'#160b08');g.addColorStop(1,'#2a1510');c.fillStyle=g;c.fillRect(0,0,W,400);
+  // voûtes de brique de l'ancien entrepôt
+  c.strokeStyle='rgba(90,50,30,.45)';c.lineWidth=10;[[-60,330],[1340,330]].forEach(([x])=>{});
+  for(let k=0;k<4;k++){const x=k*420-50;c.beginPath();c.arc(x+210,330,230,Math.PI,0);c.stroke()}
+  c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=1;for(let y=8;y<330;y+=14){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+  // tonneaux empilés, souvenir de l'entrepôt
+  [[60,300],[120,300],[90,250]].forEach(([x,y])=>{c.fillStyle='#2a1810';c.beginPath();c.ellipse(x,y,28,26,0,0,7);c.fill();c.strokeStyle='#4a3020';c.lineWidth=3;c.beginPath();c.ellipse(x,y,28,26,0,0,7);c.stroke();c.beginPath();c.ellipse(x,y,12,26,0,0,7);c.stroke()});
+  // scène : rideau rouge, étoiles dorées peintes, plancher
+  c.fillStyle='#4a0f0b';c.fillRect(SC.g,70,SC.d-SC.g,SC.haut-70);
+  for(let i=0;i<14;i++){const x=SC.g+i*(SC.d-SC.g)/14;c.fillStyle=i%2?'#5a1410':'#3f0c09';c.fillRect(x,70,(SC.d-SC.g)/14,SC.haut-70)}
+  c.fillStyle='#2a0807';c.fillRect(SC.g-10,60,SC.d-SC.g+20,18);
+  [[380,110],[640,96],[900,110],[510,150],[770,150]].forEach(([x,y],i)=>L.star(c,x,y,i===1?16:10,i===1?6.5:4,L.C.or));
+  c.fillStyle='#3a2410';c.fillRect(SC.g-14,SC.haut,SC.d-SC.g+28,SC.bord-SC.haut);c.fillStyle='#24160c';c.fillRect(SC.g-14,SC.bord,SC.d-SC.g+28,10);c.fillStyle=L.C.or;c.fillRect(SC.g-14,SC.bord-2,SC.d-SC.g+28,2);
+  // piste de parquet ciré
+  const pg=c.createLinearGradient(0,394,0,720);pg.addColorStop(0,'#3a2414');pg.addColorStop(1,'#6b4526');c.fillStyle=pg;c.fillRect(0,394,W,326);
+  c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=1;for(let i=-12;i<=12;i++){c.beginPath();c.moveTo(640+i*40,394);c.lineTo(640+i*120,720);c.stroke()}
+  for(let y=410;y<720;y+=y<500?14:22){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+  // lampes suspendues à abat-jour rouge au-dessus de la piste
+  const la=o.lampes==null?1:o.lampes;
+  [[430,130],[850,130]].forEach(([x,y])=>{c.strokeStyle='#0b0706';c.lineWidth=2;c.beginPath();c.moveTo(x,0);c.lineTo(x,y);c.stroke();
+    c.fillStyle='#8a1a14';c.beginPath();c.moveTo(x-22,y+22);c.lineTo(x+22,y+22);c.lineTo(x+12,y);c.lineTo(x-12,y);c.closePath();c.fill();
+    c.save();c.globalCompositeOperation='lighter';const cg=c.createLinearGradient(0,y+22,0,640);cg.addColorStop(0,`rgba(255,150,110,${.2*la})`);cg.addColorStop(1,`rgba(255,150,110,${.03*la})`);c.fillStyle=cg;c.beginPath();c.moveTo(x-22,y+22);c.lineTo(x+22,y+22);c.lineTo(x+170,640);c.lineTo(x-170,640);c.closePath();c.fill();
+    const fl=c.createRadialGradient(x,600,4,x,600,190);fl.addColorStop(0,`rgba(255,170,120,${.3*la})`);fl.addColorStop(1,'rgba(255,170,120,0)');c.fillStyle=fl;c.beginPath();c.ellipse(x,600,190,40,0,0,7);c.fill();c.restore()});
+  // colonnes de fonte
+  if(o.colonne!==false)[150,1150].forEach(x=>{c.fillStyle='#0c0806';c.fillRect(x-9,0,18,612);c.fillRect(x-16,0,32,22);c.fillRect(x-15,600,30,14)});
+};
+/* tables rondes et leur lampe rouge, avec les clients ; à dessiner au premier plan */
+L.tablesCabaret=function(c,t){
+  [[70,690,1.25],[1215,690,1.25],[300,470,.7],[980,470,.7]].forEach(([x,y,k],i)=>{
+    c.save();c.translate(x,y);c.scale(k,k);
+    c.fillStyle='#0d0806';c.beginPath();c.ellipse(0,0,70,14,0,0,7);c.fill();c.fillRect(-5,0,10,60);
+    c.fillStyle='#a8201a';c.beginPath();c.moveTo(-16,-28);c.lineTo(16,-28);c.lineTo(10,-46);c.lineTo(-10,-46);c.closePath();c.fill();c.fillStyle='#0d0806';c.fillRect(-2,-28,4,26);
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(0,-30,2,0,-30,90);g.addColorStop(0,'rgba(255,120,90,.35)');g.addColorStop(1,'rgba(255,120,90,0)');c.fillStyle=g;c.beginPath();c.arc(0,-30,90,0,7);c.fill();c.restore();
+    c.fillStyle='#070504';[[-58,-12],[58,-12]].forEach(([dx,dy],j)=>{const b=Math.sin(t*1.5+i+j)*1.5;c.beginPath();c.arc(dx,dy-40+b,13,0,7);c.fill();c.fillRect(dx-18,dy-28+b,36,40)});
+    c.restore()});
+};
+/* l'orchestre de six, en chemise, manches retroussées ; Léon à la trompette. joue = 0..1 */
+L.orchestreSix=function(c,t,joue){
+  const y=L.SCENE.haut,b=Math.abs(Math.sin(t*Math.PI*2))*joue*2,col='#120a07';c.fillStyle=col;c.strokeStyle=col;
+  // piano droit et pianiste
+  c.fillRect(300,y-70,70,70);c.fillStyle='#e8dcc2';c.fillRect(304,y-34,62,4);c.fillStyle=col;c.beginPath();c.arc(392,y-74-b,9,0,7);c.fill();c.fillRect(384,y-64-b,18,34);c.fillRect(386,y-30,14,30);
+  // contrebasse
+  c.beginPath();c.ellipse(470,y-38,16,26,0,0,7);c.fill();c.fillRect(468,y-110,4,72);c.beginPath();c.arc(492,y-96+b,9,0,7);c.fill();c.fillRect(484,y-86+b,18,50);c.fillRect(486,y-36,7,36);c.fillRect(496,y-36,7,36);
+  // batterie
+  c.beginPath();c.arc(570,y-22,22,0,7);c.fill();c.fillStyle=L.C.or;c.fillRect(548,y-62,30,2);c.fillStyle=col;c.fillRect(562,y-62,2,40);c.beginPath();c.arc(600,y-70-b,9,0,7);c.fill();c.fillRect(592,y-60-b,18,32);c.fillRect(594,y-28,14,28);
+  // saxophone
+  c.beginPath();c.arc(900,y-92-b,9,0,7);c.fill();c.fillRect(892,y-82-b,18,46);c.fillRect(892,y-36,7,36);c.fillRect(902,y-36,7,36);c.strokeStyle=L.C.or;c.lineWidth=4;c.beginPath();c.moveTo(906,y-74);c.quadraticCurveTo(918,y-50,908,y-42);c.stroke();c.strokeStyle=col;
+  // banjo
+  c.fillStyle=col;c.beginPath();c.arc(980,y-90-b,9,0,7);c.fill();c.fillRect(972,y-80-b,18,46);c.fillRect(972,y-34,7,34);c.fillRect(982,y-34,7,34);c.fillStyle='#e8dcc2';c.beginPath();c.arc(970,y-56,11,0,7);c.fill();c.strokeStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(972,y-56);c.lineTo(1006,y-82);c.stroke();
+};
+
+/* Soleil rayonnant art déco (titres, ouverture). o = {x,y,r,n,rot,couleur,epais,alpha} */
+L.soleil=function(c,o){
+  const n=o.n||24;c.save();c.translate(o.x,o.y);c.rotate(o.rot||0);c.globalAlpha=o.alpha==null?1:o.alpha;
+  for(let i=0;i<n;i++){const a=i*2*Math.PI/n,w=(o.epais||.05);c.fillStyle=typeof o.couleur==='function'?o.couleur(i):o.couleur;
+    c.beginPath();c.moveTo(0,0);c.lineTo(Math.cos(a-w)*o.r,Math.sin(a-w)*o.r);c.lineTo(Math.cos(a+w)*o.r,Math.sin(a+w)*o.r);c.closePath();c.fill()}
+  c.restore();
+};
+})();
+
+</script>
+<script>
+/* Plan 12 — Le bureau du rez-de-chaussée (chapitre 11, ~112 s)
+   A. Lundi 23 décembre au matin : Marthe secoue les tapis, voit quelque chose dans la glycine, à mi-hauteur,
+      et la décroche avec le manche d'un balai : une frange de soie noire.
+   B. Le bureau : lambris, livres de droit reliés en rouge, bureau d'acajou, lampe à abat-jour vert. « Tu sors la nuit. »
+      « Oui, grand-père. Je sors la nuit. » … « Et c'est lui que j'aime. » « Amélie… je vous prie. »
+      Derrière trois volumes du Dalloz, un étui noir : le violon. Rose, Montpellier, cinquante ans d'étui.
+      « Je voudrais voir ce portrait. Et je voudrais voir ce garçon. Pas par la fenêtre. Par la porte d'entrée. »
+   C. La nuit de Noël : un violon monte à travers le plancher. Il hésite, se trompe, recommence.
+   Les passages du chapitre qui évoquent le mariage ne sont pas repris. */
+(function(){
+const L=LDD,{clamp,lerp,eio,eoc,seg}=L,eic=L.eic,W=L.W,H=L.H,SOL=L.SOL,S=L.SARRAIL,P=L.POSES;
+const cp=p=>JSON.parse(JSON.stringify(p));
+
+function heure(c,s,a){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='right';c.font="30px "+L.F.machine;L.setLS(c,'3px');
+  c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.8)';c.strokeText(s,1230,64);c.fillStyle=L.C.or;c.fillText(s,1230,64);L.setLS(c,'0px');c.restore()}
+function parole(c,s,x,y,a){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font="27px "+L.F.main;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';
+  const w=c.measureText(s).width;x=clamp(x,w/2+30,W-w/2-30);y=clamp(y,40,H-30);c.strokeText(s,x,y);c.fillStyle='#fbf3e2';c.fillText(s,x,y);c.restore()}
+const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
+function dire(c,t,lignes,tetes){for(const l of lignes){const a=env(t,l[0],l[3]||1.5);if(a<=0)continue;const h=tetes[l[1]];if(h)parole(c,l[2],h.x+(l[4]||0),h.y-(l[5]||62),a)}}
+const OX=640-440,OY=660-640; // le pied de la glycine au centre, le sol à 660 px
+const scr=p=>p&&{x:p.x+OX,y:p.y+OY};
+function ciel(c,t){const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#060b15');g.addColorStop(1,'#13233b');c.fillStyle=g;c.fillRect(0,0,W,H);L.etoiles(c,t,0,0,false,300)}
+function jardin(c){
+  c.fillStyle='#070d12';[[-150,470,95],[-90,540,80],[880,470,100],[960,540,90],[1050,500,120]].forEach(([x,y,r])=>{c.beginPath();c.ellipse(x,y,r,r*1.3,0,0,7);c.fill();c.fillRect(x-6,y,12,640-y)});
+  c.fillStyle='#0d1712';c.fillRect(-300,640,1700,120);
+  for(let k=0;k<140;k++){const x=-260+((k*131.7)%1600),y=646+((k*37)%60);c.fillStyle='rgba(225,235,245,.1)';c.fillRect(x,y,2,1.5)}
+}
+// le banc de pierre au pied de la glycine (il y reviendra au chapitre 9)
+function banc(c){c.fillStyle='#3a3229';c.fillRect(470,612,90,10);c.fillStyle='#2a241d';c.fillRect(478,622,10,18);c.fillRect(542,622,10,18)}
+const FRANGE={x:437,y:452};
+function frange(c,a){if(a<=0)return;c.save();c.globalAlpha=a;c.strokeStyle='#050403';c.lineWidth=1.3;for(let k=0;k<5;k++){c.beginPath();c.moveTo(FRANGE.x+k*1.6,FRANGE.y);c.lineTo(FRANGE.x+k*1.6+(k-2)*.6,FRANGE.y+10+k%2*2);c.stroke()}c.restore()}
+
+function narr(c,s,a,y){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font="italic 32px "+L.F.texte;c.lineWidth=5;c.strokeStyle='rgba(8,10,18,.85)';c.strokeText(s,640,y);c.fillStyle='#f1e7d3';c.fillText(s,640,y);c.restore()}
+function frangeTenue(c,x,y){c.strokeStyle='#050403';c.lineWidth=1.6;for(let k=0;k<6;k++){c.beginPath();c.moveTo(x+k*1.8,y);c.lineTo(x+k*1.8+(k-2.5)*.7,y+16+k%2*3);c.stroke()}}
+
+/* ================= A. Marthe et la frange ================= */
+function sceneA(c,t){
+  // un matin d'hiver, gris et clair
+  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#8c98a8');g.addColorStop(1,'#c9c2b4');c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.save();c.translate(OX,OY);
+  c.fillStyle='#4a5048';[[-150,470,95],[880,470,100],[960,540,90]].forEach(([x,y,r])=>{c.beginPath();c.ellipse(x,y,r,r*1.3,0,0,7);c.fill();c.fillRect(x-6,y,12,640-y)});
+  c.fillStyle='#7d8a78';c.fillRect(-300,640,1700,120);for(let k=0;k<140;k++){c.fillStyle='rgba(255,255,255,.4)';c.fillRect(-260+((k*131.7)%1600),646+((k*37)%60),2,1.5)}
+  L.maisonSarrail(c,{lumLouise:0,ouvre:0,grappes:false});
+  // la fenêtre voisine ouverte ; Marthe, le tapis, puis le balai
+  const f=S.etage[3];c.fillStyle='#1a1410';c.fillRect(f.x+3,f.y+3,f.w-6,f.h-6);
+  c.save();c.beginPath();c.rect(f.x-40,f.y-20,f.w+80,f.h+40);c.clip();
+  const pm=cp(P.debout);pm.tA=.35;pm.hd=t>6.4?.6:.2;
+  const secoue=t<6.2?Math.sin(t*14):0;pm.aF=[2+.2*secoue,.2];pm.aB=[1.8+.2*secoue,.3];
+  const balai=seg(t,7.4,8.4)*(1-seg(t,10.4,11.2));if(balai>0){pm.aF=[lerp(2,3.3,balai),.1];pm.aB=[lerp(1.8,3.1,balai),.1]}
+  const rm=L.pantin(c,{x:f.x+20,F:-1,p:pm,s:.78,hipY:f.y+f.h+14},'Y');c.fillStyle='#e8e1d0';c.beginPath();c.ellipse(rm.tete.x,rm.tete.y-11,10,4,0,0,7);c.fill();
+  c.restore();
+  if(t<6.2){c.fillStyle='#7a1a14';c.save();c.translate(rm.main.x,rm.main.y);c.rotate(.3*secoue);c.fillRect(-30,0,60,20);c.fillStyle='#c9a13a';c.fillRect(-26,4,52,3);c.restore()}
+  // le manche du balai jusqu'à la branche, à mi-hauteur, sous la chambre de mademoiselle
+  const fr={x:437,y:452};let fx=fr.x,fy=fr.y;
+  if(balai>0){const bx=lerp(rm.main.x,fr.x+4,balai),by=lerp(rm.main.y,fr.y+2,balai);c.strokeStyle='#7a5a32';c.lineWidth=3;c.beginPath();c.moveTo(rm.main.x,rm.main.y);c.lineTo(bx,by);c.stroke();
+    if(t>9.4){const u=seg(t,9.4,10.8);fx=lerp(fr.x,rm.main.x,u);fy=lerp(fr.y,rm.main.y,u)}}
+  if(t<11)frangeTenue(c,fx,fy);
+  c.restore();
+  heure(c,'LUNDI 23 DÉCEMBRE · LE MATIN',env(t,3.4,4));
+  narr(c,'Une frange de soie noire, longue comme un doigt.',env(t,10.8,2.8),680);
+  narr(c,'Amélie Sarrail connaissait par cœur toutes les robes de la maison. Aucune n’avait de franges.',env(t,13.6,3.4),680);
+}
+
+/* ================= B. le bureau ================= */
+const LB=[[19.4,'E','Assieds-toi.',1.3],[21,'E','Tu sors la nuit.',1.5],[23,'L','Oui, grand-père. Je sors la nuit.',2.1],[25.5,'E','Où vas-tu ?',1.2],
+  [26.9,'L','Au Cabaret des Étoiles, rue des Teinturiers. Je danse.',2.4],[29.5,'L','J’apprends à danser depuis septembre',1.8],[31.4,'L','chez une ancienne danseuse du Moulin-Rouge qui s’appelle Solange.',2.6],
+  [34.2,'A','Seigneur.',1.2],[35.6,'E','Et tu y vas seule ?',1.4],[37.2,'L','Non. J’y vais avec quelqu’un. Il s’appelle Célestin Delacroix.',2.7],
+  [40.1,'L','C’est lui qui m’a aidée à descendre par la glycine.',2.3],[42.6,'L','Et c’est lui que j’aime.',2.2],
+  [47.4,'E','Amélie. Voulez-vous nous laisser, je vous prie ?',2.4],[50,'A','Édouard, je ne…',1.5],[51.7,'E','Je vous prie.',1.5],
+  [58.6,'E','Il était à moi. J’avais dix-neuf ans.',2.1],[60.9,'E','Je jouais dans un petit orchestre, à Montpellier, pendant mes études de droit.',3],
+  [64.1,'E','Il y avait une chanteuse. Elle s’appelait Rose.',2.3],[66.6,'E','Je voulais partir avec elle à Paris. Je voulais jouer.',2.5],
+  [69.4,'E','Et je n’ai plus jamais sorti ce violon de son étui.',2.4],[72.1,'E','Je ne te regardais pas beaucoup, Louise. Je le sais.',2.4],
+  [74.8,'E','J’avais peur que tu fasses ce que j’ai fait.',2.2],[77.2,'E','Et j’avais encore plus peur que tu ne le fasses pas.',2.5],
+  [80.2,'E','Ce garçon. Ce peintre. Il est honnête ?',2.2],[82.6,'L','C’est l’homme le plus honnête que je connaisse.',2.2],[85,'E','Il t’aime ?',1.2],
+  [86.4,'L','Il m’a peinte, grand-père. Il m’a peinte telle que je suis.',2.6],[89.6,'E','Je voudrais voir ce portrait. Et je voudrais voir ce garçon.',2.6],
+  [92.4,'E','Pas par la fenêtre. Par la porte d’entrée. Dimanche, à quinze heures.',3],
+  [99.4,'L','Je veux passer le baccalauréat. Et entrer à la faculté de médecine.',2.8],[102.4,'E','Une chose à la fois, ma petite. Une chose à la fois.',2.6]];
+const BIB={x:60,y:110,w:470,h:500};
+function bureau(c,t){
+  c.fillStyle='#24160e';c.fillRect(0,0,W,SOL);
+  c.fillStyle='rgba(0,0,0,.25)';for(let x=0;x<W;x+=90){c.fillRect(x,360,2,252)}c.fillStyle='#3a2414';c.fillRect(0,354,W,8);
+  // la bibliothèque : livres de droit reliés en rouge ; le Dalloz en bas
+  c.fillStyle='#1a0f09';c.fillRect(BIB.x,BIB.y,BIB.w,BIB.h);
+  for(let r=0;r<5;r++){c.fillStyle='#2e1d0e';c.fillRect(BIB.x,BIB.y+r*100+92,BIB.w,8);
+    for(let k=0;k<26;k++){const bx=BIB.x+8+k*17.6,bh=70+((k*7+r*3)%14);const vide=r===4&&k>=3&&k<=5&&t>55&&t<56.6;if(vide)continue;
+      const dep=r===4&&k>=3&&k<=5?eio(seg(t,54.2,55))*(1-eio(seg(t,56.6,57.2))):0;
+      c.fillStyle=(k+r)%5===0?'#5a1410':'#7a1a14';c.fillRect(bx+dep*(k-2)*30,BIB.y+r*100+92-bh,15,bh);c.fillStyle='#c9a13a';c.fillRect(bx+3+dep*(k-2)*30,BIB.y+r*100+92-bh+10,9,2)}}
+  // la fenêtre du bureau (rez-de-chaussée, à droite) : un jour gris
+  c.fillStyle='#8c98a8';c.fillRect(1040,140,170,210);c.strokeStyle='#2e1d0e';c.lineWidth=8;c.strokeRect(1040,140,170,210);c.beginPath();c.moveTo(1125,140);c.lineTo(1125,350);c.stroke();
+  c.fillStyle='#1a120c';c.fillRect(0,SOL,W,H-SOL);c.fillStyle='#5a1410';c.fillRect(200,624,880,60);
+}
+function bureauAvant(c,t,o){
+  // le bureau d'acajou, la lampe à abat-jour vert, la frange, l'étui
+  c.fillStyle='#4a2414';c.fillRect(500,520,300,14);c.fillStyle='#3a1c10';c.fillRect(510,534,280,78);
+  c.fillStyle='#1d140b';c.fillRect(530,478,8,42);c.fillStyle='#2f5a3a';c.beginPath();c.moveTo(510,480);c.lineTo(558,480);c.lineTo(548,458);c.lineTo(520,458);c.closePath();c.fill();
+  c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(534,500,4,534,500,380);g.addColorStop(0,'rgba(200,230,160,.28)');g.addColorStop(1,'rgba(200,230,160,0)');c.fillStyle=g;c.fillRect(0,0,W,H);c.restore();
+  if(o.frange)frangeTenue(c,600,514);
+  if(o.etui){const op=o.ouvert;c.fillStyle='#0b0907';c.beginPath();c.ellipse(680,512,70,13,0,0,7);c.fill();
+    if(op>0){c.fillStyle='#5a2a2a';c.beginPath();c.ellipse(680,508,62,9,0,0,7);c.fill();c.fillStyle='#7a4a22';c.beginPath();c.ellipse(660,507,26,7,0,0,7);c.fill();c.fillRect(686,505,48,3); // le violon
+      c.save();c.globalAlpha=1-op;c.fillStyle='#0b0907';c.beginPath();c.ellipse(680,500,70,12,0,0,7);c.fill();c.restore()}
+    for(let k=0;k<12;k++){c.fillStyle=`rgba(230,220,200,${.3*Math.sin(t*2+k)**2})`;c.fillRect(620+k*11,492+Math.sin(t+k)*6,2,2)}} // la poussière de l'étui
+}
+function fauteuil(c,x,F){c.fillStyle='#3a1c10';c.fillRect(x-40,540,80,72);c.fillRect(x-F*46-6,470,12,142);c.fillStyle='#4a2414';c.fillRect(x-44,532,88,14)}
+function sceneB(c,t){
+  bureau(c,t);
+  const tetes={};
+  fauteuil(c,400,1);fauteuil(c,900,-1);
+  // Amélie, debout derrière lui, très droite, la frange entre deux doigts ; elle sort
+  const sort=seg(t,53.4,55.4);
+  if(sort<1){const x=lerp(300,1180,eio(sort));c.save();c.globalAlpha=1-seg(t,55,55.4);L.amelie(c,x,SOL,{F:sort>0?1:1,s:1,tempe:t>34&&t<36?1:0});c.restore();tetes.A={x,y:SOL-196}}
+  // Édouard : assis ; il se lève, va à la bibliothèque, revient avec l'étui ; il effleure les cordes
+  let xe=400,assis=true;const pe=cp(P.assis);pe.aF=[.9,.9];pe.hd=0;
+  const leve=seg(t,53.8,54.4);if(t>53.8&&t<57.6){assis=false;xe=lerp(400,330,eio(seg(t,53.8,54.4)));if(t>56.8)xe=lerp(330,400,eio(seg(t,56.8,57.6)))}
+  if(t>59.2&&t<62)pe.aF=[1.5,.3]; // il effleure les cordes
+  if(t>72&&t<80)pe.hd=-.05;
+  const epaule=t>95.2&&t<99;
+  let re;
+  if(assis&&!epaule){re=L.pantin(c,{x:xe,F:1,p:pe,hipY:560,s:1.05},'B')}
+  else if(!assis){const p=L.pas(P.debout,t*8,.2,0);p.tA=.06;if(t>54.4&&t<56.6){p.aF=[1.3,.6];p.tA=.25}if(t>56.6)p.aF=[1.2,.9];re=L.pantin(c,{x:xe,F:t>56.6?1:-1,p,s:1.05},'B');
+    if(t>56.6){c.fillStyle='#0b0907';c.fillRect(re.main.x-10,re.main.y-8,90,18)}}
+  else{const p=cp(P.debout);p.aF=[1.3,.8];p.aB=[1.2,.9];p.hd=.1;re=L.pantin(c,{x:420,F:1,p,s:1.05},'B')}
+  tetes.E=re.tete;
+  // Louise, assise face à lui ; elle soutient son regard ; elle fait le tour du bureau
+  const tour=seg(t,94.2,96);let rl;
+  if(tour<=0){const pl=cp(P.assis);pl.aF=[.8,1];pl.hd=t>44.8&&t<47?-.02:0;if(t>76&&t<88)pl.hd=.1;rl=L.pantin(c,{x:900,F:-1,p:pl,hipY:560,levres:true},'L')}
+  else{const p=tour<1?L.pas(P.debout,t*10,.3,0):cp(P.debout);if(tour>=1){p.aF=[1.3,.8];p.aB=[1.2,.9];p.hd=-.2}const xt=tour<.5?lerp(900,860,tour*2):lerp(860,462,eio((tour-.5)*2));rl=L.pantin(c,{x:xt,F:-1,p,levres:true},'L')}
+  tetes.L=rl.tete;
+  if(t>76&&t<90){c.fillStyle='rgba(200,220,255,.8)';c.beginPath();c.arc(rl.tete.x-6,rl.tete.y+8+(t*20)%8,1.6,0,7);c.fill()} // les larmes
+  bureauAvant(c,t,{frange:t>54.6,etui:t>57.4&&t<1000,ouvert:eio(seg(t,57.8,58.4))*(1-eio(seg(t,88.8,89.4)))});
+  dire(c,t,LB,tetes);
+  heure(c,'MIDI · LE BUREAU DU REZ-DE-CHAUSSÉE',env(t,18.2,4));
+}
+
+/* ================= C. la nuit de Noël, le violon ================= */
+function sceneC(c,t){
+  L.ciel(c,0,480);L.etoiles(c,t,0,0,false,300);
+  c.save();c.translate(OX,OY);jardin(c);L.maisonSarrail(c,{lumLouise:.25,ouvre:0,lumGP:1,ombreGP:false,grappes:false});banc(c);
+  // dans le bureau, une ombre qui joue du violon
+  const r=S.rdc[S.grandPere];c.fillStyle='rgba(20,12,8,.88)';c.beginPath();c.arc(r.x+28,r.y+38,8,0,7);c.fill();c.fillRect(r.x+20,r.y+46,16,64);
+  c.strokeStyle='rgba(20,12,8,.9)';c.lineWidth=2;const arc=Math.sin(t*3)*12;c.beginPath();c.moveTo(r.x+18,r.y+52+arc);c.lineTo(r.x+52,r.y+44-arc);c.stroke();
+  c.restore();
+  heure(c,'VEILLE DE NOËL · DEUX HEURES DU MATIN',env(t,108.2,4));
+  narr(c,'Il hésitait, se trompait, recommençait. Il jouait faux, puis un peu moins faux.',env(t,108.8,4.4),684);
+}
+
+const OUVERTURE=[{s:'CHAPITRE 11 · LE BUREAU DU REZ-DE-CHAUSSÉE',y:300,f:"20px "+L.F.machine,c:'#b9a98c',ls:'5px'},{s:'Ce fut Marthe qui la trahit, sans le vouloir.',y:380,f:"italic 44px "+L.F.texte}];
+const FIN=[{s:'Louise resta éveillée à l’écouter,',y:320,f:"italic 36px "+L.F.texte},{s:'les yeux grands ouverts dans le noir.',y:370,f:"italic 36px "+L.F.texte},{s:'Elle comprit alors de qui elle tenait ses nuits blanches.',y:460,f:"38px "+L.F.main,c:L.C.or}];
+const DUREE=122;
+const COUPES=[[17.6,.45],[107.4,.5]];
+function rendu(c,t){
+  c.fillStyle='#000';c.fillRect(0,0,W,H);
+  if(t>2.9&&t<115.4){if(t<17.6)sceneA(c,t);else if(t<107.4)sceneB(c,t);else sceneC(c,t)}
+  let n=t<3.6?1-seg(t,2.9,3.6):t>114.6?seg(t,114.6,115.4):0;
+  for(const[k,d]of COUPES){const a=1-Math.abs(t-k)/d;if(a>n)n=a}
+  L.noir(c,n);
+  L.carton(c,OUVERTURE,t<.6?t/.6:t<2.4?1:Math.max(0,1-(t-2.4)/.6),450);
+  L.carton(c,FIN,seg(t,115.6,116.4)*(1-seg(t,121.2,122)),540);
+}
+
+function partition(ac,sortie,T){
+  const K=L.kit(ac,sortie);
+  K.projecteur(T,DUREE);
+  // le tapis secoué, le balai
+  for(let w=3.6;w<6.2;w+=.28)K.noise(T+w,.08,'lowpass',400,1,.06,.005);K.noise(T+9.4,.2,'bandpass',1200,2,.02,.02);
+  K.nappeAccord('A7b9',T+11,6,null,.005);
+  // le bureau : la pendule, le silence
+  for(let w=18;w<53;w+=1.2)K.noise(T+w,.03,'bandpass',2200,8,.035,.002);
+  K.basse(33,T+21,null,.12);K.nappeAccord('Dm9',T+42.6,4,null,.006);
+  K.noise(T+54.4,.5,'lowpass',300,1,.04,.05);K.noise(T+57.8,.4,'bandpass',800,1,.03,.05); // les volumes du Dalloz, l'étui
+  // les cordes détendues ne produisent qu'un murmure
+  [55,57,62,64].forEach((m,i)=>K.souffle(m,T+59.4+i*.3,.6,{g:.008,cut:900,vib:3,att:.2}));
+  const v=K.bus();K.nappeAccord('Dm9',T+64,6,v,.005);K.nappeAccord('Bbmaj7',T+70,6,v,.005);K.nappeAccord('Fmaj9',T+86,6,v,.006);K.nappeAccord('Cmaj9',T+94,8,v,.006);
+  K.phrase(L.THEME.reponse,T+89.6,.8,'piano',v,.025);
+  // la nuit de Noël : un violon qui hésite, se trompe, recommence
+  const notes=L.THEME.lent;let w=T+108;const fausse=[0,15,0,-20,0,0,30,0];
+  notes.forEach(([o,m,d],i)=>{const t0=w+o*.8;const o2=ac.createOscillator();o2.type='sawtooth';o2.frequency.value=L.mf(m);o2.detune.value=fausse[i%8];
+    const g=ac.createGain();g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(.025,t0+.2);g.gain.setValueAtTime(.025,t0+d*.8-.1);g.gain.linearRampToValueAtTime(0.0001,t0+d*.8+.1);
+    o2.connect(K.lp(2400)).connect(g).connect(K.out);o2.start(t0);o2.stop(t0+d*.8+.2)});
+  K.violon(69,T+116.4,1.2,null,.022);K.violon(72,T+117.6,.8,null,.022);K.violon(74,T+118.4,2,null,.022);
+  K.finale(T,DUREE);
+}
+
+L.film({duree:DUREE,rendu,partition,affiche:62});
+})();
+
+</script>
+</body>
+</html>
