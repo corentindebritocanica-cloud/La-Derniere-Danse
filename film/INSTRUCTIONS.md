@@ -22,7 +22,7 @@ Le contexte du cadeau, les personnages, les enveloppes et les écarts relevés p
   - toute liberté prise doit être signalée dans `plans.json` (champ `NOTE`) et dans `PROJET.md`.
 - **Cohérence avec les artefacts papier** : la maison Sarrail, l'affiche, la carte du ciel, le mot de Louise, le carnet de bal, le tirage de Julien.
 - **Saison** : décembre. Glycine sans fleurs (`grappes:false`), arbres nus, givre, buée.
-- **Site public** : seuls les noms fictifs apparaissent dans le dépôt. Les vraies photos restent hors du dépôt.
+- **Site public** : sur le site (`index.html`), seuls les noms fictifs apparaissent. Les vraies photos sont dans `artefacts-papier/images/` (accord de Corentin).
 - **Enveloppe 8** : secret absolu. Rien ne doit évoquer le mariage.
 
 ## 3. Comment un plan est fabriqué

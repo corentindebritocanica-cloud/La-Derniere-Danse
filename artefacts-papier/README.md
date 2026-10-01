@@ -7,7 +7,7 @@ Copie des sources du canvas claude.ai (https://claude.ai/artifact/SjfqppdwXW8aUq
 - `canvas.json` : taille exacte de chaque planche, en px (1 px = 1/96 de pouce).
 - `images/` : images générées utilisées par les planches (`/_blob/<id>` dans le source = `images/<id>.<ext>`).
 - `png/` : rendu de chaque planche en PNG à 2×, produit par `python3 artefacts-papier/rendu.py`.
-- Les deux **vraies photos** (Corentin et Lisa) ne sont pas dans ce dépôt public : la planche `PhotoCarnet` affiche un emplacement vide à leur place. Elles restent sur le canvas.
+- Les vraies photos sont incluses (accord de Corentin) : `images/33fd….jpg` (photo du carnet de bal, env. 8) et `images/751d….jpg` (portrait non utilisé par une planche).
 
 Si le canvas change : relire les fichiers modifiés avec l'outil Artifact (`read`, `paths: ["project/<Nom>.dc.html"]`), les copier ici, puis relancer `rendu.py`.
 
@@ -30,7 +30,7 @@ Si le canvas change : relire les fichiers modifiés avec l'outil Artifact (`read
 | 7 | Invitation au réveillon (A6) + verso | `png/Invitation.png`, `png/InvitationVerso.png` | Grand bal du réveillon, 31 décembre ; carnet remis par le cavalier sur présentation du carton, « à toute heure du jour et de la nuit » ; verso : usage du carnet (I à V). |
 | 7 | Tirage de Julien (A6) | `png/TirageJulien.png` | « J. Mercier, photographe · Toulouse · Portraits · Mariages · La ville la nuit », réveillon 31 décembre 1925. Image générée : `images/a5cf….jpg` (couple dansant, robe noire à franges, smoking). |
 | 8 (secret) | Carnet de bal, extérieur et intérieur | `png/CarnetBalExterieur.png`, `png/CarnetBalInterieur.png` | Carnet n° 8, Mlle Louise Sarrail ; danses : fox-trot, tango, charleston, la danse qui n'existe pas encore, valse du réveillon, dernière danse de l'année → toutes « Célestin » ; ligne vide « Toutes les suivantes (si tu veux bien) ». |
-| 8 (secret) | Vraie photo | `png/PhotoCarnet.png` | « Toulouse, près d'un siècle plus tard. » (photo hors dépôt) |
+| 8 (secret) | Vraie photo | `png/PhotoCarnet.png` | « Toulouse, près d'un siècle plus tard. » Photo : `images/33fd….jpg`. |
 | 8 (secret) | QR code de la page réservée | `png/QRCodeCarnet.png` | « Page réservée à la cavalière qui a rempli la dernière ligne » → page bonus du site (mot de passe TOUJOURS). |
 | — | Étiquettes des enveloppes (A4) | `png/Etiquettes.png` | Enveloppes 0 à 7 et leur moment d'ouverture. |
 
