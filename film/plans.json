@@ -7,6 +7,14 @@
     "DESCRIPTION": "Plan animé : un soleil art déco se lève, l'étoile rouge s'allume et le titre du film apparaît",
     "NOTE": "Le gramophone grésille, la trompette de Léon joue seule les premières notes du morceau sans nom, et le titre s'écrit lettre par lettre."
   },
+  "02": {
+    "fichier": "plan-02-fenetre.html",
+    "TITRE": "Le peintre à sa fenêtre",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 02",
+    "SOUSTITRE": "Toulouse, la Garonne et le Pont-Neuf, la nuit. Vingt-deux secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : travelling sur la Garonne et le Pont-Neuf jusqu'à la fenêtre en demi-lune où Célestin peint",
+    "NOTE": "Les sept arches inégales du Pont-Neuf et leurs oculi, la brique de la boulangerie de madame Fabre, et une seule fenêtre allumée sous le toit."
+  },
   "05": {
     "fichier": "plan-05-danse.html",
     "TITRE": "La danse qui n'existe pas encore",
