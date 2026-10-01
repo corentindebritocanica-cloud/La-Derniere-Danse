@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Le peintre à sa fenêtre</title>
+<title>L'atelier du Pont-Neuf</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
@@ -49,12 +49,12 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <div class="wrap">
   <header>
     <div class="eyebrow">LA DERNIÈRE DANSE · PLAN 02</div>
-    <h1>Le peintre à sa fenêtre</h1>
-    <p class="sub">Toulouse, la Garonne et le Pont-Neuf, la nuit. Vingt-deux secondes, avec le son.</p>
+    <h1>L'atelier du Pont-Neuf</h1>
+    <p class="sub">Chapitre 1. Un jeudi soir, rue de la République. Trente-quatre secondes, avec le son.</p>
   </header>
 
   <div class="screen" id="screen">
-    <canvas id="film" width="1280" height="720" aria-label="Plan animé : travelling sur la Garonne et le Pont-Neuf jusqu&#x27;à la fenêtre en demi-lune où Célestin peint"></canvas>
+    <canvas id="film" width="1280" height="720" aria-label="Plan animé : la Garonne et le Pont-Neuf, puis le grenier où Julien parle du concours et où Célestin reste devant une toile vierge"></canvas>
     <button class="play" id="play" aria-label="Lancer le plan">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>
     </button>
@@ -68,7 +68,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <button class="ctl" id="fs" type="button">Plein écran</button>
   </div>
 
-  <p class="note">Les sept arches inégales du Pont-Neuf et leurs oculi, la brique de la boulangerie de madame Fabre, et une seule fenêtre allumée sous le toit.</p>
+  <p class="note">D'après le chapitre 1 : la Garonne sous la pluie retournée contre le mur, et une toile vierge jusqu'à deux heures du matin.</p>
 </div>
 <script>
 /* La Dernière Danse — moteur commun des plans
@@ -259,7 +259,7 @@ function limb(c,a,b,w){c.lineWidth=w;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.
          lift, s (échelle), hipY (hanche imposée, sinon pieds au sol), sol}
    kind = 'C' (Célestin) ou 'L' (Louise). Renvoie la position de la tête. */
 L.pantin=function(c,st,kind,flare){
-  flare=flare||0;const isC=kind==='C',sc=isC?1:.93,F=st.F,aF=Math.abs(F),p=st.p,s=st.s||1,INK=L.C.ombre;
+  flare=flare||0;const isC=kind!=='L',sc=isC?1:.93,F=st.F,aF=Math.abs(F),p=st.p,s=st.s||1,INK=L.C.ombre;
   const T=(isC?74:66)*sc,th=(isC?52:47)*sc,sh=(isC?52:47)*sc,ua=(isC?37:32)*sc,la=(isC?35:30)*sc;
   const hip={x:0,y:0};
   const kF=pt(hip,p.lF[0],th,F),fF=pt(kF,p.lF[0]+p.lF[1],sh,F),kB=pt(hip,p.lB[0],th,F),fB=pt(kB,p.lB[0]+p.lB[1],sh,F);
@@ -287,7 +287,12 @@ L.pantin=function(c,st,kind,flare){
   limb(c,S,eF,armW);limb(c,eF,hF,armW-1);c.beginPath();c.arc(hF.x,hF.y,isC?5:4,0,7);c.fill();c.beginPath();c.arc(hB.x,hB.y,isC?5:4,0,7);c.fill();
   c.lineWidth=isC?11:8;c.beginPath();c.moveTo(S.x,S.y);c.lineTo(Hc.x,Hc.y+6);c.stroke();
   c.save();c.translate(Hc.x,Hc.y);c.rotate(F*ha);
-  if(isC){
+  if(kind==='J'){
+    // Julien : casquette plate, écharpe rouge
+    c.beginPath();c.arc(0,0,13,0,7);c.fill();
+    c.beginPath();c.moveTo(-14,-4);c.quadraticCurveTo(-12,-18,2,-17);c.quadraticCurveTo(14,-16,15,-6);c.lineTo(F*22,-4);c.lineTo(F*22,-1);c.lineTo(-14,-1);c.closePath();c.fill();
+    c.restore();c.save();c.translate(S.x,S.y);c.fillStyle=L.C.rouge;c.beginPath();c.ellipse(0,-2,13,6,0,0,7);c.fill();c.fillRect(-F*10-3,0,7,26);c.fillStyle=INK;
+  }else if(isC){
     c.beginPath();c.arc(0,0,13,0,7);c.fill();
     c.beginPath();[[-13,-4],[-11,-17],[-5,-12],[0,-21],[5,-13],[11,-18],[13,-4]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();
     if(aF>.3){c.strokeStyle=L.C.papier;c.lineWidth=1.6;c.beginPath();c.arc(F*7,1,4.4,0,7);c.stroke()}
@@ -556,6 +561,32 @@ L.maisonSarrail=function(c,o){
   if(o.grappes!==false)GRAPPES_S.forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x,g.y+g.l,2.6,g.l,0,0,7);c.fill()});
 };
 
+/* L'affiche du concours, identique à celle de l'enveloppe 0 (559 × 794, coordonnées de l'artefact).
+   L'appelant place et met à l'échelle. */
+L.afficheConcours=function(c){
+  const R=L.C.rouge,I=L.C.encre,P=L.C.papier,cx=279.5,TX=L.F.texte,TI=L.F.titre;
+  c.save();c.fillStyle=P;c.fillRect(0,0,559,794);
+  c.strokeStyle=R;c.lineWidth=3;c.strokeRect(23.5,23.5,512,747);c.strokeStyle=I;c.lineWidth=1;c.strokeRect(30.5,30.5,498,733);
+  c.textAlign='center';c.fillStyle=I;
+  const txt=(s,y,font,col,ls)=>{c.font=font;c.fillStyle=col||I;L.setLS(c,(ls||0)+'px');c.fillText(s,cx,y);L.setLS(c,'0px')};
+  txt('RUE DES TEINTURIERS · TOULOUSE',76,"11px "+TX,I,4);
+  c.save();c.translate(cx-150,84);c.strokeStyle=I;c.lineWidth=1;[[20,10],[60,4],[105,1],[150,0],[195,1],[240,4],[280,10]].forEach(([x,y])=>{c.beginPath();c.moveTo(150,44);c.lineTo(x,y);c.stroke()});
+  c.fillStyle=R;c.beginPath();[[150,14],[154,26],[166,26],[156,33],[160,45],[150,38],[140,45],[144,33],[134,26],[146,26]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();c.restore();
+  txt('CABARET DES',176,"30px "+TI,I,3);txt('ÉTOILES',246,"66px "+TI,R,2);
+  c.fillStyle=I;c.fillRect(60,286,120,1);c.fillRect(379,286,120,1);txt('Samedi 14 décembre',292,"italic 700 17px "+TX);
+  txt('PREMIÈRE',336,"13px "+TX,I,5);txt('GRANDE SOIRÉE',374,"700 32px "+TX,I,1);txt('DES PARRAINS',408,"700 32px "+TX,I,1);
+  c.font="25px "+TI;L.setLS(c,'3px');const wc=c.measureText('CONCOURS DE DANSE').width+44;L.setLS(c,'0px');c.fillStyle=I;c.fillRect(cx-wc/2,428,wc,46);txt('CONCOURS DE DANSE',460,"25px "+TI,P,3);
+  c.font="700 16px "+TX;L.setLS(c,'1px');const a='UN DANSEUR CONFIRMÉ',b='UN DÉBUTANT',wa=c.measureText(a).width,wb=c.measureText(b).width,ws=18,tot=wa+wb+ws*2;
+  c.textAlign='left';c.fillStyle=I;c.fillText(a,cx-tot/2,512);c.fillText(b,cx-tot/2+wa+ws*2,512);L.setLS(c,'0px');c.fillStyle=R;c.fillText('✦',cx-tot/2+wa+ws-7,512);c.textAlign='center';
+  txt('Les couples seront tirés au sort le soir même',536,"italic 15px "+TX);
+  txt('FOX-TROT · TANGO · ET CE QUE L’ORCHESTRE VOUDRA',560,"13px "+TX,I,2);
+  c.strokeStyle=I;c.strokeRect(60.5,580.5,212,58);c.strokeStyle=R;c.strokeRect(286.5,580.5,212,58);
+  c.font="11px "+TX;L.setLS(c,'3px');c.fillStyle=I;c.fillText('ORCHESTRE DE JAZZ',166,602);c.fillStyle=R;c.fillText('PRIX DU CONCOURS',392,602);L.setLS(c,'0px');
+  c.font="italic 700 16px "+TX;c.fillStyle=I;c.fillText('sous la direction de Léon',166,624);c.fillStyle=R;c.fillText('Une coupe & cinquante francs',392,624);
+  txt('TIRAGE DES COUPLES À 20 H 30',690,"12px "+TX,I,3);txt('Inscriptions au comptoir · Consommation obligatoire',710,"italic 11px "+TX);txt('LA DIRECTION : MAURICE',732,"10px "+TX,I,3);
+  c.restore();
+};
+
 /* Soleil rayonnant art déco (titres, ouverture). o = {x,y,r,n,rot,couleur,epais,alpha} */
 L.soleil=function(c,o){
   const n=o.n||24;c.save();c.translate(o.x,o.y);c.rotate(o.rot||0);c.globalAlpha=o.alpha==null?1:o.alpha;
@@ -567,16 +598,18 @@ L.soleil=function(c,o){
 
 </script>
 <script>
-/* Plan 02 — Le peintre à sa fenêtre (22 s)
-   Toulouse la nuit : la Garonne, le Pont-Neuf et ses oculi. Travelling de droite à gauche
-   jusqu'à la façade de brique de la boulangerie, puis zoom dans la fenêtre en demi-lune où Célestin peint. */
+/* Plan 02 — L'atelier du Pont-Neuf (34 s) — chapitre 1
+   Toulouse la nuit : la Garonne, le Pont-Neuf et ses oculi ; travelling jusqu'à la fenêtre en demi-lune.
+   Dans le grenier : Célestin peint la Garonne sous la pluie. Julien monte avec une bouteille et parle du concours.
+   Quand il est parti, Célestin retourne la toile contre le mur, pose une toile vierge et reste devant jusqu'à deux heures,
+   « d'attendre un modèle qui n'était pas encore arrivé ». */
 (function(){
 const L=LDD,{clamp,lerp,eio,eoc,seg}=L,W=L.W,H=L.H;
 const EAU=470,TABLIER=380,FEN={x:175,y:140,r:52};
 
 /* ---------- caméra ---------- */
 function camera(t){
-  const p1=eio(seg(t,3.6,12)),p2=eio(seg(t,12,18.6));
+  const p1=eio(seg(t,3.6,8.6)),p2=eio(seg(t,8.6,11.4));
   const cx=lerp(lerp(1640,640,p1),FEN.x+8,p2),cy=lerp(360,FEN.y-24,p2),z=Math.exp(Math.log(3.5)*p2);
   return{cx,cy,z};
 }
@@ -652,7 +685,7 @@ function fenetre(c,t,peinture){
   if(peinture>.6){c.fillStyle=L.C.or;c.fillRect(-4,-9,2.5,2.5)}
   c.restore();
   // Célestin
-  const ph=t*3.1,actif=seg(t,18.4,18.8)*(1-seg(t,20.6,21));
+  const ph=t*3.1,actif=1;
   const p=L.melange(L.POSES.peint,L.POSES.peint,0);
   p.aF=[1.75+.28*Math.sin(ph)*actif,.55+.25*Math.cos(ph)*actif];p.hd=-.05+.12*Math.sin(t*.7);
   const m=L.pantin(c,{x:x-12,F:1,p,s:.7,hipY:y+42},'C');
@@ -668,11 +701,122 @@ function fenetre(c,t,peinture){
   c.save();c.globalCompositeOperation='lighter';const h=c.createRadialGradient(x,y-20,10,x,y-20,150);h.addColorStop(0,'rgba(255,200,110,.18)');h.addColorStop(1,'rgba(255,200,110,0)');c.fillStyle=h;c.beginPath();c.arc(x,y-20,150,0,7);c.fill();c.restore();
 }
 
-const OUVERTURE=[{s:'TOULOUSE · RUE DE LA RÉPUBLIQUE',y:300,f:"20px "+L.F.machine,c:'#b9a98c',ls:'6px'},{s:'Dessinateur le jour, peintre la nuit.',y:380,f:"italic 48px "+L.F.texte}];
+/* ---------- le grenier, à l'intérieur ---------- */
+const FI={x:800,y:340,r:175};
+const TOILE={x:470,y:296,w:160,h:200};
+const DIALOGUE=[
+  {t:12.75,qui:'C',s:'C’est ouvert !'},
+  {t:15.9,qui:'J',s:'Tu as vu l’affiche ? Maurice organise un concours.'},
+  {t:18,qui:'J',s:'Un confirmé avec quelqu’un qui débute. Tirage au sort.'},
+  {t:20.1,qui:'C',s:'Madame Fabre danserait très bien. Elle pétrit en trois temps.'},
+  {t:22.2,qui:'C',s:'Je peins la Garonne, le Pont-Neuf… Mais il n’y a rien dedans.'},
+  {t:24.3,qui:'J',s:'Tu veux dire qu’il n’y a personne dedans.'},
+  {t:26,qui:'J',s:'Inscris-toi. On ne sait jamais sur qui on tombe.'}];
+function garonnePeinte(c,x,y,w,h,t){
+  c.fillStyle='#e9e0cc';c.fillRect(x,y,w,h);
+  c.fillStyle='#55657a';c.fillRect(x+6,y+6,w-12,h*.45);c.fillStyle='#2f4560';c.fillRect(x+6,y+h*.55,w-12,h*.45-6);
+  c.fillStyle='#3a2a20';c.fillRect(x+6,y+h*.42,w-12,h*.1);
+  c.fillStyle='#55657a';for(let k=0;k<4;k++){c.beginPath();c.ellipse(x+22+k*38,y+h*.52,14,10,0,Math.PI,0);c.fill()}
+  c.strokeStyle='rgba(220,225,235,.5)';c.lineWidth=1;for(let k=0;k<14;k++){const xx=x+10+k*11;c.beginPath();c.moveTo(xx,y+10);c.lineTo(xx-8,y+h*.4);c.stroke()}
+  c.fillStyle='rgba(227,178,60,.8)';for(let k=0;k<4;k++)c.fillRect(x+20+k*38,y+h*.62+((k*7)%10),3,10);
+}
+function toile(c,t){
+  // la toile de la Garonne se retourne, puis une toile vierge prend sa place
+  const ret=seg(t,27.3,27.9),pose=seg(t,27.9,28.5),vierge=seg(t,28.6,29.2);
+  const T=TOILE;
+  if(ret<1){const k=Math.cos(Math.PI/2*ret);c.save();c.translate(T.x+T.w/2,0);c.scale(Math.max(.02,k),1);c.translate(-(T.x+T.w/2),0);garonnePeinte(c,T.x,T.y,T.w,T.h,t);c.restore()}
+  else{const x=lerp(T.x,40,eio(pose)),y=lerp(T.y,T.y+110,eio(pose));c.fillStyle='#6b4a2a';c.fillRect(x,y,T.w*.7,T.h*.9);c.strokeStyle='#3a2410';c.lineWidth=3;c.strokeRect(x+6,y+6,T.w*.7-12,T.h*.9-12);c.beginPath();c.moveTo(x+6,y+6);c.lineTo(x+T.w*.7-6,y+T.h*.9-6);c.stroke()}
+  if(vierge>0){const k=eio(vierge);c.save();c.translate(T.x+T.w/2,0);c.scale(k,1);c.translate(-(T.x+T.w/2),0);c.fillStyle='#f6efe0';c.fillRect(T.x,T.y,T.w,T.h);c.strokeStyle='rgba(90,62,27,.3)';c.strokeRect(T.x+4,T.y+4,T.w-8,T.h-8);c.restore()}
+}
+function grenier(c,t){
+  const nuit=seg(t,29.3,33);
+  const g=c.createLinearGradient(0,0,0,612);g.addColorStop(0,'#33241a');g.addColorStop(1,'#5a4128');c.fillStyle=g;c.fillRect(0,0,W,612);
+  c.fillStyle='#1d140d';c.beginPath();c.moveTo(0,0);c.lineTo(360,0);c.lineTo(0,250);c.closePath();c.fill();c.beginPath();c.moveTo(W,0);c.lineTo(1000,0);c.lineTo(W,190);c.closePath();c.fill();
+  // la fenêtre en demi-lune, vue de l'intérieur : le Pont-Neuf
+  c.save();c.beginPath();c.moveTo(FI.x-FI.r,FI.y);c.arc(FI.x,FI.y,FI.r,Math.PI,0);c.closePath();c.clip();
+  c.fillStyle='#0b1628';c.fillRect(FI.x-FI.r,FI.y-FI.r,2*FI.r,FI.r);
+  c.fillStyle='rgba(241,231,211,.8)';[[-120,-120],[-60,-150],[30,-130],[100,-100],[140,-60],[-140,-50]].forEach(([dx,dy])=>c.fillRect(FI.x+dx,FI.y+dy,1.6,1.6));
+  const lx=FI.x+90-nuit*120;c.fillStyle='#ede3cf';c.beginPath();c.arc(lx,FI.y-110+nuit*30,11,0,7);c.fill();
+  c.fillStyle='#14243a';c.fillRect(FI.x-FI.r,FI.y-34,2*FI.r,34);
+  c.fillStyle='#1a0f0b';c.fillRect(FI.x-FI.r,FI.y-62,2*FI.r,18);for(let k=0;k<5;k++){c.fillStyle='#14243a';c.beginPath();c.ellipse(FI.x-140+k*70,FI.y-44,24,16,0,Math.PI,0);c.fill()}
+  c.save();c.globalCompositeOperation='lighter';for(let k=0;k<5;k++){const x=FI.x-150+k*70;c.fillStyle='rgba(255,214,130,.8)';c.fillRect(x,FI.y-72,3,4);for(let j=0;j<3;j++){c.fillStyle=`rgba(255,200,110,${.3-j*.08})`;c.fillRect(x-4+Math.sin(t*2+k+j)*3,FI.y-26+j*8,10,2)}}c.restore();
+  c.restore();
+  c.strokeStyle='#2a1a10';c.lineWidth=3;for(let i=1;i<6;i++){const a=Math.PI+i*Math.PI/6;c.beginPath();c.moveTo(FI.x,FI.y);c.lineTo(FI.x+Math.cos(a)*FI.r,FI.y+Math.sin(a)*FI.r);c.stroke()}
+  c.beginPath();c.arc(FI.x,FI.y,40,Math.PI,0);c.stroke();c.lineWidth=12;c.beginPath();c.arc(FI.x,FI.y,FI.r+5,Math.PI,0);c.stroke();c.fillStyle='#2a1a10';c.fillRect(FI.x-FI.r-14,FI.y,2*FI.r+28,12);
+  // plancher
+  c.fillStyle='#2a1a0c';c.fillRect(0,612,W,108);c.strokeStyle='rgba(0,0,0,.25)';for(let y=622;y<720;y+=16){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+  // toiles retournées contre le mur, croquis punaisés
+  [[20,430,70,180],[60,450,80,160],[100,470,60,140]].forEach(([x,y,w,h])=>{c.fillStyle='#5a3e22';c.fillRect(x,y,w,h);c.strokeStyle='#3a2410';c.lineWidth=2;c.strokeRect(x+5,y+5,w-10,h-10)});
+  [[200,200],[250,180],[300,215]].forEach(([x,y],i)=>{c.save();c.translate(x,y);c.rotate((i-1)*.08);c.fillStyle='#e8dcc2';c.fillRect(-18,-24,36,48);c.strokeStyle='rgba(31,58,95,.6)';c.beginPath();c.moveTo(-10,10);c.lineTo(0,-12);c.lineTo(10,8);c.stroke();c.restore()});
+  // table : pots de confiture, pinceaux, lampe, gramophone
+  c.fillStyle='#3a2410';c.fillRect(150,470,200,10);c.fillRect(160,480,8,132);c.fillRect(332,480,8,132);
+  [[230,450],[252,452],[274,449]].forEach(([x,y])=>{c.fillStyle='rgba(220,230,240,.35)';c.fillRect(x-7,y,14,20);c.strokeStyle='#5a3e1b';c.lineWidth=2;c.beginPath();c.moveTo(x-2,y);c.lineTo(x-5,y-22);c.moveTo(x+2,y);c.lineTo(x+6,y-18);c.stroke()});
+  c.fillStyle='#1d140b';c.fillRect(165,440,40,30);c.fillStyle=L.C.or;c.beginPath();c.moveTo(188,440);c.lineTo(214,392);c.lineTo(234,404);c.closePath();c.fill();
+  const tourne=t>11.2&&t<25.4?t*3:0;c.fillStyle='#0a0705';c.beginPath();c.ellipse(185,438,16,4,0,0,7);c.fill();c.fillStyle='#a8201a';c.beginPath();c.ellipse(185,438,4,1.2,tourne,0,7);c.fill();
+  c.fillStyle='#1d140b';c.fillRect(306,440,16,30);c.fillStyle='rgba(255,226,150,.95)';c.fillRect(308,424,12,16);
+  // chevalet
+  c.strokeStyle='#3a2410';c.lineWidth=7;c.beginPath();c.moveTo(TOILE.x+20,612);c.lineTo(TOILE.x+80,TOILE.y-30);c.lineTo(TOILE.x+140,612);c.moveTo(TOILE.x+80,TOILE.y-30);c.lineTo(TOILE.x+96,612);c.stroke();c.fillStyle='#3a2410';c.fillRect(TOILE.x-8,TOILE.y+TOILE.h,TOILE.w+16,9);
+  toile(c,t);
+  // lit étroit, poêle en fonte, porte
+  c.fillStyle='#2e1d0e';c.fillRect(900,548,230,14);c.fillRect(900,562,8,50);c.fillRect(1122,562,8,50);c.fillStyle='#6b4a2a';c.fillRect(900,532,230,18);c.fillStyle='#e8dcc2';c.fillRect(904,524,50,12);
+  c.fillStyle='#120c08';c.fillRect(1150,520,56,92);c.fillRect(1170,200,14,320);c.fillStyle=`rgba(255,120,50,${.5+.15*Math.sin(t*6)})`;c.fillRect(1162,560,30,18);
+  const porte=eio(seg(t,12.9,13.3))*(1-eio(seg(t,26.9,27.3)));c.fillStyle='#120b08';c.fillRect(1214,300,66,312);c.fillStyle='rgba(255,200,120,.25)';c.fillRect(1214,300,66*porte,312);c.fillStyle='#4a2f16';c.fillRect(1214+66*porte,300,66*(1-porte),312);
+}
+function lumiere(c,t){
+  const nuit=seg(t,29.3,33),f=1+.05*Math.sin(t*9);
+  c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(314,430,6,314,430,620*f);g.addColorStop(0,`rgba(255,190,100,${.38*(1-.5*nuit)})`);g.addColorStop(1,'rgba(255,190,100,0)');c.fillStyle=g;c.fillRect(0,0,W,H);c.restore();
+  if(nuit>0){c.fillStyle=`rgba(5,8,18,${.35*nuit})`;c.fillRect(0,0,W,H)}
+}
+function julien(t){
+  if(t<13||t>27.1)return null;
+  let st={x:1245,F:-1,p:L.melange(L.POSES.debout,L.POSES.debout,0),alpha:seg(t,13,13.3)*(1-seg(t,26.7,27.1))};
+  if(t<13.9){const n=Math.sin(t*16);st.p.aF=[1.6+.4*n,1.2];st.p.aB=[1.4-.4*n,1.3]}
+  const ent=seg(t,13.3,14.8);if(t<15){st.x=lerp(1245,990,eio(ent));if(ent>0&&ent<1)st.p=L.pas(st.p,(t-13.3)*11,.32,0)}
+  if(t>=14.8&&t<25.4){const s=eio(seg(t,14.8,15.3));st.x=990;st.p=L.melange(st.p,L.POSES.assis,s);if(s>=1)st.hipY=548;else st.hipY=lerp(526,548,s);
+    const dent=Math.sin(Math.PI*seg(t,15.4,16));st.p.aF=[lerp(.9,2.45,dent),lerp(1,.35,dent)];st.p.hd=-.15*dent}
+  if(t>=25.4){const u=seg(t,25.4,25.8);st.p=L.melange(L.POSES.assis,L.POSES.debout,eio(u));st.hipY=u<1?lerp(548,526,u):undefined;
+    const so=seg(t,25.9,27);st.x=lerp(990,1245,eio(so));st.F=so>0?1:-1;if(so>0&&so<1)st.p=L.pas(L.POSES.debout,(t-25.9)*11,.32,0)}
+  return st;
+}
+function celestin(t){
+  const p=L.melange(L.POSES.peint,L.POSES.peint,0),peint=t<15.6?1:0,ph=t*3.2;
+  p.aF=[1.7+.25*Math.sin(ph)*peint,.55+.2*Math.cos(ph)*peint];
+  if(t>=15.6){p.aF=[lerp(1.7,.3,eio(seg(t,15.6,16.2))),.3];p.hd=0}
+  if(t>21.9&&t<24)p.hd=-.3;
+  let x=400,F=1;
+  if(t>=27.2){p.aF=[lerp(.3,1.4,Math.sin(Math.PI*seg(t,27.2,29))),.4];p.aB=[lerp(-.1,1.2,Math.sin(Math.PI*seg(t,27.3,28.9))),.4]}
+  if(t>=29.2){p.aF=[.15,.3];p.aB=[-.05,.2];p.hd=.12+.05*Math.sin(t*.8);p.tA=.04}
+  return{x,F,p};
+}
+function paroles(c,t,tetes){
+  c.save();c.textAlign='center';c.font="25px "+L.F.main;L.setLS(c,'0px');
+  for(const d of DIALOGUE){const u=(t-d.t)/2;if(u<0||u>1)continue;const h=tetes[d.qui];if(!h)continue;
+    c.globalAlpha=Math.min(1,Math.sin(Math.PI*u)*1.6);const x=clamp(h.x+(d.qui==='C'?60:-60),300,W-300),y=h.y-64-u*26;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(d.s,x,y);c.fillStyle='#fbf3e2';c.fillText(d.s,x,y)}
+  c.restore();
+}
+function interieur(c,t){
+  grenier(c,t);lumiere(c,t);
+  const ce=celestin(t);
+  const r=L.pantin(c,{x:ce.x,F:1,p:ce.p,s:1.15},'C');
+  if(t<15.6||t>=29.2){const m=r.main;c.strokeStyle='#5a3e1b';c.lineWidth=2.4;c.beginPath();c.moveTo(m.x,m.y);c.lineTo(m.x+16,m.y-14);c.stroke();c.fillStyle=L.C.bleu;c.beginPath();c.arc(m.x+16,m.y-14,2.4,0,7);c.fill()}
+  const jt=julien(t);let tj=null;
+  if(jt){c.save();c.globalAlpha=jt.alpha;const rj=L.pantin(c,{...jt,s:1.12},'J');tj=rj.tete;
+    if(t<25.5){const m=rj.main;c.save();c.translate(m.x,m.y);c.rotate(jt.F>0?-.4:.4);c.fillStyle='#1f3a24';c.fillRect(-5,-30,10,30);c.fillRect(-2.5,-40,5,10);c.restore()}
+    c.restore()}
+  if(t>15.85&&t<16.6){const u=seg(t,15.85,16.6);c.fillStyle='#c9a67a';c.beginPath();c.arc(990-30-u*80,370-u*60+u*u*140,3,0,7);c.fill()}
+  const nuit=seg(t,29.3,33);if(nuit>0){c.fillStyle=`rgba(5,8,18,${.25*nuit})`;c.fillRect(0,0,W,H)}
+  paroles(c,t,{C:r.tete,J:tj});
+  const h2=seg(t,29.4,30)*(1-seg(t,33,33.6));
+  if(h2>0){c.save();c.globalAlpha=h2;c.fillStyle='#d9c9a8';c.textAlign='center';c.font="20px "+L.F.machine;L.setLS(c,'8px');c.fillText('DEUX HEURES DU MATIN',640,680);L.setLS(c,'0px');c.restore()}
+  const h3=seg(t,30.6,31.4)*(1-seg(t,33.1,33.7));
+  if(h3>0){c.save();c.globalAlpha=h3;c.fillStyle='#f6ecd8';c.textAlign='center';c.font="30px "+L.F.main;c.fillText('… d’attendre un modèle qui n’était pas encore arrivé.',640,120);c.restore()}
+}
+
+const OUVERTURE=[{s:'TOULOUSE · RUE DE LA RÉPUBLIQUE · UN JEUDI SOIR',y:300,f:"20px "+L.F.machine,c:'#b9a98c',ls:'5px'},{s:'Dessinateur le jour, peintre la nuit.',y:380,f:"italic 48px "+L.F.texte}];
 
 function rendu(c,t){
   c.fillStyle='#000';c.fillRect(0,0,W,H);
-  if(t>2.9){
+  if(t>2.9&&t<11.8){
     const cam=camera(t);
     L.ciel(c,0,520);L.etoiles(c,t,0,0,false,430);
     c.save();c.globalCompositeOperation='lighter';const lune=c.createRadialGradient(1080,110,4,1080,110,120);lune.addColorStop(0,'rgba(241,231,211,.18)');lune.addColorStop(1,'rgba(241,231,211,0)');c.fillStyle=lune;c.fillRect(900,0,380,260);c.restore();
@@ -680,27 +824,38 @@ function rendu(c,t){
     c.save();c.translate(W/2,H/2);c.scale(cam.z,cam.z);c.translate(-cam.cx,-cam.cy);
     L.toulouse(c,1500+(cam.cx-640)*.82,EAU-58,0,1.5,{fond:'#0d1626'});
     c.fillStyle='#0f1622';c.fillRect(-1200,EAU-60,5000,60);
-    garonne(c,t);pont(c,t);facade(c,t,seg(t,14,21));
+    garonne(c,t);pont(c,t);facade(c,t,.75);
     c.restore();
   }
-  L.noir(c,t<3?1:t<4?1-(t-3):t>21.1?(t-21.1)/.8:0);
+  if(t>=11.2){c.save();c.globalAlpha=seg(t,11.2,11.8);interieur(c,t);c.restore()}
+  L.noir(c,t<3?1:t<4?1-(t-3):t>33.2?(t-33.2)/.8:0);
   L.carton(c,OUVERTURE,t<.6?t/.6:t<2.4?1:Math.max(0,1-(t-2.4)/.6),450);
 }
 
 function partition(ac,sortie,T){
   const K=L.kit(ac,sortie);
-  K.projecteur(T,22);
-  K.nappe(T+2.8,19.4,'lowpass',420,.5,[[1,.07],[6,.09],[11,.07],[16,.05],[19.2,0]]);
-  for(let i=0;i<40;i++){const w=3.5+Math.random()*16;K.noise(T+w,.25+Math.random()*.3,'bandpass',500+Math.random()*500,1.5,.02+Math.random()*.025,.08)}
-  [12.6,14.4,16.2].forEach(w=>{K.cloche(43,T+w,null,.09);K.cloche(55,T+w+.02,null,.04)});
-  K.phrase(L.THEME.lent,T+5,.8,'piano',null,.04);
-  K.nappeAccord('Dm9',T+12,5,null,.008);K.nappeAccord('Fmaj9',T+17,4.6,null,.01);
-  for(let w=18.5;w<20.6;w+=1.01){K.noise(T+w,.18,'bandpass',2600,1,.03,.05)}
-  K.piano(81,T+20.7,.03);K.piano(76,T+20.95,.025);
-  K.finale(T,22);
+  K.projecteur(T,34);
+  K.nappe(T+2.8,9,'lowpass',420,.5,[[1,.07],[7.6,.07],[8.6,0]]);
+  for(let i=0;i<16;i++){const w=3.5+Math.random()*7;K.noise(T+w,.25+Math.random()*.3,'bandpass',500+Math.random()*500,1.5,.02+Math.random()*.025,.08)}
+  K.phrase(L.THEME.lent.slice(0,4),T+4.2,.8,'piano',null,.035);
+  // le gramophone du grenier : un disque de jazz, tout doucement
+  const disque=K.bus();const f=K.lp(1400);disque.disconnect();disque.connect(f).connect(K.out);disque.gain.setValueAtTime(0,T+11);disque.gain.linearRampToValueAtTime(.55,T+11.8);disque.gain.setValueAtTime(.55,T+15.4);disque.gain.linearRampToValueAtTime(.28,T+16);disque.gain.setValueAtTime(.28,T+24.8);disque.gain.linearRampToValueAtTime(0,T+25.6);
+  K.orchestre(T+11.2,.6,['Dm9','G13','Cmaj9','A7','Dm9','G13'],disque,{piano:.02,batterie:false});
+  K.phrase(L.THEME.motif,T+11.8,.6,'trompette',disque,.03);
+  K.gramophone(T+11.2,14.4);
+  // on frappe, la porte, le bouchon
+  [12.55,12.75].forEach(w=>K.noise(T+w,.08,'lowpass',260,1,.14,.004));
+  K.souffle(43,T+12.95,.35,{g:.01,cut:600,vib:9,att:.08});
+  K.noise(T+15.85,.05,'bandpass',900,2,.12,.002);K.noise(T+15.86,.08,'lowpass',200,1,.08,.003);
+  K.souffle(43,T+26.9,.35,{g:.01,cut:600,vib:9,att:.08});K.noise(T+27.25,.12,'lowpass',200,1,.12,.004);
+  // la toile qu'on retourne, la toile vierge
+  K.noise(T+27.35,.4,'bandpass',1200,.8,.04,.05);K.noise(T+28.6,.3,'bandpass',1800,.8,.03,.05);
+  // l'attente : le thème qui ne s'achève pas
+  [[29.6,69],[30.4,72],[31.2,74],[32,77]].forEach(([w,m])=>K.piano(m,T+w,.035));
+  K.finale(T,34);
 }
 
-L.film({duree:22,rendu,partition,affiche:19.6});
+L.film({duree:34,rendu,partition,affiche:18.2});
 })();
 
 </script>

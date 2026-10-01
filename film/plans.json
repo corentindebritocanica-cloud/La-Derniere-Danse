@@ -9,19 +9,19 @@
   },
   "02": {
     "fichier": "plan-02-fenetre.html",
-    "TITRE": "Le peintre à sa fenêtre",
+    "TITRE": "L'atelier du Pont-Neuf",
     "SURTITRE": "LA DERNIÈRE DANSE · PLAN 02",
-    "SOUSTITRE": "Toulouse, la Garonne et le Pont-Neuf, la nuit. Vingt-deux secondes, avec le son.",
-    "DESCRIPTION": "Plan animé : travelling sur la Garonne et le Pont-Neuf jusqu'à la fenêtre en demi-lune où Célestin peint",
-    "NOTE": "Les sept arches inégales du Pont-Neuf et leurs oculi, la brique de la boulangerie de madame Fabre, et une seule fenêtre allumée sous le toit."
+    "SOUSTITRE": "Chapitre 1. Un jeudi soir, rue de la République. Trente-quatre secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : la Garonne et le Pont-Neuf, puis le grenier où Julien parle du concours et où Célestin reste devant une toile vierge",
+    "NOTE": "D'après le chapitre 1 : la Garonne sous la pluie retournée contre le mur, et une toile vierge jusqu'à deux heures du matin."
   },
   "03": {
     "fichier": "plan-03-purpan.html",
-    "TITRE": "Le petit hibou de Purpan",
+    "TITRE": "La maison de Purpan",
     "SURTITRE": "LA DERNIÈRE DANSE · PLAN 03",
-    "SOUSTITRE": "Purpan, la chambre de Louise. Vingt-trois secondes, avec le son.",
-    "DESCRIPTION": "Plan animé : Louise lit Freud à la bougie, cache le livre, souffle la bougie et s'éclipse ; Chopin reste dans le noir",
-    "NOTE": "Freud finit sous l'oreiller, les partitions servent d'alibi, et dans le noir il ne reste que les yeux jaunes de Chopin."
+    "SOUSTITRE": "Chapitre 2. Purpan, minuit passé. Trente-sept secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : Louise lit Freud la nuit, relit le prospectus du concours caché dans le double fond, puis s'assoit sur le rebord de sa fenêtre avec Chopin sous la Voie lactée",
+    "NOTE": "D'après le chapitre 2 : le livre jaune, le double fond de la table de chevet, l'affiche de l'enveloppe 0, et Chopin, « le seul musicien convenable », sur le rebord."
   },
   "04": {
     "fichier": "plan-04-tirage.html",

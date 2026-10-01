@@ -131,6 +131,32 @@ L.maisonSarrail=function(c,o){
   if(o.grappes!==false)GRAPPES_S.forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x,g.y+g.l,2.6,g.l,0,0,7);c.fill()});
 };
 
+/* L'affiche du concours, identique à celle de l'enveloppe 0 (559 × 794, coordonnées de l'artefact).
+   L'appelant place et met à l'échelle. */
+L.afficheConcours=function(c){
+  const R=L.C.rouge,I=L.C.encre,P=L.C.papier,cx=279.5,TX=L.F.texte,TI=L.F.titre;
+  c.save();c.fillStyle=P;c.fillRect(0,0,559,794);
+  c.strokeStyle=R;c.lineWidth=3;c.strokeRect(23.5,23.5,512,747);c.strokeStyle=I;c.lineWidth=1;c.strokeRect(30.5,30.5,498,733);
+  c.textAlign='center';c.fillStyle=I;
+  const txt=(s,y,font,col,ls)=>{c.font=font;c.fillStyle=col||I;L.setLS(c,(ls||0)+'px');c.fillText(s,cx,y);L.setLS(c,'0px')};
+  txt('RUE DES TEINTURIERS · TOULOUSE',76,"11px "+TX,I,4);
+  c.save();c.translate(cx-150,84);c.strokeStyle=I;c.lineWidth=1;[[20,10],[60,4],[105,1],[150,0],[195,1],[240,4],[280,10]].forEach(([x,y])=>{c.beginPath();c.moveTo(150,44);c.lineTo(x,y);c.stroke()});
+  c.fillStyle=R;c.beginPath();[[150,14],[154,26],[166,26],[156,33],[160,45],[150,38],[140,45],[144,33],[134,26],[146,26]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();c.restore();
+  txt('CABARET DES',176,"30px "+TI,I,3);txt('ÉTOILES',246,"66px "+TI,R,2);
+  c.fillStyle=I;c.fillRect(60,286,120,1);c.fillRect(379,286,120,1);txt('Samedi 14 décembre',292,"italic 700 17px "+TX);
+  txt('PREMIÈRE',336,"13px "+TX,I,5);txt('GRANDE SOIRÉE',374,"700 32px "+TX,I,1);txt('DES PARRAINS',408,"700 32px "+TX,I,1);
+  c.font="25px "+TI;L.setLS(c,'3px');const wc=c.measureText('CONCOURS DE DANSE').width+44;L.setLS(c,'0px');c.fillStyle=I;c.fillRect(cx-wc/2,428,wc,46);txt('CONCOURS DE DANSE',460,"25px "+TI,P,3);
+  c.font="700 16px "+TX;L.setLS(c,'1px');const a='UN DANSEUR CONFIRMÉ',b='UN DÉBUTANT',wa=c.measureText(a).width,wb=c.measureText(b).width,ws=18,tot=wa+wb+ws*2;
+  c.textAlign='left';c.fillStyle=I;c.fillText(a,cx-tot/2,512);c.fillText(b,cx-tot/2+wa+ws*2,512);L.setLS(c,'0px');c.fillStyle=R;c.fillText('✦',cx-tot/2+wa+ws-7,512);c.textAlign='center';
+  txt('Les couples seront tirés au sort le soir même',536,"italic 15px "+TX);
+  txt('FOX-TROT · TANGO · ET CE QUE L’ORCHESTRE VOUDRA',560,"13px "+TX,I,2);
+  c.strokeStyle=I;c.strokeRect(60.5,580.5,212,58);c.strokeStyle=R;c.strokeRect(286.5,580.5,212,58);
+  c.font="11px "+TX;L.setLS(c,'3px');c.fillStyle=I;c.fillText('ORCHESTRE DE JAZZ',166,602);c.fillStyle=R;c.fillText('PRIX DU CONCOURS',392,602);L.setLS(c,'0px');
+  c.font="italic 700 16px "+TX;c.fillStyle=I;c.fillText('sous la direction de Léon',166,624);c.fillStyle=R;c.fillText('Une coupe & cinquante francs',392,624);
+  txt('TIRAGE DES COUPLES À 20 H 30',690,"12px "+TX,I,3);txt('Inscriptions au comptoir · Consommation obligatoire',710,"italic 11px "+TX);txt('LA DIRECTION : MAURICE',732,"10px "+TX,I,3);
+  c.restore();
+};
+
 /* Soleil rayonnant art déco (titres, ouverture). o = {x,y,r,n,rot,couleur,epais,alpha} */
 L.soleil=function(c,o){
   const n=o.n||24;c.save();c.translate(o.x,o.y);c.rotate(o.rot||0);c.globalAlpha=o.alpha==null?1:o.alpha;
