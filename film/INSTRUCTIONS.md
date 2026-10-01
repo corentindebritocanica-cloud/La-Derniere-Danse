@@ -3,6 +3,12 @@
 À lire en premier dans une nouvelle conversation. Ce fichier est fait pour éviter de relire tout l'historique.
 Le contexte du cadeau, les personnages, les enveloppes et les écarts relevés plan par plan sont dans `../PROJET.md` (section 6).
 
+## 0. Quel modèle utiliser
+
+- **Opus** pour écrire ou réécrire un plan complet (finir le 06, refaire 07, 08, 10, créer 09, 11, 12) : beaucoup de code, fidélité au livre, contrôle visuel.
+- **Sonnet** suffit pour les retouches ciblées (une réplique, une couleur, un timing, republier, mettre à jour PROJET.md).
+- Claude ne peut pas changer de modèle lui-même : c'est Corentin qui le choisit dans le sélecteur de modèle. Si la tâche demandée est un plan complet et que la session ne tourne pas sur Opus, le signaler en une phrase au début, puis faire ce qui est demandé.
+
 ## 1. Démarrer une session
 
 1. Ajouter le dépôt `corentindebritocanica-cloud/La-Derniere-Danse` à la session (outil add_repo, accès « push »), puis le cloner. Ne jamais écrire de jeton GitHub dans le dépôt.
