@@ -15,6 +15,14 @@
     "DESCRIPTION": "Plan animé : travelling sur la Garonne et le Pont-Neuf jusqu'à la fenêtre en demi-lune où Célestin peint",
     "NOTE": "Les sept arches inégales du Pont-Neuf et leurs oculi, la brique de la boulangerie de madame Fabre, et une seule fenêtre allumée sous le toit."
   },
+  "03": {
+    "fichier": "plan-03-purpan.html",
+    "TITRE": "Le petit hibou de Purpan",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 03",
+    "SOUSTITRE": "Purpan, la chambre de Louise. Vingt-trois secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : Louise lit Freud à la bougie, cache le livre, souffle la bougie et s'éclipse ; Chopin reste dans le noir",
+    "NOTE": "Freud finit sous l'oreiller, les partitions servent d'alibi, et dans le noir il ne reste que les yeux jaunes de Chopin."
+  },
   "05": {
     "fichier": "plan-05-danse.html",
     "TITRE": "La danse qui n'existe pas encore",

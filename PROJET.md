@@ -181,7 +181,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 |---|---|---|
 | 01 | 0:00–0:20 | Ouverture : soleil art déco, étoile rouge, titre. Gramophone puis trompette seule. **Réalisé.** |
 | 02 | 0:20–0:42 | Toulouse la nuit, Garonne, Pont-Neuf ; travelling jusqu'à la fenêtre en demi-lune où Célestin peint. **Réalisé.** |
-| 03 | 0:35–0:55 | Louise lit Freud à la bougie, Chopin à ses pieds ; elle part « à sa leçon de piano ». |
+| 03 | 0:42–1:05 | Louise lit Freud à la bougie, Chopin à ses pieds ; elle part « à sa leçon de piano ». **Réalisé.** |
 | 04 | 0:55–1:15 | Cabaret des Étoiles, Léon, Maurice tire au sort : le peintre et la débutante. Carton « Samedi 14 décembre ». |
 | 05 | 1:15–1:50 | La danse qui n'existe pas encore. **Réalisé.** |
 
@@ -217,7 +217,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
 | Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
 
-### Plans réalisés (4/13)
+### Plans réalisés (5/13)
 
 **Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
 1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
@@ -232,6 +232,14 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 3. Travelling de droite à gauche jusqu'à la façade de brique : « Boulangerie · Fabre », le four qui rougeoie, le réverbère du quai.
 4. Une horloge sonne trois coups ; zoom dans la fenêtre en demi-lune (menuiserie en soleil rayonnant).
 5. Célestin peint la Garonne en bleu de Prusse, touche après touche ; une touche d'or à la fin.
+
+**Plan 03 — Le petit hibou de Purpan** (23 s) · https://claude.ai/artifact/NRF43SQmRMwvM5ioeHAiG8 · `film/plan-03-purpan.html`
+1. Carton « Le petit hibou ne dort jamais. »
+2. La chambre de Louise : papier peint rayé, frise art déco, horloge à balancier, fenêtre sur la lune. Louise lit Freud (livre rouge) à la bougie, adossée au lit ; elle tourne une page. Chopin ronronne au pied du lit.
+3. La trompette de Léon sonne au loin : Louise relève la tête vers la fenêtre.
+4. Elle ferme le livre, le cache sous l'oreiller, souffle la bougie (filet de fumée).
+5. Dans la nuit bleue, elle prend son manteau et ses partitions « PIANO » ; l'alibi s'écrit à la main : « leçon de piano chez madame Castaing ».
+6. La porte s'entrouvre sur la lumière du couloir et se referme. Dans le noir, il ne reste que les yeux jaunes de Chopin, qui cligne.
 
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».
@@ -254,7 +262,7 @@ Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
 ### Prochaines étapes du film
 
 - [x] Regrouper personnages, décors et musique en fichiers communs.
-- [ ] Animer les plans restants : 03, 04, 06, 07, 08, 09, 11, 12, 13.
+- [ ] Animer les plans restants : 04, 06, 07, 08, 09, 11, 12, 13.
 - [ ] Tester l'export en vidéo MP4.
 - [ ] Assembler le film complet avec le thème musical continu.
 - [ ] Voix off (facultatif, enregistrée par Corentin).
