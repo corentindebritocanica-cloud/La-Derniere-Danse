@@ -32,7 +32,7 @@ function limb(c,a,b,w){c.lineWidth=w;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.
          lift, s (échelle), hipY (hanche imposée, sinon pieds au sol), sol}
    kind = 'C' (Célestin) ou 'L' (Louise). Renvoie la position de la tête. */
 L.pantin=function(c,st,kind,flare){
-  flare=flare||0;const isC=kind!=='L',sc=isC?1:.93,F=st.F,aF=Math.abs(F),p=st.p,s=st.s||1,INK=L.C.ombre;
+  flare=flare||0;const isC=!(kind==='L'||kind==='S'||kind==='Y'),sc=isC?1:.93,F=st.F,aF=Math.abs(F),p=st.p,s=st.s||1,INK=L.C.ombre;
   const T=(isC?74:66)*sc,th=(isC?52:47)*sc,sh=(isC?52:47)*sc,ua=(isC?37:32)*sc,la=(isC?35:30)*sc;
   const hip={x:0,y:0};
   const kF=pt(hip,p.lF[0],th,F),fF=pt(kF,p.lF[0]+p.lF[1],sh,F),kB=pt(hip,p.lB[0],th,F),fB=pt(kB,p.lB[0]+p.lB[1],sh,F);
@@ -65,15 +65,23 @@ L.pantin=function(c,st,kind,flare){
     c.beginPath();c.arc(0,0,13,0,7);c.fill();
     c.beginPath();c.moveTo(-14,-4);c.quadraticCurveTo(-12,-18,2,-17);c.quadraticCurveTo(14,-16,15,-6);c.lineTo(F*22,-4);c.lineTo(F*22,-1);c.lineTo(-14,-1);c.closePath();c.fill();
     c.restore();c.save();c.translate(S.x,S.y);c.fillStyle=L.C.rouge;c.beginPath();c.ellipse(0,-2,13,6,0,0,7);c.fill();c.fillRect(-F*10-3,0,7,26);c.fillStyle=INK;
-  }else if(isC){
+  }else if(kind==='C'){
     c.beginPath();c.arc(0,0,13,0,7);c.fill();
     c.beginPath();[[-13,-4],[-11,-17],[-5,-12],[0,-21],[5,-13],[11,-18],[13,-4]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill();
     if(aF>.3){c.strokeStyle=L.C.papier;c.lineWidth=1.6;c.beginPath();c.arc(F*7,1,4.4,0,7);c.stroke()}
+  }else if(isC){
+    // figurants masculins : X cheveux courts, B crâne chauve, K casquette de contrôleur
+    c.beginPath();c.arc(0,0,13,0,7);c.fill();
+    if(kind==='X'){c.beginPath();c.ellipse(-F*2,-5,14,10,0,Math.PI,0);c.fill()}
+    if(kind==='K'){c.fillRect(-14,-16,28,9);c.fillRect(F>0?0:-22,-9,22,3)}
+    if(kind==='B'&&aF>.3){c.fillStyle='rgba(241,231,211,.18)';c.beginPath();c.arc(-F*3,-8,5,0,7);c.fill();c.fillStyle=INK}
   }else{
     c.beginPath();c.arc(0,0,11.5,0,7);c.fill();
     c.beginPath();c.ellipse(-F*1.5,-2,13.5,12.5,0,Math.PI,0);c.fill();c.fillRect(-13.5,-3,27,8);
     c.fillRect(F>=0?-13.5:4.5,-3,9,15);
-    if(aF>.3){c.fillStyle=L.C.papier;c.beginPath();c.arc(F*6,1,2.9,0,7);c.fill();c.fillStyle=INK;c.beginPath();c.arc(F*6.9,1,1.4,0,7);c.fill()}
+    if(kind==='S'){c.fillStyle=L.C.rouge;c.fillRect(-14,-9,28,4);c.beginPath();c.moveTo(-F*4,-9);c.quadraticCurveTo(-F*10,-30,-F*2,-42);c.quadraticCurveTo(-F*2,-24,F*2,-9);c.fill();c.fillStyle=INK}
+    if(kind==='L'&&aF>.3){c.fillStyle=L.C.papier;c.beginPath();c.arc(F*6,1,2.9,0,7);c.fill();c.fillStyle=INK;c.beginPath();c.arc(F*6.9,1,1.4,0,7);c.fill()}
+    if(st.levres&&aF>.3){c.fillStyle=L.C.rouge;c.beginPath();c.ellipse(F*10.5,7,2.6,1.6,0,0,7);c.fill();c.fillStyle=INK}
   }
   c.restore();c.restore();
   return{tete:{x:st.x+s*Hc.x,y:hipY+s*Hc.y},main:{x:st.x+s*hF.x,y:hipY+s*hF.y},hanche:{x:st.x,y:hipY}};

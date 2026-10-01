@@ -157,6 +157,64 @@ L.afficheConcours=function(c){
   c.restore();
 };
 
+/* ---------- la salle du Cabaret des Étoiles, d'après le chapitre 3 ----------
+   Ancien entrepôt de vin (voûtes de brique), tables rondes autour d'une piste de parquet ciré,
+   lampes à abat-jour rouges, une scène où l'orchestre de six joue en chemise. Piste : y 392 → 720.
+   o = {lampes 0..1, colonne true} */
+L.SCENE={g:250,d:1030,haut:300,bord:384};
+L.salleCabaret=function(c,t,o){
+  o=o||{};const SC=L.SCENE;
+  const g=c.createLinearGradient(0,0,0,400);g.addColorStop(0,'#160b08');g.addColorStop(1,'#2a1510');c.fillStyle=g;c.fillRect(0,0,W,400);
+  // voûtes de brique de l'ancien entrepôt
+  c.strokeStyle='rgba(90,50,30,.45)';c.lineWidth=10;[[-60,330],[1340,330]].forEach(([x])=>{});
+  for(let k=0;k<4;k++){const x=k*420-50;c.beginPath();c.arc(x+210,330,230,Math.PI,0);c.stroke()}
+  c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=1;for(let y=8;y<330;y+=14){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+  // tonneaux empilés, souvenir de l'entrepôt
+  [[60,300],[120,300],[90,250]].forEach(([x,y])=>{c.fillStyle='#2a1810';c.beginPath();c.ellipse(x,y,28,26,0,0,7);c.fill();c.strokeStyle='#4a3020';c.lineWidth=3;c.beginPath();c.ellipse(x,y,28,26,0,0,7);c.stroke();c.beginPath();c.ellipse(x,y,12,26,0,0,7);c.stroke()});
+  // scène : rideau rouge, étoiles dorées peintes, plancher
+  c.fillStyle='#4a0f0b';c.fillRect(SC.g,70,SC.d-SC.g,SC.haut-70);
+  for(let i=0;i<14;i++){const x=SC.g+i*(SC.d-SC.g)/14;c.fillStyle=i%2?'#5a1410':'#3f0c09';c.fillRect(x,70,(SC.d-SC.g)/14,SC.haut-70)}
+  c.fillStyle='#2a0807';c.fillRect(SC.g-10,60,SC.d-SC.g+20,18);
+  [[380,110],[640,96],[900,110],[510,150],[770,150]].forEach(([x,y],i)=>L.star(c,x,y,i===1?16:10,i===1?6.5:4,L.C.or));
+  c.fillStyle='#3a2410';c.fillRect(SC.g-14,SC.haut,SC.d-SC.g+28,SC.bord-SC.haut);c.fillStyle='#24160c';c.fillRect(SC.g-14,SC.bord,SC.d-SC.g+28,10);c.fillStyle=L.C.or;c.fillRect(SC.g-14,SC.bord-2,SC.d-SC.g+28,2);
+  // piste de parquet ciré
+  const pg=c.createLinearGradient(0,394,0,720);pg.addColorStop(0,'#3a2414');pg.addColorStop(1,'#6b4526');c.fillStyle=pg;c.fillRect(0,394,W,326);
+  c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=1;for(let i=-12;i<=12;i++){c.beginPath();c.moveTo(640+i*40,394);c.lineTo(640+i*120,720);c.stroke()}
+  for(let y=410;y<720;y+=y<500?14:22){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+  // lampes suspendues à abat-jour rouge au-dessus de la piste
+  const la=o.lampes==null?1:o.lampes;
+  [[430,130],[850,130]].forEach(([x,y])=>{c.strokeStyle='#0b0706';c.lineWidth=2;c.beginPath();c.moveTo(x,0);c.lineTo(x,y);c.stroke();
+    c.fillStyle='#8a1a14';c.beginPath();c.moveTo(x-22,y+22);c.lineTo(x+22,y+22);c.lineTo(x+12,y);c.lineTo(x-12,y);c.closePath();c.fill();
+    c.save();c.globalCompositeOperation='lighter';const cg=c.createLinearGradient(0,y+22,0,640);cg.addColorStop(0,`rgba(255,150,110,${.2*la})`);cg.addColorStop(1,`rgba(255,150,110,${.03*la})`);c.fillStyle=cg;c.beginPath();c.moveTo(x-22,y+22);c.lineTo(x+22,y+22);c.lineTo(x+170,640);c.lineTo(x-170,640);c.closePath();c.fill();
+    const fl=c.createRadialGradient(x,600,4,x,600,190);fl.addColorStop(0,`rgba(255,170,120,${.3*la})`);fl.addColorStop(1,'rgba(255,170,120,0)');c.fillStyle=fl;c.beginPath();c.ellipse(x,600,190,40,0,0,7);c.fill();c.restore()});
+  // colonnes de fonte
+  if(o.colonne!==false)[150,1150].forEach(x=>{c.fillStyle='#0c0806';c.fillRect(x-9,0,18,612);c.fillRect(x-16,0,32,22);c.fillRect(x-15,600,30,14)});
+};
+/* tables rondes et leur lampe rouge, avec les clients ; à dessiner au premier plan */
+L.tablesCabaret=function(c,t){
+  [[70,690,1.25],[1215,690,1.25],[300,470,.7],[980,470,.7]].forEach(([x,y,k],i)=>{
+    c.save();c.translate(x,y);c.scale(k,k);
+    c.fillStyle='#0d0806';c.beginPath();c.ellipse(0,0,70,14,0,0,7);c.fill();c.fillRect(-5,0,10,60);
+    c.fillStyle='#a8201a';c.beginPath();c.moveTo(-16,-28);c.lineTo(16,-28);c.lineTo(10,-46);c.lineTo(-10,-46);c.closePath();c.fill();c.fillStyle='#0d0806';c.fillRect(-2,-28,4,26);
+    c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(0,-30,2,0,-30,90);g.addColorStop(0,'rgba(255,120,90,.35)');g.addColorStop(1,'rgba(255,120,90,0)');c.fillStyle=g;c.beginPath();c.arc(0,-30,90,0,7);c.fill();c.restore();
+    c.fillStyle='#070504';[[-58,-12],[58,-12]].forEach(([dx,dy],j)=>{const b=Math.sin(t*1.5+i+j)*1.5;c.beginPath();c.arc(dx,dy-40+b,13,0,7);c.fill();c.fillRect(dx-18,dy-28+b,36,40)});
+    c.restore()});
+};
+/* l'orchestre de six, en chemise, manches retroussées ; Léon à la trompette. joue = 0..1 */
+L.orchestreSix=function(c,t,joue){
+  const y=L.SCENE.haut,b=Math.abs(Math.sin(t*Math.PI*2))*joue*2,col='#120a07';c.fillStyle=col;c.strokeStyle=col;
+  // piano droit et pianiste
+  c.fillRect(300,y-70,70,70);c.fillStyle='#e8dcc2';c.fillRect(304,y-34,62,4);c.fillStyle=col;c.beginPath();c.arc(392,y-74-b,9,0,7);c.fill();c.fillRect(384,y-64-b,18,34);c.fillRect(386,y-30,14,30);
+  // contrebasse
+  c.beginPath();c.ellipse(470,y-38,16,26,0,0,7);c.fill();c.fillRect(468,y-110,4,72);c.beginPath();c.arc(492,y-96+b,9,0,7);c.fill();c.fillRect(484,y-86+b,18,50);c.fillRect(486,y-36,7,36);c.fillRect(496,y-36,7,36);
+  // batterie
+  c.beginPath();c.arc(570,y-22,22,0,7);c.fill();c.fillStyle=L.C.or;c.fillRect(548,y-62,30,2);c.fillStyle=col;c.fillRect(562,y-62,2,40);c.beginPath();c.arc(600,y-70-b,9,0,7);c.fill();c.fillRect(592,y-60-b,18,32);c.fillRect(594,y-28,14,28);
+  // saxophone
+  c.beginPath();c.arc(900,y-92-b,9,0,7);c.fill();c.fillRect(892,y-82-b,18,46);c.fillRect(892,y-36,7,36);c.fillRect(902,y-36,7,36);c.strokeStyle=L.C.or;c.lineWidth=4;c.beginPath();c.moveTo(906,y-74);c.quadraticCurveTo(918,y-50,908,y-42);c.stroke();c.strokeStyle=col;
+  // banjo
+  c.fillStyle=col;c.beginPath();c.arc(980,y-90-b,9,0,7);c.fill();c.fillRect(972,y-80-b,18,46);c.fillRect(972,y-34,7,34);c.fillRect(982,y-34,7,34);c.fillStyle='#e8dcc2';c.beginPath();c.arc(970,y-56,11,0,7);c.fill();c.strokeStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(972,y-56);c.lineTo(1006,y-82);c.stroke();
+};
+
 /* Soleil rayonnant art déco (titres, ouverture). o = {x,y,r,n,rot,couleur,epais,alpha} */
 L.soleil=function(c,o){
   const n=o.n||24;c.save();c.translate(o.x,o.y);c.rotate(o.rot||0);c.globalAlpha=o.alpha==null?1:o.alpha;
