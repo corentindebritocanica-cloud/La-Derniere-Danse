@@ -177,7 +177,7 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 | 05 La danse | 3 (fin) | `plan-05-danse.html` | https://claude.ai/artifact/8i5uzu5MYxhB1KYspFrEjU | ✅ refait (liberté : fil d'or au sol) |
 | 06 L'heure des hiboux | 4 | `plan-06-marche.html` | https://claude.ai/artifact/933jod6ATQTFY5Mm2NxAVz | ✅ refait et publié (perron ajouté devant la façade) |
 | 07 Le portrait / enfermée | 5 | `plan-07-portrait.html` | https://claude.ai/artifact/PyBENh3VDyeHMTJViiMCWu | ✅ refait d'après le livre (83 s) |
-| 08 La glycine | 7 | `plan-08-glycine.html` | https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC | ❌ à refaire |
+| 08 La troisième fenêtre à gauche | 7 | `plan-08-glycine.html` | https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC | ✅ refait d'après le livre (124 s) |
 | 09 Soirée des lendemains | 8 | — | — | ⬜ à créer (nouvel artefact) |
 | 10 L'étoile filante | 9 | `plan-10-etoile-filante.html` | https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy | ❌ à refaire |
 | 11, 12, épilogue | 10–12 | — | — | ⬜ à créer (voir storyboard) |
