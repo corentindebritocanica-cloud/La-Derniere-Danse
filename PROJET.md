@@ -175,7 +175,7 @@ On modifie toujours `film/lib/` ou `film/src/`, puis on relance `build.py`. Les 
 
 **Règle de fidélité au roman.** Le film suit le roman imprimé, pas seulement le résumé. Avant chaque plan, relire le chapitre concerné dans le texte intégral et reprendre ses détails : lieux, vêtements, gestes, objets, répliques, moments où Chopin apparaît. Une réplique ou un détail inventé pour le film est signalé comme tel dans ce carnet, puis remplacé par celui du roman dès que possible.
 
-Source à utiliser : le texte intégral du roman (version TXT d'écoute), à déposer dans `roman/la-derniere-danse.txt`. *Pas encore dans le dépôt.*
+Source à utiliser : le livre dans `roman/La_Derniere_Danse.pdf` (dernière version), et son texte extrait dans `roman/la-derniere-danse.txt`.
 
 Détails du roman déjà repérés (à respecter) :
 - Chopin, le chat, apparaît : quand on le présente (« seul musicien convenable ») ; pendant les évasions par la fenêtre, où il regarde Louise d'un air méprisant ; sur le lit, à côté du traversin qui remplace Louise ; sur le rebord de la fenêtre pendant les conversations jusqu'à l'aube ; la nuit après le baiser, lové contre elle.
@@ -184,150 +184,17 @@ Détails du roman déjà repérés (à respecter) :
 - Henri Lasserre a été invité à dîner par la grand-mère (le relevé de la glycine se fait « pendant un certain dîner »).
 - Toujours « le pantalon de Gaston », jamais « Gaston » seul. Célestin est « dessinateur ».
 
-### Écarts relevés entre le film et le roman (1er octobre)
+### Écarts relevés entre le film et le roman (relecture du livre final, 1er octobre)
 
-Source : extraits du texte retrouvés dans la conversation « Roman » (version de travail, avant le renommage Lily → Louise, Corentin → Célestin, Roussel → Sarrail). Les chapitres 3 et 5 n'ont pas pu être relus en entier.
-
-- **Plan 02 (ch. 1)** — Dans le roman, Julien monte avec une bouteille et parle du concours ; ensuite Célestin retourne la toile de la Garonne contre le mur et reste devant une toile vierge jusqu'à 2 h sans tracer un trait, « comme s'il attendait un modèle ». Le film le montre en train de peindre la Garonne.
-- **Plan 03 (ch. 2)** — Le livre est « La science des rêves », un petit livre à couverture **jaune** (le film le montre rouge). La cachette est le **double fond du tiroir de la table de chevet** (pas l'oreiller), où dort aussi l'affiche pliée en quatre. Le départ pour le concours reste à vérifier (ch. 3).
-- **Plans 04 et 05 (ch. 3)** — À relire : comment se fait le tirage, ce que porte Louise, la danse, le prix (coupe et cinquante francs).
-- **Plan 06 (ch. 4)** — Arrivée à « quatre heures moins dix » devant l'**allée de platanes** ; maison noire, une lanterne au-dessus du perron ; la grille **ne grince pas** (Louise l'a huilée en septembre) ; elle rentre par la porte du potager. Vraies répliques : « Alors je vous appellerai petit hibou. Comme ça, je serai sûr de ne jamais vous appeler comme votre mère. » / « Bonne nuit, petit hibou. » — « Il est quatre heures du matin, monsieur le peintre. Ce n'est plus la nuit. » — « Pour les hiboux, si. » Il ne tente pas de l'embrasser ; au coin de la maison elle lève la main, il lève la sienne. Les répliques du film sont inventées.
-- **Plan 07 (ch. 5)** — À relire : comment Louise est enfermée (la clé « à double tour » est peut-être une invention du film).
-- **Plan 08 (ch. 7)** — Célestin attend **en bas, dans le jardin**, les mains dans les poches, et souffle « Trois points d'appui. Toujours trois. » La lumière du bureau du grand-père est déjà allumée. Louise met la robe couleur de nuit prêtée par Solange (à franges), le **pantalon de golf** du cousin par-dessus, ses chaussures de danse dans la poche du manteau, le rouge à lèvres, son carnet ; elle arrange le **traversin** ; **Chopin**, au pied du lit, la regarde avec un mépris absolu. Elle reste une seconde suspendue, un pied sur le rebord, un pied dans le vide ; « la glycine craquait doucement, mais elle tenait » (aucune patte ne cède). Pendant la descente, une **frange de soie noire** s'accroche à mi-hauteur : c'est elle que Marthe trouvera au ch. 11. La Mini est garée au bout de l'allée de platanes.
-- **Plan 10 (ch. 9)** — Après la soirée du baiser, Célestin la raccompagne puis **rentre seul** dans la Mini, sur la longue route droite entre les champs gelés ; il regarde sa montre à la lueur du tableau de bord : minuit quarante-huit. L'étoile passe **vers l'est, au-dessus de la ville**, blanche presque bleue, d'un bout à l'autre du ciel. Il freine et fait un vœu à voix haute, les yeux fermés. Il fait demi-tour, laisse la Mini au bout de l'allée, retourne sous la glycine : Louise est assise sur le rebord, dans une couverture, les jambes dans le vide ; elle pleure et rit en même temps : « Vous l'avez vue ? » — « Minuit quarante-huit. » Ils parlent jusqu'aux premières lueurs ; **Chopin** s'assoit à côté d'elle et juge Célestin ; la fenêtre de la cuisine de Marthe s'allume ; « Bonne nuit, petit hibou. » — « Pour les hiboux, c'est encore la nuit. » Le film actuel les montre tous les deux dans la voiture : **à refaire**.
-
-### Storyboard
-
-Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/storyboard/`)
-
-**Acte I — La rencontre** (0:00 → 1:50, ch. 1 à 3)
-
-| Plan | Temps | Contenu |
-|---|---|---|
-| 01 | 0:00–0:20 | Ouverture : soleil art déco, étoile rouge, titre. Gramophone puis trompette seule. **Réalisé.** |
-| 02 | 0:20–0:42 | Toulouse la nuit, Garonne, Pont-Neuf ; travelling jusqu'à la fenêtre en demi-lune où Célestin peint. **Réalisé.** |
-| 03 | 0:42–1:05 | Louise lit Freud à la bougie, Chopin à ses pieds ; elle part « à sa leçon de piano ». **Réalisé.** |
-| 04 | 1:05–1:25 | Cabaret des Étoiles, Léon, Maurice tire au sort : le peintre et la débutante. Carton « Samedi 14 décembre ». **Réalisé.** |
-| 05 | 1:15–1:50 | La danse qui n'existe pas encore. **Réalisé.** |
-
-**Acte II — Les nuits volées** (1:50 → 3:15, ch. 4 à 8)
-
-| Plan | Temps | Contenu |
-|---|---|---|
-| 06 | 1:58–2:21 | Marche jusqu'à Purpan, les réverbères s'allument à leur passage. **Réalisé.** |
-| 07 | 2:21–2:43 | Écran partagé : Célestin peint le portrait / Louise enfermée. Carton « Élisabeth ! ». **Réalisé.** |
-| 08 | 2:43–3:07 | Évasion par la glycine, la Mini attend phares allumés. **Réalisé.** |
-| 09 | 2:55–3:15 | Premier baiser : deux profils qui deviennent une seule ombre, fond rouge, « 15 décembre ». |
-
-**Acte III — L'étoile et la dernière danse** (3:15 → 5:00, ch. 9 à 12 + épilogue)
-
-| Plan | Temps | Contenu |
-|---|---|---|
-| 10 | 3:15–3:40 | L'étoile filante à 0 h 48. **Réalisé.** |
-| 11 | 3:40–4:00 | Le grand-père révèle son violon ; le thème passe au violon. |
-| 12 | 4:00–4:40 | Réveillon du 31, dernière danse, confettis, la caméra s'élève vers les étoiles. |
-| 13 | 4:40–5:00 | Épilogue « près d'un siècle plus tard » : le même ciel, deux silhouettes d'aujourd'hui. Carton « Fin ». |
-
-### Personnages à l'écran
-
-| Personnage | Signe distinctif | Geste animé |
-|---|---|---|
-| Célestin | Cheveux en bataille, lunettes rondes (seule ligne claire du visage), pinceau, bleu de Prusse sous le pouce | Fait tourner son pinceau ; ses lunettes accrochent la lumière quand il sourit |
-| Louise | Carré à la garçonne, robe taille basse à franges, sautoir de perles, ceinture rouge, livre rouge | Seule silhouette avec de grands yeux clairs qui bougent (le petit hibou) |
-| Léon | Queue-de-pie, nœud papillon clair, trompette dorée | Lève sa trompette à chaque reprise du thème |
-| Julien | Casquette plate, écharpe rouge, appareil à soufflet | Flash blanc qui fige l'image à chaque déclic |
-| Solange | Bandeau à plume rouge, robe à franges | Claque des doigts ; la plume suit avec un temps de retard |
-| Maurice | Tout en rondeur, moustache claire, nœud rouge, chaîne de montre | Bras ouverts, ventre qui rebondit quand il rit |
-| Édouard | Moustache blanche, canne, La Dépêche | **Son ombre au sol tient un violon** dès sa première apparition |
-| Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
-| Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
-
-### Plans réalisés (9/13) — l'acte I est complet
-
-**Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
-1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
-2. Le soleil art déco se lève, ses arcs se dessinent ; la trompette joue seule le thème.
-3. L'étoile rouge s'allume en vacillant comme un néon.
-4. « LA DERNIÈRE DANSE » s'écrit lettre par lettre (une note de piano par lettre), puis les filets dorés et « Toulouse · décembre 1925 ».
-5. L'iris se referme sur l'étoile rouge.
-
-**Plan 02 — Le peintre à sa fenêtre** (22 s) · https://claude.ai/artifact/PKxRAPSnERwsTieoC9yE92 · `film/plan-02-fenetre.html`
-1. Carton « Dessinateur le jour, peintre la nuit. »
-2. La Garonne la nuit, le Pont-Neuf avec ses sept arches inégales et ses oculi, les lanternes qui se reflètent dans l'eau ; un croissant de lune.
-3. Travelling de droite à gauche jusqu'à la façade de brique : « Boulangerie · Fabre », le four qui rougeoie, le réverbère du quai.
-4. Une horloge sonne trois coups ; zoom dans la fenêtre en demi-lune (menuiserie en soleil rayonnant).
-5. Célestin peint la Garonne en bleu de Prusse, touche après touche ; une touche d'or à la fin.
-
-**Plan 03 — Le petit hibou de Purpan** (23 s) · https://claude.ai/artifact/NRF43SQmRMwvM5ioeHAiG8 · `film/plan-03-purpan.html`
-1. Carton « Le petit hibou ne dort jamais. »
-2. La chambre de Louise : papier peint rayé, frise art déco, horloge à balancier, fenêtre sur la lune. Louise lit Freud (livre rouge) à la bougie, adossée au lit ; elle tourne une page. Chopin ronronne au pied du lit.
-3. La trompette de Léon sonne au loin : Louise relève la tête vers la fenêtre.
-4. Elle ferme le livre, le cache sous l'oreiller, souffle la bougie (filet de fumée).
-5. Dans la nuit bleue, elle prend son manteau et ses partitions « PIANO » ; l'alibi s'écrit à la main : « leçon de piano chez madame Castaing ».
-6. La porte s'entrouvre sur la lumière du couloir et se referme. Dans le noir, il ne reste que les yeux jaunes de Chopin, qui cligne.
-
-**Plan 04 — Le tirage au sort** (20 s) · https://claude.ai/artifact/HVcQ2emeSSPQm1fkdffTi4 · `film/plan-04-tirage.html`
-1. Carton « Samedi 14 décembre. Soir de concours. »
-2. Rue des Teinturiers : façade de brique, l'étoile rouge et l'enseigne au néon s'allument en grésillant ; l'affiche « Grand concours de danse » (la même que dans l'enveloppe 0) ; ampoules qui clignotent autour de la porte ; jazz étouffé derrière.
-3. On fonce vers la porte, éclair doré, on est dedans.
-4. Maurice (nouveau personnage dans les fichiers communs) tinte son verre, roulement de caisse claire, il tire un premier papier de son haut-de-forme : « CONFIRMÉ · le peintre ». Fanfare de Léon. Le projecteur trouve Célestin dans le public ; il se lève et lève la main.
-5. Deuxième papier : « DÉBUTANTE · Mlle L. Sarrail ». Le projecteur trouve Louise, timide, qui relève la tête.
-6. Les deux papiers s'envolent et tombent vers nous au ralenti.
-
-**Plan 06 — La marche jusqu'à Purpan** (23 s) · https://claude.ai/artifact/933jod6ATQTFY5Mm2NxAVz · `film/plan-06-marche.html`
-1. Carton « Il a proposé de la raccompagner. »
-2. Long travelling latéral : ils marchent côte à côte, la ville défile en couches (toits, fenêtres allumées, puis platanes et champs), Saint-Sernin s'éloigne.
-3. Chaque réverbère s'allume quand ils passent, avec un petit tintement.
-4. Leur conversation s'écrit à la main au-dessus d'eux : « Vous dansiez vraiment pour la première fois ? » / « Pour la première fois devant quelqu'un. » / « Et vous, vous peignez quoi, la nuit ? » / « Ce qu'on ne voit pas le jour. » / « Vous avez lu Freud ? » / « Non… vous me le prêterez ? » / « En cachette, alors. »
-5. Panneau « PURPAN », le mur des Sarrail avec la glycine déjà en fleurs (clin d'œil au chapitre 7).
-6. Ils se font face, petit salut ; elle passe la grille. « Bonne nuit, le peintre. » Elle se retourne derrière les barreaux.
-
-*Les répliques sont inventées pour le film : à ajuster si elles ne collent pas au roman.*
-
-**Plan 07 — Le portrait et la chambre fermée** (22 s) · https://claude.ai/artifact/PyBENh3VDyeHMTJViiMCWu · `film/plan-07-portrait.html`
-1. Carton « Le lendemain soir. Il la peint de mémoire. »
-2. Le grenier de Célestin : il peint Louise au bleu de Prusse, trait après trait (ovale, carré à la garçonne, frange, cou) ; son bras suit le pinceau.
-3. L'écran se partage (filet doré) : à droite, la fenêtre de Louise à Purpan, la glycine sur le mur. Une seule lune, à cheval sur les deux moitiés.
-4. La porte s'ouvre : Amélie (nouveau personnage commun) pointe du doigt. « Élisabeth ! » en lettres rouges qui tremblent, accord grinçant.
-5. Gros plan sur la serrure : la clé tourne « à double tour », deux déclics.
-6. Louise souffle sur la vitre et y trace une étoile du doigt ; à gauche, Célestin peint les yeux du petit hibou en dernier, puis lève la tête vers la lune. Le thème au violon.
-
-**Plan 08 — L'évasion par la glycine** (24 s) · https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC · `film/plan-08-glycine.html`
-1. Carton « Un dessinateur prépare toujours un plan. »
-2. Le plan coté de l'enveloppe 3 se dessine trait par trait, à l'identique (papier, encre, annotations rouges) : façade à pignon, 2 niveaux × 5 fenêtres, fenêtre de L. en rouge, deux tiges de glycine, pattes tous les 600 mm, cote 2 900, « 3e patte : branlante. À ÉVITER. », « Fourche : on peut s'y reposer. », notes, « TROIS POINTS D'APPUI. TOUJOURS TROIS. », cartouche « Étude de résistance — glycine », plan n° ✦ 0714.
-3. La caméra plonge dans le dessin, qui devient la vraie façade de nuit (même géométrie).
-4. Louise sort par sa fenêtre, se repose sur la fourche pendant que la fenêtre du grand-père s'allume (son ombre, La Dépêche) puis s'éteint.
-5. Elle pose le pied sur la 3e patte, qui cède ; une grappe tombe ; elle se rattrape.
-6. Au sol, la Mini fait deux appels de phares ; elle court, monte, et le Petit Citron démarre sur le thème à la trompette.
-
-**Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
-1. Carton « Un peu avant une heure du matin… ».
-2. La Mini arrive sur la route ; décors en couches, Saint-Sernin à l'horizon ; trompette.
-3. Arrêt devant une borne « Toulouse 3 ». Silence total, l'étoile filante traverse le ciel (depuis les Gémeaux), ils lèvent la tête, carillon, « 0 h 48 ».
-4. L'aube : le ciel tourne, bribes de conversation manuscrites, le thème au violon.
-5. Carton « Ils ont parlé jusqu'à l'aube. »
-
-**Plan 05 — La danse qui n'existe pas encore** (33 s) · https://claude.ai/artifact/8i5uzu5MYxhB1KYspFrEjU · `film/plan-05-danse.html`
-1. Carton « Le peintre et la débutante. Personne ne leur a dit quelle danse danser. »
-2. Projecteur qui vacille, roulement de caisse claire ; Louise regarde ses pieds.
-3. Célestin tend la main, elle la prend : une note de trompette.
-4. La danse : balancé, pirouette sous le bras (robe en corolle), promenade charleston, grande rotation à deux.
-5. Chaque pas allume un rayon du soleil art déco.
-6. Final : tous les rayons s'embrasent, l'étoile rouge apparaît, il la fait basculer. Applaudissements.
-7. Carton « Une danse qui n'existait pas encore. »
-
-Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
-
-### Prochaines étapes du film
-
-- [x] Regrouper personnages, décors et musique en fichiers communs.
-- [ ] Animer les plans restants : 09, 11, 12, 13.
-- [ ] Tester l'export en vidéo MP4.
-- [ ] Assembler le film complet avec le thème musical continu.
-- [ ] Voix off (facultatif, enregistrée par Corentin).
-- [ ] Décider où le montrer : page bonus du site, ou projection le jour J.
-
----
+- **Plan 01** — Conforme.
+- **Plan 02 (ch. 1)** — Un jeudi soir, Julien monte avec une bouteille (qu'il débouche avec les dents) et parle du concours. Ensuite Célestin retourne la toile de la Garonne contre le mur, pose une toile vierge et reste devant jusqu'à 2 h sans tracer un trait, « comme s'il attendait un modèle ». Grenier : poêle en fonte, lit étroit, pinceaux dans des pots de confiture, toiles retournées, gramophone. *Le film le montre en train de peindre la Garonne.*
+- **Plan 03 (ch. 2)** — Le livre est « Introduction à la psychanalyse », épais, couverture **jaune** (film : rouge). Cachette : le **double fond du tiroir de la table de chevet**, où est aussi le prospectus du concours (film : sous l'oreiller). La scène de nuit du roman : maison endormie, elle ouvre la fenêtre, s'enveloppe dans son châle, s'assoit sur le rebord les pieds dans le vide ; **Chopin** vient s'asseoir à côté d'elle ; Voie lactée « comme de la farine renversée », un chien, un train à Matabiau ; elle se demande si quelqu'un d'autre ne dort pas, puis referme. *Bougie soufflée, manteau, partitions « PIANO » et départ par la porte : inventés.* Le vrai départ (ch. 3) : fausse migraine, main sur la tempe, escalier de service chaussures à la main, porte du potager, tramway.
+- **Plan 04 (ch. 3)** — Cabaret : porte **rouge** sous une **enseigne en fer peinte d'étoiles dorées** (pas de néon), dans un ancien entrepôt de vin ; dedans tables rondes, piste de parquet ciré, lampes à abat-jour rouges, orchestre de six en chemise. Maurice : gros, jovial, smoking trop étroit. Tirage : un serveur apporte **deux chapeaux melon** (parrains / débutants) ; Maurice tire un nom dans chacun : « Monsieur Delacroix… avec mademoiselle Sarrail ! » Débutants en rang d'un côté, parrains de l'autre ; Célestin adossé à une colonne, il regarde l'orchestre et tape le rythme ; Solange pousse Louise sur la piste. *Film : néon, un seul haut-de-forme, projecteur qui les cherche dans le public.*
+- **Plan 05 (ch. 3)** — Trois danses : fox-trot (« Ne comptez pas »), tango (elle se perd, il s'arrête avec elle et la regarde deux mesures), puis le morceau de Léon : lent, chaloupé, basse qui traîne, trompette qui bâille. « Faites-moi confiance. » Il la garde par la main et l'envoie au bout de son bras « comme un cerf-volant », le long d'une ligne invisible, puis la ramène ; lui reste presque immobile au centre. Silence, puis toute la salle se lève. Ils ne gagnent pas (coupe au grand blond au cure-dent et à la dactylo du grand écart) ; Maurice leur donne une bouteille de mousseux « pour la plus belle troisième danse ». Robe couleur de nuit, crêpe de soie, droite, **sans taille**, franges au genou ; rouge à lèvres ; Célestin en gilet gris, chemise blanche aux manches roulées. *Film : pirouettes, promenade charleston, rotation, renversé final : ce n'est pas la danse du livre.*
+- **Plan 06 (ch. 4)** — Après minuit, avec la bouteille ; « Alors on marche », il lui offre **son bras**. Itinéraire : rue de la République (il montre sa fenêtre, éteinte), avenue de Grande-Bretagne sous les platanes nus, la Cartoucherie, jardins ouvriers, murs de cimetière ; réverbère qui grésille ; le **banc près du lavoir** vers 2 h, mousseux bu au goulot ; « Pas une chouette. Un hibou. Un petit hibou. » Arrivée à 4 h moins 10 : allée de platanes, maison noire, une lanterne au-dessus du perron, sa fenêtre entrouverte. Soirée des lendemains proposée. Pas de baiser. « Bonne nuit, petit hibou. » — « Il est quatre heures du matin, monsieur le peintre. Ce n'est plus la nuit. » — « Pour les hiboux, si. » La grille ne grince pas ; au coin de la maison elle lève la main, il lève la sienne. Maison : brique et pierre, perron de six marches, volets gris, grille de fer forgé peinte en vert. *Film : répliques inventées, grille qui grince, pas de bras, pas de banc.*
+- **Plan 07 (ch. 5)** — Le portrait : peint à l'huile, sans esquisse, le dimanche matin après la nuit blanche ; visage de trois quarts tourné vers la gauche, rire et envie de pleurer ; Julien arrive à midi (« Qu'on les retrouve »). À Purpan : petit déjeuner, le **grand-père** est là avec La Dépêche (« Même avec la peste »), Marthe baisse les yeux. C'est **le grand-père** qui l'enferme ; elle envoie un mot par un petit garçon : « Mon grand-père sait que je suis sortie. Il m'enferme ce soir… — Le petit hibou » + « Troisième fenêtre à gauche. Premier étage. » ; Célestin dévale l'escalier. *Film : grand-mère, « Élisabeth ! », clé à double tour, étoile sur la vitre : inventés.*
+- **Plan 08 (ch. 7)** — Célestin attend **dans le jardin** depuis 7 h (trois heures, un briquet). « Vous êtes fou. » — « C'est possible. » Seule autre lumière : le bureau du grand-père, rez-de-chaussée à droite (froissement du journal). « De vous enlever, petit hibou. » Elle ôte la robe bleue, met la robe couleur de nuit, le **pantalon de golf dessous**, chaussures de danse dans la poche, rouge à lèvres, carnet ; **traversin** ; **Chopin** au pied du lit, mépris absolu ; elle éteint. « Trois points d'appui. Toujours trois. » Une seconde suspendue, un pied sur le rebord, un pied dans le vide ; la glycine craque mais **tient** ; il la guide d'en bas (« à gauche, un peu plus bas… ») ; **une frange s'accroche à mi-hauteur**, elle tire ; à un mètre du sol **il la reçoit dans ses bras** (« Trois points d'appui. Vous en êtes un. »). Ils traversent le jardin main dans la main ; la Mini est au bout de l'allée, sous un réverbère ; elle la baptise « la Mini » ; elle cale une fois puis démarre. *Film : patte qui cède, Mini devant la maison, appels de phares, Louise qui court seule.*
+- **Plan 10 (ch. 9)** — Retour en Mini par la Garonne, capote repliée, sa tête sur son épaule ; à la grille elle remet le pantalon sous la robe champagne ; elle remonte la glycine, il la regarde, ils se font signe. Il repart **seul** ; route droite entre les champs gelés ; montre au tableau de bord : 0 h 48 ; étoile vers l'est au-dessus de la ville, blanche presque bleue, d'un bout à l'autre du ciel ; il freine, vœu à voix haute, yeux fermés ; demi-tour. Elle est sur le rebord dans une couverture, pleure et rit : « Vous l'avez vue ? » — « Minuit quarante-huit. » Il s'assoit sur le **banc de pierre** au pied de la glycine ; **Chopin** la rejoint et le juge ; la couverture finit sur une branche ; jusqu'à ce que la fenêtre de la cuisine de Marthe s'allume ; « Marthe est déjà levée, monsieur le peintre. » — « Pour les hiboux, c'est encore la nuit. » *Film : tous les deux dans la voiture, conversation dans la voiture : à refaire.*
 
 ## 7. Règles de travail
 
