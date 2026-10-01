@@ -44,7 +44,7 @@ L.pantin=function(c,st,kind,flare){
   c.strokeStyle=INK;c.fillStyle=INK;c.lineCap='round';c.lineJoin='round';
   const legW=isC?13:7.5,armW=isC?10:7;
   const shoe=f=>{c.beginPath();c.ellipse(f.x+F*5,f.y,isC?11:8,isC?4.5:3.5,0,0,7);c.fill()};
-  c.globalAlpha=.92;limb(c,hip,kB,legW);limb(c,kB,fB,legW-1);shoe(fB);limb(c,S,eB,armW);limb(c,eB,hB,armW-1);c.globalAlpha=1;
+  const ga=c.globalAlpha;c.globalAlpha=ga*.92;limb(c,hip,kB,legW);limb(c,kB,fB,legW-1);shoe(fB);limb(c,S,eB,armW);limb(c,eB,hB,armW-1);c.globalAlpha=ga;
   const ax=S.x,ay=S.y,al=Math.hypot(ax,ay),nx=-ay/al,ny=ax/al;
   const shW=lerp(isC?18:13,isC?11:9,aF),hpW=lerp(isC?15:12,isC?10:9,aF);
   c.beginPath();c.moveTo(nx*hpW,ny*hpW);c.lineTo(S.x+nx*shW,S.y+ny*shW);c.lineTo(S.x-nx*shW,S.y-ny*shW);c.lineTo(-nx*hpW,-ny*hpW);c.closePath();c.fill();
@@ -86,11 +86,13 @@ function roue(c,cx,cy,ang){
 L.mini=function(c,x,gy,o){
   o=o||{};const ink=L.C.ombre,tetes={};
   if(!o.vide){
+    c.save();c.beginPath();c.rect(x-60,gy-320,320,320-36);c.clip();
     const lo=o.louise||{},ce=o.celestin||{};
     const pl=L.melange(L.POSES.assis,L.POSES.assis,0);pl.hd=.05-.5*(lo.look||0);
     const pc=L.melange(L.POSES.assis_volant,L.POSES.assis_volant,0);pc.hd=-.5*(ce.look||0);
-    tetes.louise=L.pantin(c,{x:x+56+(lo.lean||0)*5,F:1,p:pl,s:.76,hipY:gy-38},'L').tete;
+    if(o.louise!==false)tetes.louise=L.pantin(c,{x:x+56+(lo.lean||0)*5,F:1,p:pl,s:.76,hipY:gy-38},'L').tete;
     tetes.celestin=L.pantin(c,{x:x+84-(ce.lean||0)*4,F:1,p:pc,s:.76,hipY:gy-38},'C').tete;
+    c.restore();
   }
   const bg=c.createLinearGradient(0,gy-74,0,gy-34);bg.addColorStop(0,'#e8bb48');bg.addColorStop(1,'#a8801f');
   c.fillStyle=bg;c.beginPath();

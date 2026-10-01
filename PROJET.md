@@ -191,7 +191,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 |---|---|---|
 | 06 | 1:58–2:21 | Marche jusqu'à Purpan, les réverbères s'allument à leur passage. **Réalisé.** |
 | 07 | 2:21–2:43 | Écran partagé : Célestin peint le portrait / Louise enfermée. Carton « Élisabeth ! ». **Réalisé.** |
-| 08 | 2:35–2:55 | Évasion par la glycine, la Mini attend phares allumés. |
+| 08 | 2:43–3:07 | Évasion par la glycine, la Mini attend phares allumés. **Réalisé.** |
 | 09 | 2:55–3:15 | Premier baiser : deux profils qui deviennent une seule ombre, fond rouge, « 15 décembre ». |
 
 **Acte III — L'étoile et la dernière danse** (3:15 → 5:00, ch. 9 à 12 + épilogue)
@@ -217,7 +217,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
 | Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
 
-### Plans réalisés (8/13) — l'acte I est complet
+### Plans réalisés (9/13) — l'acte I est complet
 
 **Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
 1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
@@ -267,6 +267,14 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 5. Gros plan sur la serrure : la clé tourne « à double tour », deux déclics.
 6. Louise souffle sur la vitre et y trace une étoile du doigt ; à gauche, Célestin peint les yeux du petit hibou en dernier, puis lève la tête vers la lune. Le thème au violon.
 
+**Plan 08 — L'évasion par la glycine** (24 s) · https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC · `film/plan-08-glycine.html`
+1. Carton « Un dessinateur prépare toujours un plan. »
+2. Le plan coté de la glycine (celui de l'enveloppe 3) se trace tout seul au bleu d'architecte : façade, fenêtres, tronc, cotes « 4,10 m » et « 5,60 m », prises 1 à 3, « tronc Ø 8 cm, tient bon », « la Mini (moteur coupé) », cartouche « dessiné par C. Delacroix ».
+3. Le plan se fond dans la vraie façade, la nuit.
+4. La fenêtre s'ouvre, Louise descend la glycine. Une branche craque, une grappe tombe ; elle se rattrape.
+5. La fenêtre du grand-père s'allume (son ombre et La Dépêche), silence… puis s'éteint.
+6. Elle saute au sol. La Mini clignote deux fois des phares ; elle court, monte, et le Petit Citron démarre sur le thème à la trompette.
+
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».
 2. La Mini arrive sur la route ; décors en couches, Saint-Sernin à l'horizon ; trompette.
@@ -288,7 +296,7 @@ Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
 ### Prochaines étapes du film
 
 - [x] Regrouper personnages, décors et musique en fichiers communs.
-- [ ] Animer les plans restants : 08, 09, 11, 12, 13.
+- [ ] Animer les plans restants : 09, 11, 12, 13.
 - [ ] Tester l'export en vidéo MP4.
 - [ ] Assembler le film complet avec le thème musical continu.
 - [ ] Voix off (facultatif, enregistrée par Corentin).
