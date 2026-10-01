@@ -173,6 +173,19 @@ On modifie toujours `film/lib/` ou `film/src/`, puis on relance `build.py`. Les 
 
 **Règle de cohérence avec les artefacts papier.** Tout lieu ou objet qui existe déjà sur le canvas des enveloppes doit être repris tel quel dans le film. La maison Sarrail est définie une seule fois dans `film/lib/decors.js` (`L.SARRAIL` et `L.maisonSarrail`), avec la géométrie exacte du plan coté de l'enveloppe 3 ; les plans 06, 07 et 08 l'utilisent. À vérifier de la même façon pour les prochains plans : la carte du ciel (env. 4), l'invitation au réveillon et le carnet de bal (env. 7-8), le tirage de Julien.
 
+**Règle de fidélité au roman.** Le film suit le roman imprimé, pas seulement le résumé. Avant chaque plan, relire le chapitre concerné dans le texte intégral et reprendre ses détails : lieux, vêtements, gestes, objets, répliques, moments où Chopin apparaît. Une réplique ou un détail inventé pour le film est signalé comme tel dans ce carnet, puis remplacé par celui du roman dès que possible.
+
+Source à utiliser : le texte intégral du roman (version TXT d'écoute), à déposer dans `roman/la-derniere-danse.txt`. *Pas encore dans le dépôt.*
+
+Détails du roman déjà repérés (à respecter) :
+- Chopin, le chat, apparaît : quand on le présente (« seul musicien convenable ») ; pendant les évasions par la fenêtre, où il regarde Louise d'un air méprisant ; sur le lit, à côté du traversin qui remplace Louise ; sur le rebord de la fenêtre pendant les conversations jusqu'à l'aube ; la nuit après le baiser, lové contre elle.
+- Le soir des lendemains (ch. 8), Solange prête à Louise une robe champagne brodée de perles, dans l'arrière-salle. Au réveillon, Louise remet la robe noire, dont Solange a recousu la frange.
+- Célestin l'appelle parfois « Lou ». La grand-mère dit « Élisabeth » quand elle est fâchée.
+- Henri Lasserre a été invité à dîner par la grand-mère (le relevé de la glycine se fait « pendant un certain dîner »).
+- Toujours « le pantalon de Gaston », jamais « Gaston » seul. Célestin est « dessinateur ».
+
+Écarts connus dans les plans déjà faits (à reprendre avec le texte) : répliques du plan 06 inventées ; Chopin absent de l'évasion (plan 08) et du traversin ; robe du plan 05 à vérifier (premier soir : robe noire à frange ?).
+
 ### Storyboard
 
 Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/storyboard/`)
