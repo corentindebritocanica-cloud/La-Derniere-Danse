@@ -186,6 +186,8 @@ Détails du roman déjà repérés (à respecter) :
 
 ### Écarts relevés entre le film et le roman (relecture du livre final, 1er octobre)
 
+> État : plans 02 à 05 corrigés et publiés ; plan 06 réécrit (finitions à faire, voir `film/INSTRUCTIONS.md`) ; 07, 08, 10 à refaire ; 09 à créer. Mode d'emploi complet : `film/INSTRUCTIONS.md`. Artefacts papier : `artefacts-papier/`.
+
 - **Plan 01** — Conforme.
 - **Plan 02 (ch. 1)** — Un jeudi soir, Julien monte avec une bouteille (qu'il débouche avec les dents) et parle du concours. Ensuite Célestin retourne la toile de la Garonne contre le mur, pose une toile vierge et reste devant jusqu'à 2 h sans tracer un trait, « comme s'il attendait un modèle ». Grenier : poêle en fonte, lit étroit, pinceaux dans des pots de confiture, toiles retournées, gramophone. *Le film le montre en train de peindre la Garonne.*
 - **Plan 03 (ch. 2)** — Le livre est « Introduction à la psychanalyse », épais, couverture **jaune** (film : rouge). Cachette : le **double fond du tiroir de la table de chevet**, où est aussi le prospectus du concours (film : sous l'oreiller). La scène de nuit du roman : maison endormie, elle ouvre la fenêtre, s'enveloppe dans son châle, s'assoit sur le rebord les pieds dans le vide ; **Chopin** vient s'asseoir à côté d'elle ; Voie lactée « comme de la farine renversée », un chien, un train à Matabiau ; elle se demande si quelqu'un d'autre ne dort pas, puis referme. *Bougie soufflée, manteau, partitions « PIANO » et départ par la porte : inventés.* Le vrai départ (ch. 3) : fausse migraine, main sur la tempe, escalier de service chaussures à la main, porte du potager, tramway.

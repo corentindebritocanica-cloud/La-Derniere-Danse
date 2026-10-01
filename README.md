@@ -17,3 +17,8 @@ Cadeau des 2 ans : un roman imprimé, des artefacts d'époque en enveloppes, un 
 - Le roman imprimé ne change plus. Le film et le site le suivent : avant de toucher à une scène, relire le chapitre dans `roman/`.
 - Tout ce qui existe déjà sur les artefacts papier (plan de la glycine, carte du ciel, invitation, carnet de bal…) est repris tel quel.
 - Aucun jeton d'accès ni mot de passe GitHub dans ce dépôt.
+
+## Reprendre le travail dans une nouvelle conversation
+
+- `film/INSTRUCTIONS.md` : mode d'emploi du film (état des plans, liens des artefacts, outils, règles, prochaines étapes). **À lire en premier.**
+- `artefacts-papier/` : copie de tous les artefacts papier des enveloppes (sources + rendus PNG dans `artefacts-papier/png/`, catalogue dans `artefacts-papier/README.md`).
