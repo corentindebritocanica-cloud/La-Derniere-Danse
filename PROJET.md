@@ -171,6 +171,8 @@ Personnages, décors et musique sont partagés : une modification faite une fois
 
 On modifie toujours `film/lib/` ou `film/src/`, puis on relance `build.py`. Les fichiers `film/plan-*.html` sont générés.
 
+**Règle de cohérence avec les artefacts papier.** Tout lieu ou objet qui existe déjà sur le canvas des enveloppes doit être repris tel quel dans le film. La maison Sarrail est définie une seule fois dans `film/lib/decors.js` (`L.SARRAIL` et `L.maisonSarrail`), avec la géométrie exacte du plan coté de l'enveloppe 3 ; les plans 06, 07 et 08 l'utilisent. À vérifier de la même façon pour les prochains plans : la carte du ciel (env. 4), l'invitation au réveillon et le carnet de bal (env. 7-8), le tirage de Julien.
+
 ### Storyboard
 
 Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/storyboard/`)
@@ -269,11 +271,11 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 
 **Plan 08 — L'évasion par la glycine** (24 s) · https://claude.ai/artifact/5Q5dsaErcVoFixNE2CB7JC · `film/plan-08-glycine.html`
 1. Carton « Un dessinateur prépare toujours un plan. »
-2. Le plan coté de la glycine (celui de l'enveloppe 3) se trace tout seul au bleu d'architecte : façade, fenêtres, tronc, cotes « 4,10 m » et « 5,60 m », prises 1 à 3, « tronc Ø 8 cm, tient bon », « la Mini (moteur coupé) », cartouche « dessiné par C. Delacroix ».
-3. Le plan se fond dans la vraie façade, la nuit.
-4. La fenêtre s'ouvre, Louise descend la glycine. Une branche craque, une grappe tombe ; elle se rattrape.
-5. La fenêtre du grand-père s'allume (son ombre et La Dépêche), silence… puis s'éteint.
-6. Elle saute au sol. La Mini clignote deux fois des phares ; elle court, monte, et le Petit Citron démarre sur le thème à la trompette.
+2. Le plan coté de l'enveloppe 3 se dessine trait par trait, à l'identique (papier, encre, annotations rouges) : façade à pignon, 2 niveaux × 5 fenêtres, fenêtre de L. en rouge, deux tiges de glycine, pattes tous les 600 mm, cote 2 900, « 3e patte : branlante. À ÉVITER. », « Fourche : on peut s'y reposer. », notes, « TROIS POINTS D'APPUI. TOUJOURS TROIS. », cartouche « Étude de résistance — glycine », plan n° ✦ 0714.
+3. La caméra plonge dans le dessin, qui devient la vraie façade de nuit (même géométrie).
+4. Louise sort par sa fenêtre, se repose sur la fourche pendant que la fenêtre du grand-père s'allume (son ombre, La Dépêche) puis s'éteint.
+5. Elle pose le pied sur la 3e patte, qui cède ; une grappe tombe ; elle se rattrape.
+6. Au sol, la Mini fait deux appels de phares ; elle court, monte, et le Petit Citron démarre sur le thème à la trompette.
 
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».

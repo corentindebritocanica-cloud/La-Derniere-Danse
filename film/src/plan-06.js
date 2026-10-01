@@ -45,13 +45,10 @@ function rue(c,t,ox){
     c.fillStyle=L.C.encre;c.font="13px "+L.F.machine;c.textAlign='left';L.setLS(c,'2px');c.fillText('PURPAN',sx+2,489);L.setLS(c,'0px')}
   // le mur et le portail des Sarrail
   const gx=2300-ox;if(gx<W+40){
-    c.fillStyle='#16121a';c.beginPath();c.moveTo(gx+60,330);c.lineTo(gx+260,250);c.lineTo(gx+520,330);c.closePath();c.fill();
-    c.fillStyle='#1d1820';c.fillRect(gx+80,330,420,140);c.fillStyle='#0b0807';[[120,360],[250,360],[380,360]].forEach(([x,y])=>c.fillRect(gx+x,y,40,56));
-    c.fillStyle='#3a3026';c.fillRect(gx,450,1000,152);c.strokeStyle='rgba(0,0,0,.25)';for(let y=466;y<602;y+=16){c.beginPath();c.moveTo(gx,y);c.lineTo(gx+1000,y);c.stroke()}
-    c.fillStyle='#4a3d30';c.fillRect(gx,444,1000,8);
-    // glycine sur le mur
-    c.strokeStyle='#2a1d12';c.lineWidth=3;c.beginPath();c.moveTo(gx+190,602);c.quadraticCurveTo(gx+170,520,gx+210,452);c.quadraticCurveTo(gx+260,430,gx+330,450);c.stroke();
-    for(let k=0;k<14;k++){const x=gx+180+k*11+Math.sin(k*2.1)*6,y=452+Math.sin(k*1.3)*10;c.fillStyle=k%2?'#6b4a8a':'#7a5a9a';c.beginPath();c.ellipse(x,y+14,5,12,0,0,7);c.fill()}
+    // la maison Sarrail, exactement celle du plan coté (porte dans l'axe de la grille)
+    c.save();const k=.62;c.translate(gx+105-390*k,602-640*k);c.scale(k,k);L.maisonSarrail(c,{});c.restore();
+    c.fillStyle='#2b241d';c.fillRect(gx-200,450,1200,152);c.strokeStyle='rgba(0,0,0,.25)';for(let y=466;y<602;y+=16){c.beginPath();c.moveTo(gx-200,y);c.lineTo(gx+1000,y);c.stroke()}
+    c.fillStyle='#4a3d30';c.fillRect(gx-200,444,1200,8);
     // piliers et grille (la grille est dessinée après les personnages)
     c.fillStyle='#4a3d30';c.fillRect(gx+30,410,34,192);c.fillRect(gx+146,410,34,192);c.fillStyle='#5a4a3a';c.fillRect(gx+26,402,42,10);c.fillRect(gx+142,402,42,10);
     c.fillStyle='#0b0706';c.fillRect(gx+64,452,82,150);

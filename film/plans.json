@@ -45,7 +45,7 @@
     "SURTITRE": "LA DERNIÈRE DANSE · PLAN 06",
     "SOUSTITRE": "De la rue des Teinturiers à Purpan, la nuit. Vingt-trois secondes, avec le son.",
     "DESCRIPTION": "Plan animé : Célestin et Louise marchent côte à côte dans la nuit, les réverbères s'allument à leur passage, jusqu'au portail de Purpan",
-    "NOTE": "Chaque réverbère s'allume quand ils passent. Sur le mur de Purpan, la glycine attend déjà le chapitre 7."
+    "NOTE": "Chaque réverbère s'allume quand ils passent. La maison de Purpan est celle du plan coté de l'enveloppe 3, glycine comprise."
   },
   "07": {
     "fichier": "plan-07-portrait.html",
@@ -61,7 +61,7 @@
     "SURTITRE": "LA DERNIÈRE DANSE · PLAN 08",
     "SOUSTITRE": "Purpan, la nuit de l'évasion. Vingt-quatre secondes, avec le son.",
     "DESCRIPTION": "Plan animé : le plan coté de la glycine devient la vraie façade, Louise descend la glycine et rejoint la Mini",
-    "NOTE": "Le plan coté est celui de l'enveloppe 3 : Célestin est dessinateur, il a tout calculé. Ou presque : une branche craque."
+    "NOTE": "Le plan coté est exactement celui de l'enveloppe 3 (n° 0714) : la fourche où l'on peut se reposer, la 3e patte branlante à éviter… qui cède."
   },
   "10": {
     "fichier": "plan-10-etoile-filante.html",

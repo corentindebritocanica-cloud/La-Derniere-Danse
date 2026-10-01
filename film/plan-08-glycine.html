@@ -68,7 +68,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <button class="ctl" id="fs" type="button">Plein écran</button>
   </div>
 
-  <p class="note">Le plan coté est celui de l'enveloppe 3 : Célestin est dessinateur, il a tout calculé. Ou presque : une branche craque.</p>
+  <p class="note">Le plan coté est exactement celui de l'enveloppe 3 (n° 0714) : la fourche où l'on peut se reposer, la 3e patte branlante à éviter… qui cède.</p>
 </div>
 <script>
 /* La Dernière Danse — moteur commun des plans
@@ -514,6 +514,48 @@ L.public=function(c,t,bravo){
     if(bravo>0){c.beginPath();c.arc(h.x+(Math.sin(t*18+h.ph)>0?10:4),y-h.r*1.6,6,0,7);c.fill()}}
 };
 
+/* ---------- la maison Sarrail, à Purpan ----------
+   Géométrie reprise telle quelle du plan coté de l'enveloppe 3 (« Étude de résistance — glycine »,
+   plan n° 0714) : coordonnées du plan (1 unité = 10 mm à l'échelle 1:50 du dessin). */
+L.SARRAIL={
+  facade:{x:110,y:170,w:560,h:470},sol:640,cordon:400,
+  toit:[[90,170],[390,70],[690,170]],
+  etage:[140,245,350,475,580].map(x=>({x,y:240,w:60,h:110})),
+  rdc:[140,245,475,580].map(x=>({x,y:470,w:60,h:110})),
+  porte:{x:350,y:490,w:80,h:150},
+  louise:2,grandPere:2,
+  tiges:['M432 640 C 436 590, 426 560, 434 520 C 442 480, 428 450, 432 410 C 436 370, 426 330, 430 280 C 433 250, 438 220, 452 190',
+         'M450 640 C 454 600, 462 570, 456 530 C 450 490, 462 460, 458 420 C 454 380, 464 340, 458 300 C 455 270, 470 240, 488 210'],
+  branches:['M434 520 C 410 512, 400 500, 392 486','M430 350 C 418 346, 414 338, 412 330','M458 420 C 482 410, 492 398, 500 384','M456 300 C 480 292, 494 280, 502 262'],
+  pattes:[588,528,468,408,348,288],patteBranlante:468,fourche:{x:444,y:410}
+};
+const GRAPPES_S=(function(){const R=L.rng(714),g=[];for(let i=0;i<40;i++){const y=200+R()*420,x=432+(R()-.5)*(y<300?110:80)+(y<300?20:0);g.push({x,y,l:5+R()*7,c:R()<.5?'#6b4a8a':'#8a6aaa'})}return g})();
+/* Dessine la façade de nuit, en coordonnées du plan (l'appelant choisit l'échelle).
+   o = {lumLouise 0..1, ouvre 0..1 (fenêtre de Louise), lumGP 0..1 (fenêtre du grand-père, rez-de-chaussée), ombreGP true, grappes true} */
+L.maisonSarrail=function(c,o){
+  o=o||{};const S=L.SARRAIL,f=S.facade;
+  c.fillStyle='#16121a';c.beginPath();c.moveTo(...S.toit[0]);c.lineTo(...S.toit[1]);c.lineTo(...S.toit[2]);c.closePath();c.fill();
+  c.fillStyle='#3a3026';c.fillRect(f.x,f.y,f.w,f.h);
+  c.strokeStyle='rgba(0,0,0,.2)';c.lineWidth=.5;for(let y=f.y+8;y<S.sol;y+=8){c.beginPath();c.moveTo(f.x,y);c.lineTo(f.x+f.w,y);c.stroke()}
+  c.fillStyle='#4a3d30';c.fillRect(f.x-4,S.cordon-3,f.w+8,6);c.fillRect(f.x-6,f.y-4,f.w+12,6);
+  const fen=(r,lum,ouv)=>{c.fillStyle=lum>0?L.mix('#0c0908','#c99a52',lum):'#0c0908';c.fillRect(r.x,r.y,r.w,r.h);
+    c.fillStyle='#2a1a10';const lw=r.w/2*(1-.85*(ouv||0));c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    if(lum>0&&lw>4){c.fillStyle=`rgba(255,200,120,${.35*lum})`;c.fillRect(r.x+3,r.y+3,lw-6,r.h-6);c.fillRect(r.x+r.w-lw+3,r.y+3,lw-6,r.h-6)}
+    c.strokeStyle='#2a1a10';c.lineWidth=3;c.strokeRect(r.x,r.y,r.w,r.h);c.fillStyle='#4a3d30';c.fillRect(r.x-6,r.y+r.h,r.w+12,5)};
+  S.etage.forEach((r,i)=>fen(r,i===S.louise?(o.lumLouise||0):0,i===S.louise?o.ouvre:0));
+  S.rdc.forEach((r,i)=>fen(r,i===S.grandPere?(o.lumGP||0):0,0));
+  if(o.ombreGP&&o.lumGP>0){const r=S.rdc[S.grandPere],a=o.lumGP;c.fillStyle=`rgba(20,12,8,${.85*a})`;c.beginPath();c.arc(r.x+22,r.y+40,8,0,7);c.fill();c.fillRect(r.x+14,r.y+48,16,62);
+    c.fillStyle=`rgba(240,230,210,${.9*a})`;c.fillRect(r.x+30,r.y+36,24,30)}
+  const p=S.porte;c.fillStyle='#2e1d0e';c.fillRect(p.x,p.y,p.w,p.h);c.strokeStyle='#1a1009';c.lineWidth=2;c.beginPath();c.moveTo(p.x+p.w/2,p.y);c.lineTo(p.x+p.w/2,p.y+p.h);c.stroke();
+  c.beginPath();c.arc(p.x+p.w/2,p.y,p.w/2,Math.PI,0);c.fillStyle='#3a3026';c.fill();
+  // glycine : deux tiges, branches, pattes de scellement, grappes
+  c.strokeStyle='#2a1d12';c.lineCap='round';c.lineJoin='round';
+  c.lineWidth=7;c.stroke(new Path2D(S.tiges[0]));c.lineWidth=5.5;c.stroke(new Path2D(S.tiges[1]));
+  c.lineWidth=3;S.branches.forEach(b=>c.stroke(new Path2D(b)));
+  c.fillStyle='#16110c';S.pattes.forEach(y=>c.fillRect(426,y,12,5));
+  if(o.grappes!==false)GRAPPES_S.forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x,g.y+g.l,2.6,g.l,0,0,7);c.fill()});
+};
+
 /* Soleil rayonnant art déco (titres, ouverture). o = {x,y,r,n,rot,couleur,epais,alpha} */
 L.soleil=function(c,o){
   const n=o.n||24;c.save();c.translate(o.x,o.y);c.rotate(o.rot||0);c.globalAlpha=o.alpha==null?1:o.alpha;
@@ -526,117 +568,112 @@ L.soleil=function(c,o){
 </script>
 <script>
 /* Plan 08 — L'évasion par la glycine (24 s)
-   D'abord le plan coté de la glycine, tracé par Célestin au bleu d'architecte (celui de l'enveloppe 3),
-   qui se change en vraie façade de nuit. Louise sort par la fenêtre et descend la glycine ;
-   une branche craque, la lumière du grand-père s'allume puis s'éteint. En bas, la Mini attend, phares allumés. */
+   D'abord le plan coté de l'enveloppe 3 (« Étude de résistance — glycine », plan n° 0714), qui se dessine
+   trait par trait sur papier ; la caméra plonge dans le dessin et il devient la vraie façade de la maison Sarrail.
+   Louise sort par la 3e fenêtre du 1er étage, se repose sur la fourche pendant que le grand-père allume,
+   pose le pied sur la 3e patte (« branlante, à éviter ») qui cède, se rattrape, et rejoint la Mini. */
 (function(){
-const L=LDD,{clamp,lerp,eio,eoc,seg}=L,W=L.W,H=L.H;
-const SOLMUR=1150,ROUTE=1250;
-const FEN={x:520,y:120,w:160,h:210},FENGP={x:770,y:690,w:130,h:180},PORTE={x:380,y:900,w:96};
-const TRONC=[[600,1150],[586,1060],[612,960],[590,860],[618,760],[596,660],[622,560],[600,460],[626,380],[640,336]];
-const GRAPPES=[];(function(){const R=L.rng(708);for(let i=0;i<46;i++){const k=R()*(TRONC.length-1),j=Math.floor(k),f=k-j,a=TRONC[j],b=TRONC[j+1];
-  GRAPPES.push({x:a[0]+(b[0]-a[0])*f+(R()-.5)*120,y:a[1]+(b[1]-a[1])*f+(R()-.5)*30,l:10+R()*12,c:R()<.5?'#6b4a8a':'#8a6aaa'})}})();
+const L=LDD,{clamp,lerp,eio,eoc,seg}=L,W=L.W,H=L.H,S=L.SARRAIL;
+const SOL=S.sol,ROUTE=700,ECH=.62;
 
-/* ---------- la descente de Louise ---------- */
-const DESCENTE=[[9.4,300],[11.6,470],[12.45,560],[12.6,598],[14.4,600],[15.6,780],[16.6,930],[17.2,1010]];
-function hanche(t){if(t<=DESCENTE[0][0])return DESCENTE[0][1];for(let i=1;i<DESCENTE.length;i++){const[a,ya]=DESCENTE[i-1],[b,yb]=DESCENTE[i];if(t<=b){const u=(t-a)/(b-a);return lerp(ya,yb,i===3?u*u:eio(u))}}return DESCENTE[DESCENTE.length-1][1]}
+/* ---------- la descente (coordonnées du plan) ---------- */
+const DESC=[[9.4,318],[11,360],[13.2,362],[13.9,415],[14.05,436],[14.8,438],[16.4,560],[17,575]];
+function hanche(t){if(t<=DESC[0][0])return DESC[0][1];for(let i=1;i<DESC.length;i++){const[a,ya]=DESC[i-1],[b,yb]=DESC[i];if(t<=b){const u=(t-a)/(b-a);return lerp(ya,yb,i===4?u*u:eio(u))}}return DESC[DESC.length-1][1]}
 const GRIMPE={tA:.12,hd:-.25,aF:[2.75,-.2],aB:[2.45,.35],lF:[.95,-1.25],lB:[.15,.15]};
 function louise(t){
   if(t<9.2)return null;
-  if(t<17.2){const y=hanche(t),bouge=Math.abs(hanche(t+.05)-y)>.3?1:0,ph=t*7;
-    const p=L.melange(GRIMPE,GRIMPE,0);if(bouge){p.aF=[2.75+.25*Math.sin(ph),-.2];p.aB=[2.45-.25*Math.sin(ph),.35];p.lF=[.95+.35*Math.sin(ph),-1.25];p.lB=[.15-.3*Math.sin(ph),.15]}
-    if(t>12.45&&t<12.9)p.aB=[2.9,.1];
-    return{x:578,F:1,p,s:1.15,hipY:y,alpha:seg(t,9.2,9.6)}}
-  if(t<17.7){const u=eio(seg(t,17.2,17.6));return{x:lerp(578,570,u),F:1,p:L.melange(GRIMPE,{...L.POSES.debout,tA:.25,hd:.1},u),s:1.15,hipY:lerp(1010,1052,u),alpha:1}}
-  if(t<18.3)return{x:570,F:1,p:{...L.POSES.debout,hd:-.1},s:1.15,sol:SOLMUR,alpha:1};
+  if(t<17){const y=hanche(t),bouge=Math.abs(hanche(t+.05)-y)>.15,ph=t*7,p=L.melange(GRIMPE,GRIMPE,0);
+    if(bouge){p.aF=[2.75+.25*Math.sin(ph),-.2];p.aB=[2.45-.25*Math.sin(ph),.35];p.lF=[.95+.35*Math.sin(ph),-1.25];p.lB=[.15-.3*Math.sin(ph),.15]}
+    if(t>13.9&&t<14.4){p.aB=[2.95,.05];p.lF=[.3,0];p.lB=[-.2,.1]}
+    return{x:lerp(402,416,seg(t,9.2,9.9)),F:1,p,s:ECH,hipY:y,alpha:seg(t,9.2,9.6)}}
+  if(t<17.4){const u=eio(seg(t,17,17.4));return{x:416,F:1,p:L.melange(GRIMPE,{...L.POSES.debout,tA:.25,hd:.1},u),s:ECH,hipY:lerp(575,586,u),alpha:1}}
+  if(t<18.3)return{x:416,F:1,p:{...L.POSES.debout,hd:-.1},s:ECH,sol:SOL,alpha:1};
   const u=seg(t,18.3,19.4);
-  return{x:lerp(570,950,eio(u)),F:1,p:L.pas(L.POSES.debout,(t-18.3)*15,.45*(u<1?1:0),0),s:lerp(1.15,1.25,u),sol:lerp(SOLMUR,ROUTE+6,u),alpha:1-seg(t,19.3,19.55)};
+  return{x:lerp(416,628,eio(u)),F:1,p:L.pas(L.POSES.debout,(t-18.3)*15,.45*(u<1?1:0),0),s:lerp(ECH,.66,u),sol:lerp(SOL,ROUTE+4,u),alpha:1-seg(t,19.3,19.55)};
 }
 
-/* ---------- la façade, la nuit ---------- */
-function facade(c,t){
-  const ciel=c.createLinearGradient(0,-400,0,SOLMUR);ciel.addColorStop(0,'#060b15');ciel.addColorStop(1,'#0f1d33');c.fillStyle=ciel;c.fillRect(-300,-400,1900,SOLMUR+400);
-  c.fillStyle='#070d12';[[60,700,170],[150,820,140],[1180,760,180],[1290,880,130],[-40,880,120]].forEach(([x,y,r])=>{c.beginPath();c.ellipse(x,y,r,r*1.3,0,0,7);c.fill();c.fillRect(x-10,y,20,SOLMUR-y)});
-  c.fillStyle='#3a3026';c.fillRect(260,40,780,SOLMUR-40);
-  c.strokeStyle='rgba(0,0,0,.22)';c.lineWidth=1;for(let y=56;y<SOLMUR;y+=16){c.beginPath();c.moveTo(260,y);c.lineTo(1040,y);c.stroke()}
-  c.fillStyle='#16121a';c.beginPath();c.moveTo(230,44);c.lineTo(650,-60);c.lineTo(1070,44);c.closePath();c.fill();
-  // fenêtre de Louise
-  const ouv=eio(seg(t,8.7,9.2));
-  c.fillStyle=L.mix('#a8875a','#5a4630',seg(t,10,11));c.fillRect(FEN.x,FEN.y,FEN.w,FEN.h);
-  c.fillStyle='#2a1a10';const lw=FEN.w/2*(1-.85*ouv);c.fillRect(FEN.x,FEN.y,lw,FEN.h);c.fillRect(FEN.x+FEN.w-lw,FEN.y,lw,FEN.h);
-  c.fillStyle='rgba(255,200,120,.35)';c.fillRect(FEN.x+6,FEN.y+6,lw-12>0?lw-12:0,FEN.h-12);c.fillRect(FEN.x+FEN.w-lw+6,FEN.y+6,lw-12>0?lw-12:0,FEN.h-12);
-  c.strokeStyle='#2a1a10';c.lineWidth=8;c.strokeRect(FEN.x,FEN.y,FEN.w,FEN.h);c.fillStyle='#4a3d30';c.fillRect(FEN.x-14,FEN.y+FEN.h,FEN.w+28,12);
-  // fenêtre du grand-père : la lumière s'allume, l'ombre de La Dépêche
-  const gp=seg(t,12.9,13.1)*(1-seg(t,14.2,14.35));
-  c.fillStyle=gp>0?L.mix('#0c0908','#c99a52',gp):'#0c0908';c.fillRect(FENGP.x,FENGP.y,FENGP.w,FENGP.h);
-  if(gp>0){c.fillStyle=`rgba(20,12,8,${.85*gp})`;c.beginPath();c.arc(FENGP.x+50,FENGP.y+70,14,0,7);c.fill();c.fillRect(FENGP.x+34,FENGP.y+84,32,96);
-    c.fillStyle=`rgba(240,230,210,${.9*gp})`;c.fillRect(FENGP.x+62,FENGP.y+66,44,52);c.fillStyle=`rgba(20,12,8,${.5*gp})`;for(let k=0;k<5;k++)c.fillRect(FENGP.x+66,FENGP.y+74+k*9,36,2)}
-  c.strokeStyle='#2a1a10';c.lineWidth=7;c.strokeRect(FENGP.x,FENGP.y,FENGP.w,FENGP.h);c.beginPath();c.moveTo(FENGP.x+FENGP.w/2,FENGP.y);c.lineTo(FENGP.x+FENGP.w/2,FENGP.y+FENGP.h);c.stroke();
-  [[300,690],[300,330],[800,330]].forEach(([x,y])=>{c.fillStyle='#0c0908';c.fillRect(x,y,130,180);c.strokeStyle='#2a1a10';c.strokeRect(x,y,130,180)});
-  c.fillStyle='#2e1d0e';c.fillRect(PORTE.x,PORTE.y,PORTE.w,SOLMUR-PORTE.y);
-  // glycine
-  c.strokeStyle='#2a1d12';c.lineWidth=9;c.lineJoin='round';c.beginPath();TRONC.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();
-  c.lineWidth=4;[[3,[680,940]],[5,[520,640]],[6,[700,520]],[8,[540,420]]].forEach(([i,[x,y]])=>{c.beginPath();c.moveTo(TRONC[i][0],TRONC[i][1]);c.quadraticCurveTo((TRONC[i][0]+x)/2,y-30,x,y);c.stroke()});
-  GRAPPES.forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x,g.y+g.l,5,g.l,0,0,7);c.fill()});
-  // jardin et route
-  c.fillStyle='#0e1612';c.fillRect(-200,SOLMUR,1700,ROUTE-SOLMUR);c.fillStyle='#24201a';c.fillRect(-200,ROUTE-20,1700,400);
-  c.fillStyle='rgba(255,255,255,.04)';for(let x=-200;x<1500;x+=34)c.fillRect(x,ROUTE-6+((x/34)%2)*8,14,3);
+/* ---------- le plan coté, sur papier (même dessin que l'enveloppe 3) ---------- */
+function plan(c,t,a){
+  if(a<=0)return;c.save();c.globalAlpha=a;
+  c.fillStyle='#f1e7d3';c.fillRect(-400,-300,1900,1400);c.strokeStyle='#1a1512';c.lineWidth=2;c.strokeRect(0,0,1063,734);
+  const ink='#1a1512',rouge='#a8201a';
+  const trace=(path,p,lw,col,len)=>{if(p<=0)return;c.save();c.strokeStyle=col||ink;c.lineWidth=lw;c.setLineDash([len,len]);c.lineDashOffset=len*(1-p);c.stroke(typeof path==='string'?new Path2D(path):path);c.restore()};
+  const r=(x,y,w,h)=>{const p=new Path2D();p.rect(x,y,w,h);return p};
+  trace('M60 640 L760 640',seg(t,3.3,3.8),2.4,ink,700);
+  trace(r(110,170,560,470),seg(t,3.4,4.1),1.6,ink,2060);
+  trace('M90 170 L390 70 L690 170',seg(t,3.7,4.2),1.6,ink,640);
+  if(t>4.3){c.save();c.setLineDash([10,5]);c.lineWidth=.8;c.globalAlpha*=seg(t,4.3,4.6);c.beginPath();c.moveTo(110,400);c.lineTo(670,400);c.strokeStyle=ink;c.stroke();c.restore()}
+  const fens=[...S.etage.map((f,i)=>[f,i===S.louise]),...S.rdc.map(f=>[f,false]),[S.porte,false]];
+  fens.forEach(([f,rouge2],i)=>{const p=seg(t,4+i*.06,4.35+i*.06);if(p<=0)return;c.save();c.globalAlpha*=p;c.fillStyle=rouge2?'#f3d9d3':'#f6efdf';c.fillRect(f.x,f.y,f.w,f.h);c.strokeStyle=rouge2?rouge:ink;c.lineWidth=rouge2?2:1.2;c.strokeRect(f.x,f.y,f.w,f.h);c.restore()});
+  trace(S.tiges[0],seg(t,4.6,5.6),7,'#5a3e1b',520);trace(S.tiges[1],seg(t,4.75,5.75),5.5,'#5a3e1b',520);
+  S.branches.forEach((b,i)=>trace(b,seg(t,5.5+i*.08,5.8+i*.08),3,'#5a3e1b',80));
+  if(t>5.8){c.save();c.globalAlpha*=seg(t,5.8,6.1);c.fillStyle=ink;S.pattes.forEach(y=>c.fillRect(426,y,12,5));
+    c.strokeStyle=ink;c.lineWidth=.8;c.beginPath();c.moveTo(395,590);c.lineTo(395,290);[590,530,470,410,350,290].forEach(y=>{c.moveTo(389,y);c.lineTo(401,y)});
+    c.moveTo(720,640);c.lineTo(720,350);c.moveTo(712,640);c.lineTo(728,640);c.moveTo(712,350);c.lineTo(728,350);c.stroke();
+    c.setLineDash([3,3]);c.beginPath();c.moveTo(670,350);c.lineTo(728,350);c.stroke();c.setLineDash([]);
+    c.font="11px "+L.F.machine;c.fillStyle=ink;c.textAlign='right';[564,504,444,384,324].forEach(y=>c.fillText('600',386,y));
+    c.save();c.translate(734,500);c.rotate(-Math.PI/2);c.textAlign='center';c.fillText('2 900 (sol → appui fenêtre)',0,0);c.restore();c.restore()}
+  if(t>6.1){c.save();c.globalAlpha*=seg(t,6.1,6.4);c.strokeStyle=rouge;c.lineWidth=2;c.strokeRect(424,464,16,13);c.lineWidth=1.4;c.setLineDash([3,3]);c.beginPath();c.arc(444,410,16,0,7);c.stroke();c.setLineDash([]);
+    c.lineWidth=.9;c.beginPath();c.moveTo(410,232);c.lineTo(340,160);c.moveTo(440,470);c.lineTo(560,440);c.moveTo(460,406);c.lineTo(560,390);c.stroke();
+    c.fillStyle=rouge;c.font="12.5px "+L.F.machine;c.textAlign='left';c.fillText('Fenêtre de L. (3e à gauche, 1er étage)',200,150);c.fillText('3e patte : branlante. À ÉVITER.',566,436);c.fillText('Fourche : on peut s’y reposer.',566,388);c.restore()}
+  if(t>6.5){c.save();c.globalAlpha*=seg(t,6.5,6.8);c.fillStyle=ink;c.font="12px "+L.F.machine;c.textAlign='left';
+    [['NOTES',782,60],['1. Glycine ancienne, deux tiges',782,86],['principales (Ø ~ un poignet).',800,104],['2. Pattes de scellement env.',782,128],['tous les 600 mm.',800,146],['3. Bois sec mais sain. Porte',782,170],['largement la charge prévue.',800,188],['4. Relevé effectué au briquet,',782,212],['entre 19 h et 22 h, pendant',800,230],['un certain dîner.',800,248],['5. Tolérance : généreuse.',782,272]].forEach(([s,x,y])=>c.fillText(s,x,y));c.restore()}
+  if(t>6.8){c.save();c.globalAlpha*=seg(t,6.8,7.1);c.strokeStyle=rouge;c.lineWidth=2;c.strokeRect(782,300,250,84);c.fillStyle=rouge;c.font="17px "+L.F.titre;c.textAlign='center';c.fillText('TROIS POINTS D’APPUI.',907,332);c.fillText('TOUJOURS TROIS.',907,362);c.restore()}
+  if(t>7){c.save();c.globalAlpha*=seg(t,7,7.3);c.strokeStyle=ink;c.lineWidth=1.4;c.strokeRect(760,584,303,150);c.beginPath();[624,664,699].forEach(y=>{c.moveTo(760,y);c.lineTo(1063,y)});c.moveTo(940,664);c.lineTo(940,734);c.stroke();
+    c.fillStyle=ink;c.textAlign='left';c.font="15px "+L.F.machine;c.fillText('ÉTUDE DE RÉSISTANCE — GLYCINE',772,610);c.font="12px "+L.F.machine;c.fillText('Maison Sarrail, Purpan · Élévation façade',772,650);
+    c.font="10px "+L.F.machine;c.fillText('Dessiné : C. Delacroix',772,686);c.fillText('Date : 15.12.1925',945,686);c.fillText('Échelle : 1:50 · cotes mm',772,721);c.fillText('Plan n°',945,721);c.fillStyle=rouge;c.fillText('✦ 0714 · Ind. A',988,721);c.restore()}
+  c.restore();
 }
-function grappeTombe(c,t){const u=seg(t,12.5,13.6);if(u<=0||u>=1)return;const x=650+u*40,y=lerp(560,SOLMUR-10,u*u);
-  c.save();c.translate(x,y);c.rotate(u*4);c.fillStyle='#8a6aaa';c.beginPath();c.ellipse(0,0,6,16,0,0,7);c.fill();c.restore();
-  for(let k=0;k<6;k++){const fy=lerp(560,SOLMUR,u)-k*30*u;c.fillStyle=`rgba(160,130,190,${.7*(1-u)})`;c.fillRect(640+Math.sin(k*2+t*6)*30,fy,3,3)}}
+
+/* ---------- la nuit autour de la maison ---------- */
+function jardin(c,t){
+  c.fillStyle='#070d12';[[30,470,95],[-40,540,80],[760,460,100],[850,540,90],[1000,500,120]].forEach(([x,y,r])=>{c.beginPath();c.ellipse(x,y,r,r*1.3,0,0,7);c.fill();c.fillRect(x-6,y,12,SOL-y)});
+  c.fillStyle='#0e1612';c.fillRect(-500,SOL,2200,ROUTE-SOL);c.fillStyle='#24201a';c.fillRect(-500,ROUTE-12,2200,400);
+  c.fillStyle='rgba(255,255,255,.04)';for(let x=-500;x<1700;x+=20)c.fillRect(x,ROUTE-4+((x/20)%2)*5,8,2);
+}
+function grappeTombe(c,t){const u=seg(t,13.95,14.9);if(u<=0||u>=1)return;const x=440+u*24,y=lerp(470,SOL-6,u*u);
+  c.save();c.translate(x,y);c.rotate(u*4);c.fillStyle='#8a6aaa';c.beginPath();c.ellipse(0,0,3,9,0,0,7);c.fill();c.restore();
+  for(let k=0;k<6;k++){c.fillStyle=`rgba(160,130,190,${.7*(1-u)})`;c.fillRect(436+Math.sin(k*2+t*6)*16,lerp(470,SOL,u)-k*16*u,2,2)}
+  c.fillStyle=`rgba(40,30,20,${1-u})`;c.save();c.translate(432,470+u*u*160);c.rotate(u*6);c.fillRect(-6,-2,12,5);c.restore();}
 function voiture(c,t){
-  const dep=t>20.6?L.eic(seg(t,20.6,22.8))*1100:0,x=860+dep,gy=ROUTE+40;
+  const dep=t>20.6?L.eic(seg(t,20.6,22.8))*900:0,x=560+dep,gy=ROUTE+14,K=1.25;
   const clign=(t>17.75&&t<17.95)||(t>18.1&&t<18.3)?0:1;
-  if(t<21.6)L.phares(c,x+304,gy-112,(t<9?.5:.9)*clign);
-  const louiseDedans=t>19.45;
-  c.save();c.translate(x,gy);c.scale(1.6,1.6);L.mini(c,0,0,{roue:dep/24,louise:louiseDedans?{look:0,lean:0}:false,celestin:{look:0,lean:louiseDedans?.6:0}});c.restore();
-  if(t>20.4&&t<23){for(let k=0;k<5;k++){const a=(t-20.4-k*.25);if(a<0||a>1.2)continue;c.fillStyle=`rgba(200,200,210,${.25*(1-a/1.2)})`;c.beginPath();c.arc(x-10-a*60,gy-40-a*20,8+a*18,0,7);c.fill()}}
+  c.save();c.translate(x,gy);c.scale(K,K);
+  if(t<21.6)L.phares(c,190,-70,.9*clign);
+  const dedans=t>19.45;
+  L.mini(c,0,0,{roue:dep/24/K,louise:dedans?{look:0,lean:0}:false,celestin:{look:0,lean:dedans?.6:0}});
+  if(t>20.4&&t<23){for(let k=0;k<5;k++){const a=(t-20.4-k*.25);if(a<0||a>1.2)continue;c.fillStyle=`rgba(200,200,210,${.25*(1-a/1.2)})`;c.beginPath();c.arc(-6-a*40,-26-a*14,4+a*10,0,7);c.fill()}}
+  c.restore();
 }
 
-/* ---------- le plan coté (bleu d'architecte) ---------- */
-function bleu(c,t){
-  const k=.52,ox=262,oy=24,P=(x,y)=>[ox+x*k,oy+y*k];
-  c.fillStyle='#1d3a63';c.fillRect(0,0,W,H);
-  c.strokeStyle='rgba(232,240,255,.08)';c.lineWidth=1;for(let x=0;x<W;x+=24){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke()}for(let y=0;y<H;y+=24){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
-  c.strokeStyle='#e8f0ff';c.fillStyle='#e8f0ff';c.lineWidth=1.6;
-  const ligne=(pts,p)=>{if(p<=0)return;const n=pts.length-1,kk=p*n,i=Math.floor(kk);c.beginPath();let a=P(...pts[0]);c.moveTo(a[0],a[1]);
-    for(let j=1;j<=Math.min(i,n);j++){a=P(...pts[j]);c.lineTo(a[0],a[1])}if(i<n){const f=kk-i,A=P(...pts[i]),B=P(...pts[i+1]);c.lineTo(A[0]+(B[0]-A[0])*f,A[1]+(B[1]-A[1])*f)}c.stroke()};
-  const rect=(x,y,w,h,p)=>ligne([[x,y],[x+w,y],[x+w,y+h],[x,y+h],[x,y]],p);
-  rect(260,40,780,SOLMUR-40,seg(t,3.4,4.4));rect(FEN.x,FEN.y,FEN.w,FEN.h,seg(t,4,4.6));rect(FENGP.x,FENGP.y,FENGP.w,FENGP.h,seg(t,4.2,4.7));rect(PORTE.x,PORTE.y,PORTE.w,SOLMUR-PORTE.y,seg(t,4.3,4.8));[[300,690],[300,330],[800,330]].forEach(([x,y],i)=>rect(x,y,130,180,seg(t,4.4+i*.1,4.9+i*.1)));
-  c.lineWidth=2.6;ligne(TRONC,seg(t,4.6,5.8));c.lineWidth=1.2;
-  c.setLineDash([6,5]);ligne([[200,SOLMUR],[1100,SOLMUR]],seg(t,4.4,5));c.setLineDash([]);
-  // cotes
-  const cote=(x,y1,y2,txt,t0)=>{const p=seg(t,t0,t0+.6);if(p<=0)return;const a=P(x,y1),b=P(x,lerp(y1,y2,p));c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();
-    [a,b].forEach((q,i)=>{c.beginPath();c.moveTo(q[0]-5,q[1]+(i?-8:8));c.lineTo(q[0],q[1]);c.lineTo(q[0]+5,q[1]+(i?-8:8));c.stroke()});
-    if(p>=1){c.save();c.font="13px "+L.F.machine;c.textAlign='right';c.fillText(txt,a[0]-10,(a[1]+b[1])/2+4);c.restore()}};
-  cote(460,SOLMUR,FEN.y+FEN.h,'4,10 m',5.6);cote(1090,SOLMUR,40,'5,60 m',6);
-  c.font="12px "+L.F.machine;c.textAlign='left';
-  [[2,'prise 1'],[4,'prise 2'],[6,'prise 3'],[8,'appui']].forEach(([i,txt],n)=>{if(t<6.2+n*.25)return;const q=P(...TRONC[i]);c.beginPath();c.arc(q[0],q[1],5,0,7);c.stroke();c.beginPath();c.moveTo(q[0]+5,q[1]);c.lineTo(q[0]+60,q[1]-14);c.stroke();c.fillText(txt,q[0]+64,q[1]-12)});
-  if(t>6.6){c.fillText('glycine — tronc Ø 8 cm, tient bon',P(640,1010)[0]+40,P(640,1010)[1]);c.fillText('fenêtre : 1er étage, ouvre en dedans',P(700,200)[0]+40,P(700,200)[1])}
-  if(t>6.9){const q=P(860,1290);c.fillText('LA MINI (moteur coupé)',q[0],q[1]);c.strokeRect(q[0]-6,q[1]-40,170,30)}
-  // cartouche
-  const ca=seg(t,6.8,7.2);if(ca>0){c.save();c.globalAlpha=ca;c.strokeRect(930,600,300,90);c.beginPath();c.moveTo(930,632);c.lineTo(1230,632);c.stroke();
-    c.font="15px "+L.F.titre;c.fillText('PLAN COTÉ · GLYCINE',942,624);c.font="12px "+L.F.machine;c.fillText('Purpan · éch. 1:50',942,656);c.fillText('dessiné par C. Delacroix',942,676);c.restore()}
+/* ---------- caméra ---------- */
+function camera(t,lo){
+  const p0={z:.9,cx:531.5,cy:367};
+  let cible={z:1.6,cx:450,cy:320};
+  if(t>9.2&&lo&&lo.hipY!=null)cible.cy=clamp(lo.hipY,300,520);
+  if(t>=17)cible={z:1.6,cx:lerp(450,600,eio(seg(t,17.2,19))),cy:520};
+  const u=eio(seg(t,7.3,9.3));
+  return{z:Math.exp(lerp(Math.log(p0.z),Math.log(cible.z),u)),cx:lerp(p0.cx,cible.cx,u),cy:lerp(p0.cy,cible.cy,u)};
 }
 
 const OUVERTURE=[{s:'LA NUIT DE L’ÉVASION',y:300,f:"20px "+L.F.machine,c:'#b9a98c',ls:'6px'},{s:'Un dessinateur prépare toujours un plan.',y:380,f:"italic 44px "+L.F.texte}];
 
 function rendu(c,t){
   c.fillStyle='#000';c.fillRect(0,0,W,H);
-  if(t>2.9&&t<8.6)bleu(c,t);
-  if(t>7.4){
-    const lo=louise(t);
-    let camY=0;if(t>9.6){const y=lo&&lo.hipY!=null?lo.hipY:1050;camY=clamp(y-330,0,640)}
-    if(t>17.5)camY=640;
-    c.save();c.globalAlpha=seg(t,7.4,8.6);
-    const z=lerp(.84,1,eio(seg(t,7.4,9.4)));c.translate(640,360);c.scale(z,z);c.translate(-640,-360-camY);
-    facade(c,t);grappeTombe(c,t);
-    if(lo){c.save();c.globalAlpha*=lo.alpha;L.pantin(c,lo,'L',0);c.restore()}
-    GRAPPES.slice(0,14).forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x+8,g.y+g.l+6,4,g.l*.8,0,0,7);c.fill()});
-    voiture(c,t);
+  if(t>2.9){
+    const lo=louise(t),cam=camera(t,lo);
+    const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#060b15');g.addColorStop(1,'#13233b');c.fillStyle=g;c.fillRect(0,0,W,H);
+    c.save();c.translate(W/2,H/2);c.scale(cam.z,cam.z);c.translate(-cam.cx,-cam.cy);
+    const nuit=seg(t,7.6,8.8);
+    if(nuit>0){c.save();c.globalAlpha=nuit;jardin(c,t);
+      const gp=seg(t,11.3,11.5)*(1-seg(t,12.9,13.05));
+      L.maisonSarrail(c,{lumLouise:1-.6*seg(t,10,11),ouvre:eio(seg(t,8.7,9.2)),lumGP:gp,ombreGP:true});
+      grappeTombe(c,t);
+      if(lo){c.save();c.globalAlpha=lo.alpha;L.pantin(c,lo,'L',0);c.restore()}
+      voiture(c,t);c.restore()}
+    plan(c,t,1-seg(t,7.8,8.9));
     c.restore();
-    c.save();c.globalCompositeOperation='lighter';c.fillStyle='rgba(60,90,150,.08)';c.fillRect(0,0,W,H);c.restore();
+    if(nuit>0){c.save();c.globalCompositeOperation='lighter';c.fillStyle=`rgba(60,90,150,${.07*nuit})`;c.fillRect(0,0,W,H);c.restore()}
   }
   L.noir(c,t<3?1:t<4?1-(t-3):t>23.1?(t-23.1)/.8:0);
   L.carton(c,OUVERTURE,t<.6?t/.6:t<2.4?1:Math.max(0,1-(t-2.4)/.6),450);
@@ -645,18 +682,15 @@ function rendu(c,t){
 function partition(ac,sortie,T){
   const K=L.kit(ac,sortie);
   K.projecteur(T,24);
-  // le crayon sur le calque
-  for(let w=3.4;w<7.3;w+=.12+Math.random()*.15)K.noise(T+w,.08+Math.random()*.1,'highpass',3500,.7,.012+Math.random()*.012,.01);
+  for(let w=3.3;w<7.3;w+=.12+Math.random()*.15)K.noise(T+w,.08+Math.random()*.1,'highpass',3500,.7,.012+Math.random()*.012,.01);
   K.phrase(L.THEME.motif.slice(0,4),T+3.6,.6,'piano',null,.035);
-  // tension
   K.nappe(T+8,13,'lowpass',180,.7,[[1,.05],[12,.05],[13,0]]);
   K.souffle(46,T+8.7,.4,{g:.012,cut:600,vib:10,att:.08});
-  for(let i=0;i<26;i++){const w=10+Math.random()*7;if(w>12.4&&w<14.5)continue;K.noise(T+w,.15,'bandpass',900+Math.random()*900,1,.025,.04)}
-  K.noise(T+12.47,.08,'highpass',1500,.5,.16,.001);K.noise(T+12.5,.25,'bandpass',600,1,.08,.003);
-  K.noise(T+13.05,.4,'bandpass',2400,.8,.03,.08);K.noise(T+14.25,.05,'bandpass',2000,4,.04,.002);
-  [[14.6,62],[15.4,64],[16.2,65],[17,67]].forEach(([w,m])=>K.piano(m,T+w,.03));
-  K.noise(T+17.55,.15,'lowpass',200,.8,.12,.004);
-  // les phares, la portière, le Petit Citron
+  for(let i=0;i<26;i++){const w=9.5+Math.random()*7.4;if(w>11.2&&w<13.2)continue;K.noise(T+w,.15,'bandpass',900+Math.random()*900,1,.025,.04)}
+  K.noise(T+11.35,.4,'bandpass',2400,.8,.03,.08);K.noise(T+12.95,.05,'bandpass',2000,4,.04,.002);
+  K.noise(T+13.92,.08,'highpass',1500,.5,.16,.001);K.noise(T+13.95,.25,'bandpass',600,1,.08,.003);K.noise(T+14.75,.06,'bandpass',3000,3,.05,.002);
+  [[15,62],[15.6,64],[16.2,65],[16.8,67]].forEach(([w,m])=>K.piano(m,T+w,.03));
+  K.noise(T+17.35,.15,'lowpass',200,.8,.12,.004);
   [17.78,18.13].forEach(w=>K.noise(T+w,.03,'bandpass',2500,4,.04,.002));
   K.noise(T+19.45,.12,'lowpass',300,1,.12,.004);
   const mo=ac.createOscillator();mo.type='sawtooth';mo.frequency.setValueAtTime(38,T+20.3);mo.frequency.linearRampToValueAtTime(58,T+22.8);
@@ -667,7 +701,7 @@ function partition(ac,sortie,T){
   K.finale(T,24);
 }
 
-L.film({duree:24,rendu,partition,affiche:13.4});
+L.film({duree:24,rendu,partition,affiche:12});
 })();
 
 </script>

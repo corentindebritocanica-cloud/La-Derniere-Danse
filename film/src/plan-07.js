@@ -64,38 +64,36 @@ function grenier(c,t){
 }
 
 /* ---------- à droite : Purpan ---------- */
-const FEN={x:150,y:150,w:300,h:320};
+const FEN={x:180,y:110,w:200,h:366},KS=FEN.w/60;
 function purpan(c,t){
   c.fillStyle='#0b1526';c.fillRect(-100,0,900,720);
-  c.fillStyle='#3a3026';c.fillRect(-100,90,900,630);c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=1;for(let y=100;y<720;y+=16){c.beginPath();c.moveTo(-100,y);c.lineTo(800,y);c.stroke()}
-  // glycine
-  c.strokeStyle='#2a1d12';c.lineWidth=4;c.beginPath();c.moveTo(520,720);c.quadraticCurveTo(500,500,540,330);c.quadraticCurveTo(560,200,500,120);c.stroke();
-  for(let k=0;k<16;k++){const y=150+k*30,x=520+Math.sin(k*1.7)*26;c.fillStyle=k%2?'#6b4a8a':'#7a5a9a';c.beginPath();c.ellipse(x,y,6,15,0,0,7);c.fill()}
+  // la façade du plan coté, cadrée sur la fenêtre de L. (3e à gauche, 1er étage), glycine à sa droite
+  const fl=L.SARRAIL.etage[L.SARRAIL.louise];c.save();c.translate(FEN.x-fl.x*KS,FEN.y-fl.y*KS);c.scale(KS,KS);L.maisonSarrail(c,{});c.restore();
   // intérieur vu par la fenêtre
   c.save();c.beginPath();c.rect(FEN.x,FEN.y,FEN.w,FEN.h);c.clip();
   const lum=1-.45*seg(t,12.3,12.8);
   c.fillStyle=L.mix('#6b5537','#a8875a',lum);c.fillRect(FEN.x,FEN.y,FEN.w,FEN.h);
   c.fillStyle='rgba(90,62,27,.12)';for(let x=FEN.x;x<FEN.x+FEN.w;x+=30)c.fillRect(x,FEN.y,12,FEN.h);
   const ouv=eio(seg(t,9.6,10))*(1-eio(seg(t,11.9,12.3)));
-  c.fillStyle='#2e1d0e';c.fillRect(368,200,80,280);c.fillStyle='rgba(255,210,140,.75)';c.fillRect(372,204,72*ouv,276);
-  if(ouv>.05){c.save();c.beginPath();c.rect(372,204,72*ouv,276);c.clip();
-    L.amelie(c,408,486,{F:-1,s:.95,pointe:eio(seg(t,10.9,11.3))*(1-seg(t,11.7,11.9))});c.restore()}
-  c.fillStyle='#4a2f16';c.fillRect(372+72*ouv,204,72*(1-ouv),276);
+  c.fillStyle='#2e1d0e';c.fillRect(296,196,68,290);c.fillStyle='rgba(255,210,140,.75)';c.fillRect(300,200,60*ouv,286);
+  if(ouv>.05){c.save();c.beginPath();c.rect(300,200,60*ouv,286);c.clip();
+    L.amelie(c,330,492,{F:-1,s:.95,pointe:eio(seg(t,10.9,11.3))*(1-seg(t,11.7,11.9))});c.restore()}
+  c.fillStyle='#4a2f16';c.fillRect(300+60*ouv,200,60*(1-ouv),286);
   // Louise
   let F=-1;const tour=eio(seg(t,9.7,10.1))*(1-eio(seg(t,13.6,14.1)));F=lerp(-1,1,tour);
   const p=L.melange(L.POSES.debout,L.POSES.debout,0);p.hd=.08;
   const sursaut=Math.sin(Math.PI*seg(t,10.4,10.9));p.tA=-.18*sursaut;
   const main=eio(seg(t,14.4,15))*(1-eio(seg(t,19.2,19.8)));p.aF=[lerp(.15,1.85,main),lerp(.2,.15,main)];
-  L.pantin(c,{x:lerp(330,295,eio(seg(t,13.8,14.4))),F,p,s:1.25,hipY:445},'L');
+  L.pantin(c,{x:lerp(262,248,eio(seg(t,13.8,14.4))),F,p,s:1.15,hipY:450},'L');
   // buée et étoile tracée du doigt
   const bu=seg(t,13.8,14.8);if(bu>0){c.fillStyle=`rgba(215,222,232,${.32*bu})`;c.fillRect(FEN.x,FEN.y,FEN.w,FEN.h)}
-  const etp=seg(t,15,18.2);if(etp>0){const pts=[];for(let i=0;i<=10;i++){const r=i%2?17:42,an=-Math.PI/2+i*Math.PI/5;pts.push([228+Math.cos(an)*r,292+Math.sin(an)*r])}
+  const etp=seg(t,15,18.2);if(etp>0){const pts=[];for(let i=0;i<=10;i++){const r=i%2?17:42,an=-Math.PI/2+i*Math.PI/5;pts.push([228+Math.cos(an)*r*.9,300+Math.sin(an)*r*.9])}
     c.strokeStyle='rgba(255,220,150,.95)';c.lineWidth=7;c.lineCap='round';c.lineJoin='round';trait(c,pts,etp)}
   c.restore();
   c.strokeStyle='#2a1a10';c.lineWidth=10;c.strokeRect(FEN.x,FEN.y,FEN.w,FEN.h);c.lineWidth=5;
-  c.beginPath();c.moveTo(FEN.x+FEN.w/2,FEN.y);c.lineTo(FEN.x+FEN.w/2,FEN.y+FEN.h);[1,2].forEach(k=>{c.moveTo(FEN.x,FEN.y+FEN.h*k/3);c.lineTo(FEN.x+FEN.w,FEN.y+FEN.h*k/3)});c.stroke();
-  c.fillStyle='#4a3d30';c.fillRect(FEN.x-16,FEN.y+FEN.h,FEN.w+32,12);
-  c.save();c.globalCompositeOperation='lighter';const h=c.createRadialGradient(300,320,10,300,320,330);h.addColorStop(0,`rgba(255,200,110,${.16*lum})`);h.addColorStop(1,'rgba(255,200,110,0)');c.fillStyle=h;c.fillRect(-100,0,900,720);c.restore();
+  c.beginPath();c.moveTo(FEN.x+FEN.w/2,FEN.y);c.lineTo(FEN.x+FEN.w/2,FEN.y+FEN.h);[1,2,3].forEach(k=>{c.moveTo(FEN.x,FEN.y+FEN.h*k/4);c.lineTo(FEN.x+FEN.w,FEN.y+FEN.h*k/4)});c.stroke();
+  c.fillStyle='#4a3d30';c.fillRect(FEN.x-20,FEN.y+FEN.h,FEN.w+40,17);
+  c.save();c.globalCompositeOperation='lighter';const h=c.createRadialGradient(280,300,10,280,300,330);h.addColorStop(0,`rgba(255,200,110,${.16*lum})`);h.addColorStop(1,'rgba(255,200,110,0)');c.fillStyle=h;c.fillRect(-100,0,900,720);c.restore();
 }
 function serrure(c,t){
   const a=seg(t,12.3,12.5)*(1-seg(t,13.5,13.75));if(a<=0)return;

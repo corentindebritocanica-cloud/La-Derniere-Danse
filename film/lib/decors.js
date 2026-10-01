@@ -89,6 +89,48 @@ L.public=function(c,t,bravo){
     if(bravo>0){c.beginPath();c.arc(h.x+(Math.sin(t*18+h.ph)>0?10:4),y-h.r*1.6,6,0,7);c.fill()}}
 };
 
+/* ---------- la maison Sarrail, à Purpan ----------
+   Géométrie reprise telle quelle du plan coté de l'enveloppe 3 (« Étude de résistance — glycine »,
+   plan n° 0714) : coordonnées du plan (1 unité = 10 mm à l'échelle 1:50 du dessin). */
+L.SARRAIL={
+  facade:{x:110,y:170,w:560,h:470},sol:640,cordon:400,
+  toit:[[90,170],[390,70],[690,170]],
+  etage:[140,245,350,475,580].map(x=>({x,y:240,w:60,h:110})),
+  rdc:[140,245,475,580].map(x=>({x,y:470,w:60,h:110})),
+  porte:{x:350,y:490,w:80,h:150},
+  louise:2,grandPere:2,
+  tiges:['M432 640 C 436 590, 426 560, 434 520 C 442 480, 428 450, 432 410 C 436 370, 426 330, 430 280 C 433 250, 438 220, 452 190',
+         'M450 640 C 454 600, 462 570, 456 530 C 450 490, 462 460, 458 420 C 454 380, 464 340, 458 300 C 455 270, 470 240, 488 210'],
+  branches:['M434 520 C 410 512, 400 500, 392 486','M430 350 C 418 346, 414 338, 412 330','M458 420 C 482 410, 492 398, 500 384','M456 300 C 480 292, 494 280, 502 262'],
+  pattes:[588,528,468,408,348,288],patteBranlante:468,fourche:{x:444,y:410}
+};
+const GRAPPES_S=(function(){const R=L.rng(714),g=[];for(let i=0;i<40;i++){const y=200+R()*420,x=432+(R()-.5)*(y<300?110:80)+(y<300?20:0);g.push({x,y,l:5+R()*7,c:R()<.5?'#6b4a8a':'#8a6aaa'})}return g})();
+/* Dessine la façade de nuit, en coordonnées du plan (l'appelant choisit l'échelle).
+   o = {lumLouise 0..1, ouvre 0..1 (fenêtre de Louise), lumGP 0..1 (fenêtre du grand-père, rez-de-chaussée), ombreGP true, grappes true} */
+L.maisonSarrail=function(c,o){
+  o=o||{};const S=L.SARRAIL,f=S.facade;
+  c.fillStyle='#16121a';c.beginPath();c.moveTo(...S.toit[0]);c.lineTo(...S.toit[1]);c.lineTo(...S.toit[2]);c.closePath();c.fill();
+  c.fillStyle='#3a3026';c.fillRect(f.x,f.y,f.w,f.h);
+  c.strokeStyle='rgba(0,0,0,.2)';c.lineWidth=.5;for(let y=f.y+8;y<S.sol;y+=8){c.beginPath();c.moveTo(f.x,y);c.lineTo(f.x+f.w,y);c.stroke()}
+  c.fillStyle='#4a3d30';c.fillRect(f.x-4,S.cordon-3,f.w+8,6);c.fillRect(f.x-6,f.y-4,f.w+12,6);
+  const fen=(r,lum,ouv)=>{c.fillStyle=lum>0?L.mix('#0c0908','#c99a52',lum):'#0c0908';c.fillRect(r.x,r.y,r.w,r.h);
+    c.fillStyle='#2a1a10';const lw=r.w/2*(1-.85*(ouv||0));c.fillRect(r.x,r.y,lw,r.h);c.fillRect(r.x+r.w-lw,r.y,lw,r.h);
+    if(lum>0&&lw>4){c.fillStyle=`rgba(255,200,120,${.35*lum})`;c.fillRect(r.x+3,r.y+3,lw-6,r.h-6);c.fillRect(r.x+r.w-lw+3,r.y+3,lw-6,r.h-6)}
+    c.strokeStyle='#2a1a10';c.lineWidth=3;c.strokeRect(r.x,r.y,r.w,r.h);c.fillStyle='#4a3d30';c.fillRect(r.x-6,r.y+r.h,r.w+12,5)};
+  S.etage.forEach((r,i)=>fen(r,i===S.louise?(o.lumLouise||0):0,i===S.louise?o.ouvre:0));
+  S.rdc.forEach((r,i)=>fen(r,i===S.grandPere?(o.lumGP||0):0,0));
+  if(o.ombreGP&&o.lumGP>0){const r=S.rdc[S.grandPere],a=o.lumGP;c.fillStyle=`rgba(20,12,8,${.85*a})`;c.beginPath();c.arc(r.x+22,r.y+40,8,0,7);c.fill();c.fillRect(r.x+14,r.y+48,16,62);
+    c.fillStyle=`rgba(240,230,210,${.9*a})`;c.fillRect(r.x+30,r.y+36,24,30)}
+  const p=S.porte;c.fillStyle='#2e1d0e';c.fillRect(p.x,p.y,p.w,p.h);c.strokeStyle='#1a1009';c.lineWidth=2;c.beginPath();c.moveTo(p.x+p.w/2,p.y);c.lineTo(p.x+p.w/2,p.y+p.h);c.stroke();
+  c.beginPath();c.arc(p.x+p.w/2,p.y,p.w/2,Math.PI,0);c.fillStyle='#3a3026';c.fill();
+  // glycine : deux tiges, branches, pattes de scellement, grappes
+  c.strokeStyle='#2a1d12';c.lineCap='round';c.lineJoin='round';
+  c.lineWidth=7;c.stroke(new Path2D(S.tiges[0]));c.lineWidth=5.5;c.stroke(new Path2D(S.tiges[1]));
+  c.lineWidth=3;S.branches.forEach(b=>c.stroke(new Path2D(b)));
+  c.fillStyle='#16110c';S.pattes.forEach(y=>c.fillRect(426,y,12,5));
+  if(o.grappes!==false)GRAPPES_S.forEach(g=>{c.fillStyle=g.c;c.beginPath();c.ellipse(g.x,g.y+g.l,2.6,g.l,0,0,7);c.fill()});
+};
+
 /* Soleil rayonnant art déco (titres, ouverture). o = {x,y,r,n,rot,couleur,epais,alpha} */
 L.soleil=function(c,o){
   const n=o.n||24;c.save();c.translate(o.x,o.y);c.rotate(o.rot||0);c.globalAlpha=o.alpha==null?1:o.alpha;
