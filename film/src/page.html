@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITRE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+/* Layout: one cinema screen centred on a dark projection-room ground, credits-style text above and below. Single dark look on purpose. */
+:root{
+  --room:#120e0b;
+  --frame:#1a1512;
+  --edge:#3a2e22;
+  --cream:#f1e7d3;
+  --muted:#b9a98c;
+  --gold:#e3b23c;
+  --red:#a8201a;
+  --display:'Limelight',Georgia,serif;
+  --body:'Bodoni Moda',Georgia,serif;
+  --type:'Special Elite','Courier New',monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--room);color:var(--cream)}
+body{font-family:var(--body)}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center}
+.eyebrow{font-family:var(--type);font-size:12px;letter-spacing:.22em;color:var(--muted)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,6.5vw,60px);line-height:1.05;margin:0;text-wrap:balance}
+.sub{margin:0;font-style:italic;font-size:17px;color:var(--muted)}
+.screen{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--edge);box-shadow:0 0 0 6px var(--frame),0 0 0 7px var(--edge),0 30px 80px rgba(0,0,0,.6)}
+.screen:fullscreen{border:0;box-shadow:none;background:#000}
+canvas{display:block;width:100%;height:100%}
+.play{position:absolute;inset:0;margin:auto;width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:rgba(18,14,11,.72);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:transform .2s ease,background .2s ease}
+.play:hover{transform:scale(1.06);background:rgba(18,14,11,.88)}
+.play svg{width:30px;height:30px;margin-left:5px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:var(--type);font-size:14px}
+.ctl{font-family:var(--type);font-size:14px;color:var(--cream);background:transparent;border:1px solid #5a4a36;padding:10px 16px;min-height:44px;cursor:pointer}
+.ctl:hover{border-color:var(--gold);color:var(--gold)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.bar{height:3px;background:#2c241b;flex:1 1 160px;position:relative;min-width:0}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--gold);width:0}
+.tc{color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.05em}
+.note{max-width:62ch;margin:0 auto;color:var(--muted);line-height:1.6;text-align:center;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">{{SURTITRE}}</div>
+    <h1>{{TITRE}}</h1>
+    <p class="sub">{{SOUSTITRE}}</p>
+  </header>
+
+  <div class="screen" id="screen">
+    <canvas id="film" width="1280" height="720" aria-label="{{DESCRIPTION}}"></canvas>
+    <button class="play" id="play" aria-label="Lancer le plan">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>
+    </button>
+  </div>
+
+  <div class="controls">
+    <button class="ctl" id="replay" type="button">Rejouer</button>
+    <button class="ctl" id="sound" type="button" aria-pressed="true">Son : activé</button>
+    <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+    <span class="tc" id="tc">00:00</span>
+    <button class="ctl" id="fs" type="button">Plein écran</button>
+  </div>
+
+  <p class="note">{{NOTE}}</p>
+</div>
+{{SCRIPTS}}
+</body>
+</html>

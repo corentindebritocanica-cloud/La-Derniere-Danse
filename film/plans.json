@@ -1,0 +1,26 @@
+{
+  "01": {
+    "fichier": "plan-01-ouverture.html",
+    "TITRE": "La Dernière Danse",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 01 · OUVERTURE",
+    "SOUSTITRE": "Le générique d'ouverture. Vingt secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : un soleil art déco se lève, l'étoile rouge s'allume et le titre du film apparaît",
+    "NOTE": "Le gramophone grésille, la trompette de Léon joue seule les premières notes du morceau sans nom, et le titre s'écrit lettre par lettre."
+  },
+  "05": {
+    "fichier": "plan-05-danse.html",
+    "TITRE": "La danse qui n'existe pas encore",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 05",
+    "SOUSTITRE": "Cabaret des Étoiles, samedi 14 décembre. Trente-trois secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : Célestin et Louise inventent une danse sur la scène du Cabaret des Étoiles",
+    "NOTE": "Chaque pas allume un rayon du soleil art déco derrière eux. À la fin de la danse, le décor entier est devenu leur étoile."
+  },
+  "10": {
+    "fichier": "plan-10-etoile-filante.html",
+    "TITRE": "L'étoile filante",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 10",
+    "SOUSTITRE": "Route de Purpan, 16 décembre, 0 h 48. Trente secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : la Mini sur la route de nuit, une étoile filante, puis l'aube",
+    "NOTE": "Silhouettes découpées, cartons muets et le morceau sans nom joué en direct par le navigateur."
+  }
+}

@@ -155,6 +155,22 @@ Source : constantes `MOTS_DE_PASSE` et `MOT_BONUS` dans `index.html`.
 - **Musique** : un seul thème original, « le morceau sans nom » de Léon, qui revient et se transforme (trompette → violon → orchestre). Voix off possible, enregistrée par Corentin.
 - **Technique** : animation en HTML/canvas, musique générée par le navigateur (Web Audio). Rien d'emprunté : dessins et musique originaux.
 
+### Organisation des fichiers du film
+
+Personnages, décors et musique sont partagés : une modification faite une fois s'applique à tous les plans.
+
+| Fichier | Contenu |
+|---|---|
+| `film/lib/moteur.js` | Outils communs, cartons de cinéma muet, grain de pellicule, lecteur (lecture, son, plein écran) |
+| `film/lib/personnages.js` | Pantins de Célestin et Louise (poses : debout, timide, invite, tenue, bras levé, promenade, renversé, assis…), la Mini, Léon, Chopin |
+| `film/lib/decors.js` | Ciel de nuit et étoiles (avec les Gémeaux), silhouette de Toulouse, collines et cyprès, scène du Cabaret des Étoiles, public, soleil art déco |
+| `film/lib/musique.js` | Instruments (piano, contrebasse, batterie, trompette, violon, cloches, gramophone, projecteur) et le thème « le morceau sans nom » |
+| `film/src/plan-XX.js` | Le déroulé propre à chaque plan (chorégraphie, temps, partition) |
+| `film/src/page.html`, `film/plans.json` | Gabarit de page et titres des plans |
+| `film/build.py` | Construit chaque `film/plan-XX-….html` autonome : `python3 film/build.py` (ou `python3 film/build.py 05`) |
+
+On modifie toujours `film/lib/` ou `film/src/`, puis on relance `build.py`. Les fichiers `film/plan-*.html` sont générés.
+
 ### Storyboard
 
 Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/storyboard/`)
@@ -163,11 +179,11 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 
 | Plan | Temps | Contenu |
 |---|---|---|
-| 01 | 0:00–0:15 | Ouverture : soleil art déco, étoile rouge, titre. Gramophone puis trompette seule. |
+| 01 | 0:00–0:20 | Ouverture : soleil art déco, étoile rouge, titre. Gramophone puis trompette seule. **Réalisé.** |
 | 02 | 0:15–0:35 | Toulouse la nuit, Garonne, Pont-Neuf ; travelling jusqu'à la fenêtre en demi-lune où Célestin peint. |
 | 03 | 0:35–0:55 | Louise lit Freud à la bougie, Chopin à ses pieds ; elle part « à sa leçon de piano ». |
 | 04 | 0:55–1:15 | Cabaret des Étoiles, Léon, Maurice tire au sort : le peintre et la débutante. Carton « Samedi 14 décembre ». |
-| 05 | 1:15–1:50 | La danse qui n'existe pas encore. **Plan test réalisé.** |
+| 05 | 1:15–1:50 | La danse qui n'existe pas encore. **Réalisé.** |
 
 **Acte II — Les nuits volées** (1:50 → 3:15, ch. 4 à 8)
 
@@ -182,7 +198,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 
 | Plan | Temps | Contenu |
 |---|---|---|
-| 10 | 3:15–3:40 | L'étoile filante à 0 h 48. **Plan test réalisé.** |
+| 10 | 3:15–3:40 | L'étoile filante à 0 h 48. **Réalisé.** |
 | 11 | 3:40–4:00 | Le grand-père révèle son violon ; le thème passe au violon. |
 | 12 | 4:00–4:40 | Réveillon du 31, dernière danse, confettis, la caméra s'élève vers les étoiles. |
 | 13 | 4:40–5:00 | Épilogue « près d'un siècle plus tard » : le même ciel, deux silhouettes d'aujourd'hui. Carton « Fin ». |
@@ -201,7 +217,14 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
 | Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
 
-### Plans tests réalisés
+### Plans réalisés (3/13)
+
+**Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
+1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
+2. Le soleil art déco se lève, ses arcs se dessinent ; la trompette joue seule le thème.
+3. L'étoile rouge s'allume en vacillant comme un néon.
+4. « LA DERNIÈRE DANSE » s'écrit lettre par lettre (une note de piano par lettre), puis les filets dorés et « Toulouse · décembre 1925 ».
+5. L'iris se referme sur l'étoile rouge.
 
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».
@@ -219,11 +242,12 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 6. Final : tous les rayons s'embrasent, l'étoile rouge apparaît, il la fait basculer. Applaudissements.
 7. Carton « Une danse qui n'existait pas encore. »
 
-Verdict de Corentin : les deux plans plaisent tels quels.
+Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
 
 ### Prochaines étapes du film
 
-- [ ] Animer les autres plans (01 à 13) dans le même style.
+- [x] Regrouper personnages, décors et musique en fichiers communs.
+- [ ] Animer les plans restants : 02, 03, 04, 06, 07, 08, 09, 11, 12, 13.
 - [ ] Tester l'export en vidéo MP4.
 - [ ] Assembler le film complet avec le thème musical continu.
 - [ ] Voix off (facultatif, enregistrée par Corentin).
