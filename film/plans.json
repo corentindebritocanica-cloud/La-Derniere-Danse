@@ -39,6 +39,14 @@
     "DESCRIPTION": "Plan animé : Célestin et Louise inventent une danse sur la scène du Cabaret des Étoiles",
     "NOTE": "Chaque pas allume un rayon du soleil art déco derrière eux. À la fin de la danse, le décor entier est devenu leur étoile."
   },
+  "06": {
+    "fichier": "plan-06-marche.html",
+    "TITRE": "La marche jusqu'à Purpan",
+    "SURTITRE": "LA DERNIÈRE DANSE · PLAN 06",
+    "SOUSTITRE": "De la rue des Teinturiers à Purpan, la nuit. Vingt-trois secondes, avec le son.",
+    "DESCRIPTION": "Plan animé : Célestin et Louise marchent côte à côte dans la nuit, les réverbères s'allument à leur passage, jusqu'au portail de Purpan",
+    "NOTE": "Chaque réverbère s'allume quand ils passent. Sur le mur de Purpan, la glycine attend déjà le chapitre 7."
+  },
   "10": {
     "fichier": "plan-10-etoile-filante.html",
     "TITRE": "L'étoile filante",

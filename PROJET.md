@@ -189,7 +189,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 
 | Plan | Temps | Contenu |
 |---|---|---|
-| 06 | 1:50–2:15 | Marche jusqu'à Purpan, les réverbères s'allument à leur passage. |
+| 06 | 1:58–2:21 | Marche jusqu'à Purpan, les réverbères s'allument à leur passage. **Réalisé.** |
 | 07 | 2:15–2:35 | Écran partagé : Célestin peint le portrait / Louise enfermée. Carton « Élisabeth ! ». |
 | 08 | 2:35–2:55 | Évasion par la glycine, la Mini attend phares allumés. |
 | 09 | 2:55–3:15 | Premier baiser : deux profils qui deviennent une seule ombre, fond rouge, « 15 décembre ». |
@@ -217,7 +217,7 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 | Amélie | Chignon haut, robe longue, perles, tasse de thé | Main sur la tempe : la « migraine stratégique » |
 | Chopin | Seul personnage en gris, yeux jaunes en amande | Sa queue bat la mesure |
 
-### Plans réalisés (6/13) — l'acte I est complet
+### Plans réalisés (7/13) — l'acte I est complet
 
 **Plan 01 — Ouverture** (20 s) · https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL · `film/plan-01-ouverture.html`
 1. Dans le noir, le gramophone grésille ; un point d'or apparaît.
@@ -249,6 +249,16 @@ Canvas : https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q (sources dans `film/s
 5. Deuxième papier : « DÉBUTANTE · Mlle L. Sarrail ». Le projecteur trouve Louise, timide, qui relève la tête.
 6. Les deux papiers s'envolent et tombent vers nous au ralenti.
 
+**Plan 06 — La marche jusqu'à Purpan** (23 s) · https://claude.ai/artifact/933jod6ATQTFY5Mm2NxAVz · `film/plan-06-marche.html`
+1. Carton « Il a proposé de la raccompagner. »
+2. Long travelling latéral : ils marchent côte à côte, la ville défile en couches (toits, fenêtres allumées, puis platanes et champs), Saint-Sernin s'éloigne.
+3. Chaque réverbère s'allume quand ils passent, avec un petit tintement.
+4. Leur conversation s'écrit à la main au-dessus d'eux : « Vous dansiez vraiment pour la première fois ? » / « Pour la première fois devant quelqu'un. » / « Et vous, vous peignez quoi, la nuit ? » / « Ce qu'on ne voit pas le jour. » / « Vous avez lu Freud ? » / « Non… vous me le prêterez ? » / « En cachette, alors. »
+5. Panneau « PURPAN », le mur des Sarrail avec la glycine déjà en fleurs (clin d'œil au chapitre 7).
+6. Ils se font face, petit salut ; elle passe la grille. « Bonne nuit, le peintre. » Elle se retourne derrière les barreaux.
+
+*Les répliques sont inventées pour le film : à ajuster si elles ne collent pas au roman.*
+
 **Plan 10 — L'étoile filante** (30 s) · https://claude.ai/artifact/RhiNcMF8wjVBm1DpN8cCqy · `film/plan-10-etoile-filante.html`
 1. Carton « Un peu avant une heure du matin… ».
 2. La Mini arrive sur la route ; décors en couches, Saint-Sernin à l'horizon ; trompette.
@@ -270,7 +280,7 @@ Verdict de Corentin : les plans 05 et 10 plaisent tels quels.
 ### Prochaines étapes du film
 
 - [x] Regrouper personnages, décors et musique en fichiers communs.
-- [ ] Animer les plans restants : 06, 07, 08, 09, 11, 12, 13.
+- [ ] Animer les plans restants : 07, 08, 09, 11, 12, 13.
 - [ ] Tester l'export en vidéo MP4.
 - [ ] Assembler le film complet avec le thème musical continu.
 - [ ] Voix off (facultatif, enregistrée par Corentin).
