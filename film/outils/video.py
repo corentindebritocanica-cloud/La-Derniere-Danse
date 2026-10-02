@@ -1,5 +1,5 @@
 """Export vidéo : rend chaque plan image par image + sa bande-son (OfflineAudioContext), puis assemble le film.
-Usage : python3 film/outils/video.py [01 02 ...] [--fps 25] [--out dossier]
+Usage : python3 film/outils/video.py [01 02 ...] [--fps 25] [--crf 18] [--out dossier]
 Sans numéro : tous les plans de plans.json, puis film complet « la-derniere-danse.mp4 »."""
 from playwright.sync_api import sync_playwright
 import os, sys, json, base64, subprocess, wave
@@ -10,7 +10,7 @@ def opt(n, d):
     if n in a:
         i = a.index(n); v = a[i+1]; a = a[:i]+a[i+2:]; return v
     return d
-FPS = int(opt('--fps', '25')); OUT = opt('--out', os.path.join(F, 'video')); SR = 48000
+FPS = int(opt('--fps', '25')); CRF = opt('--crf', '18'); OUT = opt('--out', os.path.join(F, 'video')); SR = 48000
 os.makedirs(OUT, exist_ok=True)
 plans = json.load(open(os.path.join(F, 'plans.json')))
 nums = a or sorted(plans)
@@ -49,7 +49,7 @@ def rendre(num, pg):
     # images
     mp4 = os.path.join(OUT, f'plan-{num}.mp4'); N = round(D*FPS)
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', str(FPS), '-i', '-',
-                           '-i', wav, '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p',
+                           '-i', wav, '-c:v', 'libx264', '-preset', 'medium', '-crf', CRF, '-pix_fmt', 'yuv420p',
                            '-c:a', 'aac', '-b:a', '192k', '-ar', str(SR), '-shortest', '-movflags', '+faststart', mp4], stdin=subprocess.PIPE)
     for a0 in range(0, N, 50):
         for d in pg.evaluate(FRAMES, [a0, min(50, N-a0), FPS]): ff.stdin.write(base64.b64decode(d))
