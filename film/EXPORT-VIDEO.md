@@ -12,12 +12,17 @@ Le film est dessiné par le code (canevas HTML, 1280×720). L'export rend chaque
 `git clone https://github.com/corentindebritocanica-cloud/La-Derniere-Danse.git` puis `cd La-Derniere-Danse`
 
 ## 3. Lancer l'export
-`python film/outils/video.py --out C:\Videos\ldd`
+**4K (3840×2160)** : `python film/outils/video.py --4k --out C:\Videos\ldd`
+→ `C:\Videos\ldd\la-derniere-danse-4k.mp4` (≈ 1 Go ; prévoir 3 Go libres). Calcul : ≈ 3 h sur un petit processeur 2 cœurs, 1 h 30 à 2 h sur un PC récent.
 
-- Résultat : `C:\Videos\ldd\la-derniere-danse.mp4` (et un `plan-XX.mp4` par plan).
+1080p (compromis) : `python film/outils/video.py --1080 --out C:\Videos\ldd` (≈ 1 à 1 h 30). 720p d'origine : sans option (≈ 40 min).
+
+**Tester d'abord sur un seul plan** (4K, ≈ 3 min) : `python film/outils/video.py 01 --4k --out C:\Videos\ldd` puis ouvrir `plan-01-4k.mp4`.
+
+- Résultat : le film complet, plus un fichier par plan (`plan-XX-4k.mp4`).
 - Qualité : `--crf 18` par défaut (plus petit = meilleure image, plus lourd ; 14 à 20 conseillé).
 - Un seul plan pour tester (≈ 35 s) : `python film/outils/video.py 01 --out C:\Videos\ldd`
-- Si le calcul s'interrompt, relancer seulement les plans manquants : `python film/outils/video.py 07 08 09 --out C:\Videos\ldd`, puis assembler :
-  `ffmpeg -f concat -safe 0 -i liste.txt -c copy -movflags +faststart film.mp4` (liste.txt : une ligne `file 'C:/Videos/ldd/plan-01.mp4'` par plan).
+- Si le calcul s'interrompt, relancer seulement les plans manquants : `python film/outils/video.py 07 08 09 --4k --out C:\Videos\ldd`, puis assembler :
+  `ffmpeg -f concat -safe 0 -i liste.txt -c copy -movflags +faststart film.mp4` (liste.txt : une ligne `file 'C:/Videos/ldd/plan-01-4k.mp4'` par plan).
 
 Ne pas laisser le PC se mettre en veille pendant le calcul. Les vidéos ne vont pas dans le dépôt (trop lourdes).
