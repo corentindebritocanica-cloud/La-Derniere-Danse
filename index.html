@@ -161,6 +161,13 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
 .bonus-contenu{text-align:center;padding:10px 4px 4px}
 .bonus-contenu h3{color:var(--bleu)}
 .bonus-contenu .siecle{font-family:var(--f-hand);font-size:26px;color:var(--rouge);margin:14px 0}
+.bonus-film{display:block;margin:22px auto 6px;max-width:300px;text-decoration:none;color:var(--fond);background:var(--encre);border:1px solid var(--encre);box-shadow:0 0 0 4px var(--fond),0 0 0 5px var(--encre);padding:16px 18px 14px}
+.bonus-film .sur{display:block;font-family:var(--f-type);font-size:11px;letter-spacing:3px;color:#e3b23c}
+.bonus-film .titre{display:block;font-family:var(--f-title);font-size:24px;margin:6px 0 4px}
+.bonus-film .play{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-type);font-size:13px;color:#e3b23c}
+.bonus-film .play svg{width:14px;height:14px}
+.bonus-film:active{transform:scale(.98)}
+.bonus-contenu .petit{font-size:13px;opacity:.75}
 </style>
 </head>
 <body>
@@ -498,6 +505,12 @@ function ouvrirBonus(){
       <p>Une dernière page, glissée entre les autres.</p>
       <div class="siecle">Toulouse, près d'un siècle plus tard.</div>
       <p>Les mêmes rues, la même Garonne, et une dernière danse qui, cette fois, ne s'arrête pas.</p>
+      <a class="bonus-film" href="film/film-complet.html?depuis=site">
+        <span class="sur">PROJECTION PRIVÉE</span>
+        <span class="titre">La Dernière Danse</span>
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>Voir le film · 20 min</span>
+      </a>
+      <p class="petit">Avec le son, téléphone à l'horizontale.</p>
     </div>`;
   feuilleFiche.querySelector('.ferm').addEventListener('click', fermerVoiles);
   setTimeout(()=> voileFiche.classList.add('show'), 50);

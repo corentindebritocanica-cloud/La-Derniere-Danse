@@ -45,11 +45,14 @@ h2{font-family:var(--display);font-weight:400;font-size:24px;margin:12px 0 0;col
 .plans button[aria-current="true"]{border-color:var(--gold);background:#1f1812}
 .plans .n{font-family:var(--display);color:var(--red);font-size:20px}
 .plans .d{font-family:var(--type);font-size:12px;color:var(--muted)}
+.retour{align-self:flex-start;font-family:var(--type);font-size:13px;color:var(--muted);text-decoration:none;padding:10px 0;min-height:44px;box-sizing:border-box}
+.retour:hover{color:var(--gold)}
 .note{max-width:62ch;margin:0 auto;color:var(--muted);line-height:1.6;text-align:center;font-size:15px}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <a class="retour" id="retour" href="../index.html?cb=TOUJOURS" hidden>← Retour au carnet de bal</a>
   <header>
     <div class="eyebrow">UN FILM EN QUATORZE PLANS · D'APRÈS LE ROMAN</div>
     <h1>La Dernière Danse</h1>
@@ -82,6 +85,7 @@ h2{font-family:var(--display);font-weight:400;font-size:24px;margin:12px 0 0;col
 <script>
 (function(){
 const L=window.LDD,P=L.PLANS,META={{META}};
+if(new URLSearchParams(location.search).get('depuis')==='site')document.getElementById('retour').hidden=false;
 const GAP=.8; // un instant de noir entre deux plans
 const OFF=[];let acc=0;P.forEach((p,i)=>{OFF.push(acc);acc+=p.duree+(i<P.length-1?GAP:0)});const DUR=acc;
 const cv=document.getElementById('film'),c=cv.getContext('2d');

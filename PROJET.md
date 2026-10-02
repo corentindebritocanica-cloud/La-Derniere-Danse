@@ -140,7 +140,7 @@ Source : constantes `MOTS_DE_PASSE` et `MOT_BONUS` dans `index.html`.
 
 - [ ] Vérifier que chaque mot de passe figure discrètement sur l'artefact de son enveloppe (canvas).
 - [ ] QR code en artefact d'époque pour l'enveloppe 0.
-- [ ] Ajouter le film en page bonus (idée).
+- [x] Le film complet est dans la page bonus (carnet de bal, mot `TOUJOURS` ou QR `?cb=TOUJOURS`) : bouton « Voir le film » → `film/film-complet.html?depuis=site`, avec retour au carnet.
 
 ---
 
