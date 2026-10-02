@@ -169,7 +169,7 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 
 | Plan | Chapitre | Fichier | Artefact | État |
 |---|---|---|---|---|
-| Storyboard | — | `storyboard/` | https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q | à mettre à jour à la fin |
+| Storyboard | — | `storyboard/` | https://claude.ai/artifact/PDDgJdnzVN3cTKYL3yjV5q | ✅ aligné sur les 14 plans (≈ 20 min 30) |
 | 01 Ouverture | — | `plan-01-ouverture.html` | https://claude.ai/artifact/GRPzWs2e8G2sznQfsYC6wL | conforme |
 | 02 La fenêtre | 1 | `plan-02-fenetre.html` | https://claude.ai/artifact/PKxRAPSnERwsTieoC9yE92 | ✅ refait d'après le livre |
 | 03 Purpan | 2 | `plan-03-purpan.html` | https://claude.ai/artifact/NRF43SQmRMwvM5ioeHAiG8 | ✅ refait |
