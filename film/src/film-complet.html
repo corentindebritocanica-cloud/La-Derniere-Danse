@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Dernière Danse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;1,400&family=La+Belle+Aurore&family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+/* Salle de projection : l'écran au centre, les quatorze plans en bobines dessous. Volontairement sombre. */
+:root{
+  --room:#120e0b;--frame:#1a1512;--edge:#3a2e22;--cream:#f1e7d3;--muted:#b9a98c;--gold:#e3b23c;--red:#a8201a;
+  --display:'Limelight',Georgia,serif;--body:'Bodoni Moda',Georgia,serif;--type:'Special Elite','Courier New',monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--room);color:var(--cream);margin:0}
+body{font-family:var(--body)}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:28px 56px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center}
+.eyebrow{font-family:var(--type);font-size:12px;letter-spacing:.22em;color:var(--muted)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,7vw,64px);line-height:1.05;margin:0}
+.sub{margin:0;font-family:'La Belle Aurore',cursive;font-size:clamp(22px,4vw,30px);color:var(--gold)}
+.screen{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--edge);box-shadow:0 0 0 6px var(--frame),0 0 0 7px var(--edge),0 30px 80px rgba(0,0,0,.6)}
+.screen:fullscreen{border:0;box-shadow:none}
+canvas{display:block;width:100%;height:100%}
+.play{position:absolute;inset:0;margin:auto;width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:rgba(18,14,11,.72);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:transform .2s ease}
+.play:hover{transform:scale(1.06)}
+.play svg{width:30px;height:30px;margin-left:5px}
+.now{font-family:var(--type);font-size:13px;letter-spacing:.08em;color:var(--muted);text-align:center;min-height:1.4em}
+.now b{color:var(--gold);font-weight:400}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:var(--type);font-size:14px}
+.ctl{font-family:var(--type);font-size:14px;color:var(--cream);background:transparent;border:1px solid #5a4a36;padding:10px 14px;min-height:44px;min-width:44px;cursor:pointer}
+.ctl:hover{border-color:var(--gold);color:var(--gold)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.bar{height:14px;flex:1 1 200px;position:relative;min-width:0;cursor:pointer;display:flex;align-items:center}
+.bar::before{content:'';position:absolute;left:0;right:0;height:3px;background:#2c241b}
+.bar i{position:absolute;left:0;height:3px;background:var(--gold);width:0}
+.bar s{position:absolute;top:2px;width:1px;height:10px;background:#5a4a36;text-decoration:none}
+.tc{color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.05em}
+h2{font-family:var(--display);font-weight:400;font-size:24px;margin:12px 0 0;color:var(--cream);text-align:center}
+.plans{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.plans button{width:100%;text-align:left;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline;background:transparent;border:1px solid #3a2e22;color:var(--cream);padding:12px 14px;min-height:44px;cursor:pointer;font-family:var(--body);font-size:16px}
+.plans button:hover{border-color:var(--gold)}
+.plans button[aria-current="true"]{border-color:var(--gold);background:#1f1812}
+.plans .n{font-family:var(--display);color:var(--red);font-size:20px}
+.plans .d{font-family:var(--type);font-size:12px;color:var(--muted)}
+.note{max-width:62ch;margin:0 auto;color:var(--muted);line-height:1.6;text-align:center;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">UN FILM EN QUATORZE PLANS · D'APRÈS LE ROMAN</div>
+    <h1>La Dernière Danse</h1>
+    <p class="sub">Toulouse, décembre 1925</p>
+  </header>
+
+  <div class="screen" id="screen">
+    <canvas id="film" width="1280" height="720" aria-label="Le film La Dernière Danse, en silhouettes art déco, du grenier du Pont-Neuf jusqu'à près d'un siècle plus tard."></canvas>
+    <button class="play" id="play" aria-label="Lancer le film">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>
+    </button>
+  </div>
+  <div class="now" id="now" aria-live="polite"></div>
+
+  <div class="controls">
+    <button class="ctl" id="prev" type="button" aria-label="Plan précédent">◀◀</button>
+    <button class="ctl" id="pause" type="button">Lecture</button>
+    <button class="ctl" id="next" type="button" aria-label="Plan suivant">▶▶</button>
+    <div class="bar" id="bar" role="slider" aria-label="Aller au plan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><i id="prog"></i></div>
+    <span class="tc" id="tc">00:00</span>
+    <button class="ctl" id="sound" type="button" aria-pressed="true">Son : activé</button>
+    <button class="ctl" id="fs" type="button">Plein écran</button>
+  </div>
+
+  <h2>Les plans</h2>
+  <ol class="plans" id="plans"></ol>
+  <p class="note">À regarder avec le son, de préférence en plein écran, téléphone à l'horizontale. Un clic sur un plan, ou sur la barre, reprend le film au début de ce plan.</p>
+</div>
+{{SCRIPTS}}
+<script>
+(function(){
+const L=window.LDD,P=L.PLANS,META={{META}};
+const GAP=.8; // un instant de noir entre deux plans
+const OFF=[];let acc=0;P.forEach((p,i)=>{OFF.push(acc);acc+=p.duree+(i<P.length-1?GAP:0)});const DUR=acc;
+const cv=document.getElementById('film'),c=cv.getContext('2d');
+const $=id=>document.getElementById(id);
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');
+const idx=t=>{let i=0;while(i<P.length-1&&t>=OFF[i+1])i++;return i};
+function draw(t){
+  const i=idx(t),lt=t-OFF[i];c.save();
+  if(lt<=P[i].duree)P[i].rendu(c,Math.max(0,lt));else{c.fillStyle='#000';c.fillRect(0,0,L.W,L.H)}
+  c.restore();L.pellicule(c);
+}
+window.LDD_rendu=draw;window.LDD_OFF=OFF;
+
+/* lecture : l'horloge est celle du contexte audio (la pause le suspend) */
+let ac=null,master=null,buses=[],base=0,started=false,playing=false,muted=false,tP=0,raf=0,cur=-1;const prevu=new Set();
+const now=()=>ac?ac.currentTime:performance.now()/1000;
+function partition(i){
+  if(prevu.has(i)||!ac)return;prevu.add(i);
+  const b=ac.createGain();b.connect(master);buses.push(b);
+  try{P[i].partition(ac,b,base+OFF[i])}catch(e){console.error(e)}
+}
+function couper(){buses.forEach(b=>{try{b.gain.cancelScheduledValues(0);b.gain.value=0;b.disconnect()}catch(e){}});buses=[];prevu.clear()}
+function lancer(i){
+  cancelAnimationFrame(raf);
+  if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=muted?0:1;master.connect(ac.destination)}catch(e){ac=null}}
+  if(ac&&ac.state!=='running')ac.resume();
+  couper();base=now()+.12-OFF[i];partition(i);
+  started=true;playing=true;$('play').hidden=true;$('pause').textContent='Pause';raf=requestAnimationFrame(tick);
+}
+function tick(){
+  let t=playing?now()-base:tP;
+  if(t>=DUR){t=DUR;playing=false;started=false;$('play').hidden=false;$('play').setAttribute('aria-label','Revoir le film');$('pause').textContent='Lecture'}
+  t=Math.max(0,t);
+  const i=idx(t);if(i+1<P.length&&t>=OFF[i+1]-2.5)partition(i+1);
+  draw(t);maj(t,i);
+  if(playing)raf=requestAnimationFrame(tick);
+}
+function maj(t,i){
+  $('prog').style.width=(t/DUR*100)+'%';$('tc').textContent=fmt(t)+' / '+fmt(DUR);$('bar').setAttribute('aria-valuenow',Math.round(t/DUR*100));
+  if(i!==cur){cur=i;$('now').innerHTML='Plan <b>'+META[i].n+'</b> · '+META[i].titre;
+    document.querySelectorAll('#plans button').forEach((b,k)=>b.setAttribute('aria-current',String(k===i)))}
+}
+function pause(){
+  if(!started){lancer(0);return}
+  if(playing){tP=now()-base;playing=false;if(ac)ac.suspend();$('pause').textContent='Lecture';cancelAnimationFrame(raf)}
+  else{if(ac)ac.resume();else base=now()-tP;playing=true;$('pause').textContent='Pause';raf=requestAnimationFrame(tick)}
+}
+const actuel=()=>idx(playing?now()-base:tP);
+$('play').addEventListener('click',()=>lancer(0));
+$('pause').addEventListener('click',pause);
+$('prev').addEventListener('click',()=>{const i=started?actuel():0;const t=playing?now()-base:tP;lancer(t-OFF[i]>3||i===0?i:i-1)});
+$('next').addEventListener('click',()=>{const i=started?actuel():-1;if(i+1<P.length)lancer(i+1)});
+$('bar').addEventListener('click',e=>{const r=$('bar').getBoundingClientRect();lancer(idx(L.clamp((e.clientX-r.left)/r.width,0,1)*DUR))});
+$('bar').addEventListener('keydown',e=>{if(e.key==='ArrowRight')$('next').click();if(e.key==='ArrowLeft')$('prev').click()});
+document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('button,[role=slider]'))return;if(e.key===' '){e.preventDefault();pause()}});
+$('sound').addEventListener('click',()=>{muted=!muted;$('sound').textContent='Son : '+(muted?'coupé':'activé');$('sound').setAttribute('aria-pressed',String(!muted));if(master)master.gain.setValueAtTime(muted?0:1,ac.currentTime)});
+$('fs').addEventListener('click',()=>{const s=$('screen');try{const p=document.fullscreenElement?document.exitFullscreen():(s.requestFullscreen&&s.requestFullscreen());if(p&&p.catch)p.catch(()=>{})}catch(e){}});
+/* marqueurs et liste des plans */
+OFF.slice(1).forEach(o=>{const m=document.createElement('s');m.style.left=(o/DUR*100)+'%';$('bar').appendChild(m)});
+META.forEach((m,i)=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';
+  b.innerHTML='<span class="n">'+m.n+'</span><span>'+m.titre+'</span><span class="d">'+fmt(OFF[i])+'</span>';
+  b.addEventListener('click',()=>{lancer(i);$('screen').scrollIntoView({behavior:'smooth',block:'center'})});li.appendChild(b);$('plans').appendChild(li)});
+const affiche=()=>{draw(P[0].affiche);maj(0,0)};
+$('tc').textContent='00:00 / '+fmt(DUR);affiche();
+if(document.fonts&&document.fonts.load)Promise.all(["26px 'Limelight'","italic 22px 'Bodoni Moda'","20px 'Special Elite'","30px 'La Belle Aurore'"].map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{if(!started)affiche()});
+})();
+</script>
+</body>
+</html>

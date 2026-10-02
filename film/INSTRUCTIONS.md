@@ -188,6 +188,7 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 | 12 Le bureau du rez-de-chaussée | 11 | `plan-12-violon.html` | https://claude.ai/artifact/3oworfu4s2fME7jAARkv1x | ✅ créé d'après le livre (122 s) |
 | 13 La dernière danse | 12 | `plan-13-derniere-danse.html` | https://claude.ai/artifact/LfRRsyP4chiE5dWDRUhwqh | ✅ créé d'après le livre (154 s) |
 | 14 Épilogue | épilogue | `plan-14-epilogue.html` | https://claude.ai/artifact/BMmm2rgAk2XSpUstMEDFLt | ✅ créé d'après le livre (92 s) |
+| **Film complet** | tout | `film-complet.html` (`python3 film/build_film.py`) | https://claude.ai/artifact/HvJnLmjpYQXN2QuNTqmQNy | ✅ 14 plans enchaînés, 20 min 38, chapitres, pause |
 
 ### Plan 06 : terminé (1er octobre)
 
@@ -246,3 +247,8 @@ Avant d'écrire le plan 09, relire tout le chapitre 8 : ces éléments ne suffis
 - **Réveillon (plan 12)** :
   - l'invitation et le carnet de bal (danses : fox-trot, tango, charleston, la danse qui n'existe pas encore, valse du réveillon, dernière danse de l'année) ;
   - le tirage de Julien : couple dansant, robe noire à franges, smoking.
+
+### Film complet (2 octobre)
+
+`build_film.py` assemble les 14 plans dans `film-complet.html` : bibliothèques inlinées une fois, `L.film` détourné pour remplir `L.PLANS`, 0,8 s de noir entre deux plans. L'horloge est celle du contexte audio (pause = `ac.suspend()`) ; la musique d'un plan est programmée 2,5 s avant son début. On ne peut reprendre qu'au début d'un plan (sinon toutes les notes passées partiraient en même temps). Après toute retouche d'un plan : `python3 film/build.py XX && python3 film/build_film.py`, puis republier les deux.
+Corrigé au passage : l'accord `Am9` manquait dans `musique.js`, ce qui coupait la musique du plan 06 après 39 s.
