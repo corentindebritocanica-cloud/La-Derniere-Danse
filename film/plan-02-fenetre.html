@@ -122,9 +122,11 @@ L.pellicule=function(c){
   if(Math.random()<.05){c.strokeStyle='rgba(241,231,211,.14)';c.lineWidth=1;const x=Math.random()*W;c.beginPath();c.moveTo(x,0);c.lineTo(x+Math.random()*6-3,H);c.stroke()}
   c.fillStyle=`rgba(0,0,0,${Math.random()*.035})`;c.fillRect(0,0,W,H);
 };
-/* Répliques : durée d'affichage proportionnelle à la longueur (≈ 13 caractères par seconde + 1,1 s de fondu),
+/* Répliques : durée d'affichage proportionnelle à la longueur (≈ 10 caractères par seconde + 1,3 s de fondu),
    et empilement vers le haut quand une réplique suivante apparaît avant que la précédente ait disparu. */
-L.lue=l=>Math.min(8,Math.max(l[3]||1.5,1.1+l[2].length/13));
+L.lue=l=>Math.min(9,Math.max(l[3]||1.5,1.3+l[2].length/10));
+/* au plus 4 répliques à l'écran : quand 3 plus récentes ont commencé, la plus ancienne s'efface */
+L.coupe=(t,lignes,l)=>{const n=lignes.filter(m=>m[0]>l[0]&&m[0]<=t).map(m=>m[0]).sort((a,b)=>a-b);return n.length>=3?1-L.seg(t,n[2]+.5,n[2]+1.1):1};
 L.pile=(t,lignes,l)=>{let o=0;for(const m of lignes)if(m[0]>l[0])o+=34*L.seg(t,m[0]-.25,m[0]+.1);return o};
 L.noir=function(c,a){if(a>0){c.fillStyle=`rgba(0,0,0,${Math.min(1,a)})`;c.fillRect(0,0,L.W,L.H)}};
 
@@ -882,7 +884,7 @@ function celestin(t){
 function paroles(c,t,tetes){
   c.save();c.textAlign='center';c.font="25px "+L.F.main;L.setLS(c,'0px');
   for(const d of DIALOGUE){const l=[d.t,d.qui,d.s],du=L.lue(l);if(t<d.t||t>d.t+du)continue;const h=tetes[d.qui];if(!h)continue;
-    c.globalAlpha=L.seg(t,d.t,d.t+.3)*(1-L.seg(t,d.t+du-.3,d.t+du));const x=clamp(h.x+(d.qui==='C'?60:-60),300,W-300),y=250-L.pile(t,DIALOGUE.map(e=>[e.t]),l)+34;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(d.s,x,y);c.fillStyle='#fbf3e2';c.fillText(d.s,x,y)}
+    c.globalAlpha=L.seg(t,d.t,d.t+.3)*(1-L.seg(t,d.t+du-.3,d.t+du))*L.coupe(t,DIALOGUE.map(e=>[e.t]),l);const x=clamp(h.x+(d.qui==='C'?60:-60),300,W-300),y=250-L.pile(t,DIALOGUE.map(e=>[e.t]),l)+34;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(d.s,x,y);c.fillStyle='#fbf3e2';c.fillText(d.s,x,y)}
   c.restore();
 }
 function interieur(c,t){

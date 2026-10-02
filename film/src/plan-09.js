@@ -25,7 +25,7 @@ const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
 // caméra fixe (z) : les têtes renvoyées par les pantins sont converties en coordonnées d'écran
 const Z=1.08,CX=640,CY=420;
 const ecran=p=>p&&{x:640+(p.x-CX)*Z,y:360+(p.y-CY)*Z};
-function dire(c,t,lignes,tetes){const act=[];for(const l of lignes){const a=env(t,l[0],L.lue(l));if(a<=0)continue;const h=ecran(tetes[l[1]]);if(h)act.push([l,a,h.x+(l[4]||0),h.y-(l[5]||66)])}act.sort((p,q)=>p[0][0]-q[0][0]);let sa=0,sy=0;for(const e of act){sa+=e[1];sy+=e[1]*e[3]}const Ya=sa?sy/sa:0;act.forEach((e,i)=>{let r=0;for(let j=i+1;j<act.length;j++)r+=Math.min(1,3*act[j][1]);parole(c,e[0][2],e[2],Math.max(46,Ya-34*r),e[1])})}
+function dire(c,t,lignes,tetes){const act=[];for(const l of lignes){const a=env(t,l[0],L.lue(l))*L.coupe(t,lignes,l);if(a<=0)continue;const h=ecran(tetes[l[1]]);if(h)act.push([l,a,h.x+(l[4]||0),h.y-(l[5]||66)])}act.sort((p,q)=>p[0][0]-q[0][0]);let sa=0,sy=0;for(const e of act){sa+=e[1];sy+=e[1]*e[3]}const Ya=sa?sy/sa:0;act.forEach((e,i)=>{let r=0;for(let j=i+1;j<act.length;j++)r+=Math.min(1,3*act[j][1]);parole(c,e[0][2],e[2],Math.max(46,Ya-34*r),e[1])})}
 
 // la robe de soie champagne brodée de perles, qui accroche la lumière des lampes à chaque pas
 let OFF=null;

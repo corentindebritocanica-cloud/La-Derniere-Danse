@@ -10,9 +10,8 @@ function heure(c,s,a){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='right
 function parole(c,s,x,y,a,taille){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font=(taille||27)+"px "+L.F.main;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(s,x,y);c.fillStyle='#fbf3e2';c.fillText(s,x,y);c.restore()}
 
 const REGP=[];
-function paroleP(c,t,s,x,y,A,D,sz){const du=L.lue([A,0,s,D]),a=env(t,A,du);if(a<=0)return;
-  if(!REGP.some(r=>r[0]===A&&r[1]===x))REGP.push([A,x,y]);
-  let o=0;for(const r of REGP)if(r[0]>A&&Math.abs(r[1]-x)<700&&Math.abs(r[2]-y)<120)o+=44*L.seg(t,r[0]-.25,r[0]+.1);
+function paroleP(c,t,s,x,y,A,D,sz){const du=L.lue([A,0,s,D]);if(!REGP.some(r=>r[0]===A&&r[1]===x))REGP.push([A,x,y]);const a=env(t,A,du)*L.coupe(t,REGP,[A]);if(a<=0)return;
+  let o=0;for(const r of REGP)if(r[0]>A&&Math.abs(r[1]-x)<700&&Math.abs(r[2]-y)<120)o+=56*L.seg(t,r[0]-.25,r[0]+.1);
   parole(c,s,x,Math.max(50,y-o),a,sz)}
 const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
 
