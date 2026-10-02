@@ -1,0 +1,63 @@
+{
+  "_note": "Prompts de l'essai, chapitre 9 (l'étoile filante). CLIP ne lit que 77 mots-clés par prompt : image_prompt (≤ ~50 mots, avec style court) va à l'encodeur 1, image_prompt_2 (style long + résumé) à l'encodeur 2. Les blocs longs de references/FICHES-PERSONNAGES.md servent de référence de description.",
+  "blocs": {
+    "STYLE": "detailed gouache illustration, 1920s French art deco poster style, hand-painted, visible brush texture, warm paper grain, limited palette of deep Prussian blue, ink black, brick red and warm cream, soft cinematic lighting, Toulouse December 1925",
+    "CELESTIN": "Célestin, a 28-year-old man with tousled dark brown hair, round wire-rimmed glasses, a lopsided smile that starts in the eyes, grey wool waistcoat over a cream shirt with rolled sleeves, a faint smudge of Prussian blue paint on his thumb",
+    "LOUISE": "Louise, a 26-year-old woman with a short dark brown bob haircut in 1920s garçonne style, large dark eyes that look a little surprised, a little angry and very attentive, deep red lipstick, champagne-coloured beaded dress",
+    "MINI": "small open-top yellow 1920s Citroën Type C two-seater with round headlamps, canvas roof folded back",
+    "CHOPIN": "large grey cat with yellow eyes, aloof expression"
+  },
+  "negatif_image": "photo, photorealistic, 3d render, modern clothes, smartphone, neon, text, watermark, signature, extra fingers, deformed hands, blurry, lowres, cartoon chibi",
+  "negatif_video": "worst quality, inconsistent motion, blurry, jittery, distorted, morphing face, extra limbs, text, watermark, flicker",
+  "image": {
+    "width": 1344,
+    "height": 768,
+    "steps": 35,
+    "guidance": 6.5
+  },
+  "video": {
+    "width": 768,
+    "height": 448,
+    "num_frames": 97,
+    "fps": 25,
+    "steps": 30,
+    "guidance": 3.0
+  },
+  "plans": [
+    {
+      "id": "A-route",
+      "titre": "La route droite, minuit quarante-huit",
+      "chapitre": "Ch. 9 — « Elle apparut au-dessus de la ville, vers l'est… »",
+      "ref": null,
+      "seed": 1948,
+      "ip_scale": 0.0,
+      "image_prompt": "{SC}. Wide night shot, long straight road between frozen fields, small open yellow 1920s Citroën parked at roadside seen from behind, distant city glow on the horizon, starry sky, one thin white-blue shooting star, white frost, bare poplars, no people",
+      "video_prompt": "A calm night scene on a frozen country road. A single white-blue shooting star streaks across the sky from left to right above the distant city lights and fades, leaving a pale trail. The two round headlamps of the small yellow car glow steadily. A thin breath of mist drifts over the frosty fields. The camera stays still with a very slow push-in. Painterly gouache texture, subtle film grain.",
+      "image_prompt_2": "{SL}. night road, small yellow Citroën, shooting star over distant city"
+    },
+    {
+      "id": "B-volant",
+      "titre": "Célestin freine",
+      "chapitre": "Ch. 9 — « Célestin freina… la tête levée vers le ciel, le cœur battant. »",
+      "ref": "celestin",
+      "seed": 4112,
+      "ip_scale": 0.55,
+      "image_prompt": "{SC}. Célestin, tousled dark brown hair, round wire glasses, lopsided smile, grey waistcoat, long dark overcoat, at the wheel of a small open yellow 1920s Citroën, hands on steering wheel, head tilted up to the night sky, awed expression, mouth closed, dashboard glow on face",
+      "video_prompt": "A young man with round glasses sits at the wheel of an open car at night, head tilted up toward the sky. Slowly he lets out a breath that mists in the cold air, then gently closes his eyes for a moment and opens them again. The dashboard glow flickers softly on his face. The camera stays still. Very gentle motion, painterly gouache texture, subtle film grain.",
+      "image_prompt_2": "{SL}. close-up of a young man with round glasses in an open yellow car at night"
+    },
+    {
+      "id": "C-fenetre",
+      "titre": "Elle pleure et elle rit",
+      "chapitre": "Ch. 9 — « Même dans le noir, il vit qu'elle pleurait et qu'elle riait en même temps. »",
+      "ref": "louise",
+      "seed": 7305,
+      "ip_scale": 0.55,
+      "image_prompt": "{SC}. Louise, short dark brown bob, large dark attentive eyes, deep red lipstick, wool blanket on shoulders, sitting on window sill of brick house, legs dangling, bare wisteria branches, grey cat beside her, frosty night, tears and a smile, looking down, mouth closed",
+      "video_prompt": "A young woman wrapped in a blanket sits on a window sill at night, legs dangling outside. She looks up at the sky, then lowers her eyes toward the garden below and smiles through her tears. Her breath mists softly. A large grey cat beside her blinks slowly. Bare wisteria branches sway very slightly. The camera stays still. Very gentle motion, painterly gouache texture, subtle film grain.",
+      "image_prompt_2": "{SL}. young woman in a blanket on a window sill at night with a grey cat"
+    }
+  ],
+  "style_court": "gouache illustration, 1920s art deco poster, Prussian blue, brick red",
+  "style_long": "detailed hand-painted gouache illustration, 1920s French art deco poster style, visible brush texture, warm paper grain, deep Prussian blue, ink black, brick red, cream, Toulouse December 1925"
+}
