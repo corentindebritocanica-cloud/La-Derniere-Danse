@@ -12,6 +12,12 @@ const TANGO_L={tA:-.36,hd:-.32,aF:[1.6,.2],aB:[1.0,1.0],lF:[.62,-.2],lB:[-.3,.1]
 const COUPLES=[{x:300,ph:0},{x:930,ph:1.7},{x:1110,ph:3.1}];
 
 function parole(c,s,x,y,a,taille){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font=(taille||27)+"px "+L.F.main;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(s,x,y);c.fillStyle='#fbf3e2';c.fillText(s,x,y);c.restore()}
+
+const REGP=[];
+function paroleP(c,t,s,x,y,A,D,sz){const du=L.lue([A,0,s,D]),a=env(t,A,du);if(a<=0)return;
+  if(!REGP.some(r=>r[0]===A&&r[1]===x))REGP.push([A,x,y]);
+  let o=0;for(const r of REGP)if(r[0]>A&&Math.abs(r[1]-x)<700&&Math.abs(r[2]-y)<120)o+=44*L.seg(t,r[0]-.25,r[0]+.1);
+  parole(c,s,x,Math.max(50,y-o),a,sz)}
 const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
 
 /* ---------- le couple ---------- */
@@ -105,24 +111,24 @@ function rendu(c,t){
     L.public(c,t,seg(t,49.2,49.6)*(1-seg(t,52,53)));
     // les voix
     const pc=x=>x;
-    parole(c,'Pardon.',760,200,env(t,6.3,.9));
-    parole(c,'Ne comptez pas.',520,200,env(t,7.2,1.1));
-    parole(c,'Si je ne compte pas, je me trompe.',760,200,env(t,8.3,1.3));
-    parole(c,'Vous vous trompez aussi en comptant.',520,190,env(t,9.6,1.1));
-    parole(c,'Au moins, sans compter, vous vous tromperez en musique.',560,190,env(t,10.6,1.3));
-    parole(c,'C’est de la peinture ?',760,200,env(t,12.5,.95));
-    parole(c,'Bleu de Prusse. Vous avez l’œil.',520,200,env(t,13.4,1));
-    parole(c,'Vous êtes peintre ?',760,200,env(t,14.35,.8));
-    parole(c,'La nuit. Le jour, je dessine des avions.',520,200,env(t,15.05,1.15));
-    parole(c,'Vous faites toujours ça ?',760,190,env(t,25.4,1));
-    parole(c,'Transformer les erreurs des autres en quelque chose de beau.',640,190,env(t,26.4,1.2));
-    parole(c,'En dessin industriel, on appelle ça la tolérance.',560,190,env(t,27.6,1.2));
-    parole(c,'C’est très romantique, votre dessin industriel.',760,190,env(t,28.8,1.1));
-    parole(c,'Vous n’avez pas idée.',520,200,env(t,29.85,1));
-    parole(c,'Faites-moi confiance.',520,200,env(t,33.5,1.2),30);
-    parole(c,'Pour la plus belle troisième danse !',640,110,env(t,52.2,1.6),30);
-    parole(c,'Qu’est-ce que c’était ? Cette danse ?',760,190,env(t,54,1.4));
-    parole(c,'Je ne sais pas. Je crois qu’elle n’existe pas encore.',600,190,env(t,55.5,2),29);
+    paroleP(c,t,'Pardon.',760,200,6.3,.9);
+    paroleP(c,t,'Ne comptez pas.',520,200,7.2,1.1);
+    paroleP(c,t,'Si je ne compte pas, je me trompe.',760,200,8.3,1.3);
+    paroleP(c,t,'Vous vous trompez aussi en comptant.',520,190,9.6,1.1);
+    paroleP(c,t,'Au moins, sans compter, vous vous tromperez en musique.',560,190,10.6,1.3);
+    paroleP(c,t,'C’est de la peinture ?',760,200,12.5,.95);
+    paroleP(c,t,'Bleu de Prusse. Vous avez l’œil.',520,200,13.4,1);
+    paroleP(c,t,'Vous êtes peintre ?',760,200,14.35,.8);
+    paroleP(c,t,'La nuit. Le jour, je dessine des avions.',520,200,15.05,1.15);
+    paroleP(c,t,'Vous faites toujours ça ?',760,190,25.4,1);
+    paroleP(c,t,'Transformer les erreurs des autres en quelque chose de beau.',640,190,26.4,1.2);
+    paroleP(c,t,'En dessin industriel, on appelle ça la tolérance.',560,190,27.6,1.2);
+    paroleP(c,t,'C’est très romantique, votre dessin industriel.',760,190,28.8,1.1);
+    paroleP(c,t,'Vous n’avez pas idée.',520,200,29.85,1);
+    paroleP(c,t,'Faites-moi confiance.',520,200,33.5,1.2,30);
+    paroleP(c,t,'Pour la plus belle troisième danse !',640,110,52.2,1.6,30);
+    paroleP(c,t,'Qu’est-ce que c’était ? Cette danse ?',760,190,54,1.4);
+    paroleP(c,t,'Je ne sais pas. Je crois qu’elle n’existe pas encore.',600,190,55.5,2,29);
   }
   L.noir(c,t<3?1:t<3.6?1-(t-3)/.6:t>57.2?(t-57.2)/.8:0);
   L.carton(c,[{s:'UN FOX-TROT · UN TANGO · ET CE QUE L’ORCHESTRE VOUDRA',y:300,f:"19px "+L.F.machine,c:'#b9a98c',ls:'4px'},{s:'« Ne comptez pas. »',y:380,f:"italic 50px "+L.F.texte}],t<.6?t/.6:t<2.4?1:Math.max(0,1-(t-2.4)/.6),450);

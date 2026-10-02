@@ -252,3 +252,6 @@ Avant d'écrire le plan 09, relire tout le chapitre 8 : ces éléments ne suffis
 
 `build_film.py` assemble les 14 plans dans `film-complet.html` : bibliothèques inlinées une fois, `L.film` détourné pour remplir `L.PLANS`, 0,8 s de noir entre deux plans. L'horloge est celle du contexte audio (pause = `ac.suspend()`) ; la musique d'un plan est programmée 2,5 s avant son début. On ne peut reprendre qu'au début d'un plan (sinon toutes les notes passées partiraient en même temps). Après toute retouche d'un plan : `python3 film/build.py XX && python3 film/build_film.py`, puis republier les deux.
 Corrigé au passage : l'accord `Am9` manquait dans `musique.js`, ce qui coupait la musique du plan 06 après 39 s.
+
+### Répliques plus longues à l'écran (2 octobre)
+Les répliques disparaissaient trop vite (≈ 25 caractères par seconde). `L.lue(l)` (moteur.js) donne maintenant à chaque réplique un affichage de 1,1 s + longueur/13 s (au moins la durée prévue, 8 s maximum). Quand une nouvelle réplique apparaît avant la fin d'une autre, les bulles s'empilent vers le haut (`dire()` dans les plans 06 à 14, `paroleP()` dans les plans 04 et 05, `paroles()` dans le plan 02). Le montage (images et musique) n'a pas changé.

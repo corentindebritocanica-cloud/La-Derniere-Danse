@@ -16,7 +16,7 @@ function heure(c,s,a){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='right
 function parole(c,s,x,y,a){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font="27px "+L.F.main;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';
   const w=c.measureText(s).width;x=clamp(x,w/2+30,W-w/2-30);y=clamp(y,40,H-30);c.strokeText(s,x,y);c.fillStyle='#fbf3e2';c.fillText(s,x,y);c.restore()}
 const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
-function dire(c,t,lignes,tetes){for(const l of lignes){const a=env(t,l[0],l[3]||1.5);if(a<=0)continue;const h=tetes[l[1]];if(h)parole(c,l[2],h.x+(l[4]||0),h.y-(l[5]||62),a)}}
+function dire(c,t,lignes,tetes){const act=[];for(const l of lignes){const a=env(t,l[0],L.lue(l));if(a<=0)continue;const h=tetes[l[1]];if(h)act.push([l,a,h.x+(l[4]||0),h.y-(l[5]||62)])}act.sort((p,q)=>p[0][0]-q[0][0]);let sa=0,sy=0;for(const e of act){sa+=e[1];sy+=e[1]*e[3]}const Ya=sa?sy/sa:0;act.forEach((e,i)=>{let r=0;for(let j=i+1;j<act.length;j++)r+=Math.min(1,3*act[j][1]);parole(c,e[0][2],e[2],Math.max(46,Ya-34*r),e[1])})}
 let OFF=null;
 function teinte(c,col,dessin){if(!OFF){OFF=document.createElement('canvas');OFF.width=W;OFF.height=H}const o=OFF.getContext('2d');o.setTransform(1,0,0,1,0,0);o.clearRect(0,0,W,H);
   o.setTransform(c.getTransform());const r=dessin(o);o.setTransform(1,0,0,1,0,0);o.globalCompositeOperation='source-atop';o.fillStyle=col;o.fillRect(0,0,W,H);o.globalCompositeOperation='source-over';
@@ -151,7 +151,7 @@ function sceneB(c,t){
 /* ================= C à F. le réveillon ================= */
 const Z=1.08,CX=640,CY=420,SOLP=640;
 const ecran=p=>p&&{x:640+(p.x-CX)*Z,y:360+(p.y-CY)*Z};
-function direZ(c,t,lignes,tetes){for(const l of lignes){const a=env(t,l[0],l[3]||1.5);if(a<=0)continue;const h=ecran(tetes[l[1]]);if(h)parole(c,l[2],h.x+(l[4]||0),h.y-(l[5]||66),a)}}
+function direZ(c,t,lignes,tetes){const act=[];for(const l of lignes){const a=env(t,l[0],L.lue(l));if(a<=0)continue;const h=ecran(tetes[l[1]]);if(h)act.push([l,a,h.x+(l[4]||0),h.y-(l[5]||66)])}act.sort((p,q)=>p[0][0]-q[0][0]);let sa=0,sy=0;for(const e of act){sa+=e[1];sy+=e[1]*e[3]}const Ya=sa?sy/sa:0;act.forEach((e,i)=>{let r=0;for(let j=i+1;j<act.length;j++)r+=Math.min(1,3*act[j][1]);parole(c,e[0][2],e[2],Math.max(46,Ya-34*r),e[1])})}
 function porteRouge(c,ouv){c.fillStyle='#120806';c.fillRect(22,250,96,150);c.fillStyle='rgba(30,40,70,.9)';c.fillRect(26,254,88*ouv,146);c.fillStyle='#8a1a14';c.fillRect(26+88*ouv,254,88*(1-ouv),146)}
 function table(c,x,y,k){c.save();c.translate(x,y);c.scale(k,k);c.fillStyle='#0d0806';c.beginPath();c.ellipse(0,0,64,13,0,0,7);c.fill();c.fillRect(-5,0,10,54);c.restore()}
 const LC=[[70.8,'Ma','Monsieur, madame, bienvenue au Cabaret des Étoiles !',2.4,0,260],[73.4,'Ma','Une table ! Vite, une table ! La meilleure ! Du champagne !',2.6,0,260],

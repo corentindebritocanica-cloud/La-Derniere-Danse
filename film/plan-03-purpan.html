@@ -122,6 +122,10 @@ L.pellicule=function(c){
   if(Math.random()<.05){c.strokeStyle='rgba(241,231,211,.14)';c.lineWidth=1;const x=Math.random()*W;c.beginPath();c.moveTo(x,0);c.lineTo(x+Math.random()*6-3,H);c.stroke()}
   c.fillStyle=`rgba(0,0,0,${Math.random()*.035})`;c.fillRect(0,0,W,H);
 };
+/* Répliques : durée d'affichage proportionnelle à la longueur (≈ 13 caractères par seconde + 1,1 s de fondu),
+   et empilement vers le haut quand une réplique suivante apparaît avant que la précédente ait disparu. */
+L.lue=l=>Math.min(8,Math.max(l[3]||1.5,1.1+l[2].length/13));
+L.pile=(t,lignes,l)=>{let o=0;for(const m of lignes)if(m[0]>l[0])o+=34*L.seg(t,m[0]-.25,m[0]+.1);return o};
 L.noir=function(c,a){if(a>0){c.fillStyle=`rgba(0,0,0,${Math.min(1,a)})`;c.fillRect(0,0,L.W,L.H)}};
 
 /* Plein écran : API standard, puis préfixe webkit (iPad), sinon plein écran « maison » en CSS (iPhone, où Safari

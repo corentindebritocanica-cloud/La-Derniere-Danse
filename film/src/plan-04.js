@@ -8,6 +8,12 @@ const L=LDD,{clamp,lerp,eio,eoc,seg}=L,W=L.W,H=L.H,SOL=L.SOL,S=L.SARRAIL,P=L.POS
 
 function heure(c,s,a){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='right';c.fillStyle=L.C.or;c.font="34px "+L.F.machine;L.setLS(c,'3px');c.fillText(s,1220,70);L.setLS(c,'0px');c.restore()}
 function parole(c,s,x,y,a,taille){if(a<=0)return;c.save();c.globalAlpha=a;c.textAlign='center';c.font=(taille||27)+"px "+L.F.main;c.lineWidth=5;c.strokeStyle='rgba(20,12,8,.85)';c.strokeText(s,x,y);c.fillStyle='#fbf3e2';c.fillText(s,x,y);c.restore()}
+
+const REGP=[];
+function paroleP(c,t,s,x,y,A,D,sz){const du=L.lue([A,0,s,D]),a=env(t,A,du);if(a<=0)return;
+  if(!REGP.some(r=>r[0]===A&&r[1]===x))REGP.push([A,x,y]);
+  let o=0;for(const r of REGP)if(r[0]>A&&Math.abs(r[1]-x)<700&&Math.abs(r[2]-y)<120)o+=44*L.seg(t,r[0]-.25,r[0]+.1);
+  parole(c,s,x,Math.max(50,y-o),a,sz)}
 const env=(t,a,d)=>seg(t,a,a+.3)*(1-seg(t,a+d-.3,a+d));
 
 /* ---------- A. le salon de Purpan, 18 h 40 ---------- */
@@ -31,8 +37,8 @@ function sceneA(c,t){
   const p=L.melange(P.debout,P.debout,0);const m=eio(seg(t,4.6,5))*(1-eio(seg(t,8.6,9)));
   p.aF=[lerp(.12,2.75,m),lerp(.15,1.95,m)];p.hd=lerp(0,.25,m);p.tA=lerp(0,-.06,m);
   L.pantin(c,{x:760,F:-1,p,sol:SOL-12},'L');
-  parole(c,'… une migraine épouvantable.',760,250,env(t,5.1,2.3));
-  parole(c,'Monte te coucher. Je dirai que tu es souffrante.',380,240,env(t,7.2,2.4));
+  paroleP(c,t,'… une migraine épouvantable.',760,250,5.1,2.3);
+  paroleP(c,t,'Monte te coucher. Je dirai que tu es souffrante.',380,240,7.2,2.4);
   heure(c,'18 H 40',seg(t,3.2,3.6)*(1-seg(t,9.4,9.8)));
 }
 /* ---------- B. le jardin, 19 h 40 : la fuite par la porte du potager ---------- */
@@ -146,16 +152,16 @@ function sceneE(c,t){
   L.tablesCabaret(c,t);
   c.restore();
   // les voix
-  parole(c,'Te voilà, ma chérie ! On tire les couples dans dix minutes.',640,140,env(t,23.4,1.6));
-  parole(c,'Le rouge est un peu de travers. Viens là.',640,140,env(t,24.9,1.4));
-  parole(c,'Un confirmé, un débutant. Le hasard décide !',640,120,env(t,26.9,1.7),30);
-  parole(c,'Et surtout, que tout le monde boive !',640,120,env(t,28.6,1.2),30);
-  parole(c,'Monsieur Ferrand, avec mademoiselle Pujol !',640,120,env(t,31.6,1.8),32);
-  parole(c,'Monsieur Delacroix…',640,120,env(t,34.6,1.2),34);
-  parole(c,'… avec mademoiselle Sarrail !',640,120,env(t,35.8,1.4),34);
-  parole(c,'Célestin.',780,250,env(t,39.3,1));parole(c,'Louise.',520,250,env(t,39.9,.9));
-  parole(c,'Vous dansez depuis longtemps, Louise ?',780,230,env(t,40.3,1.2));parole(c,'Trois mois.',520,250,env(t,41.5,.9));
-  parole(c,'C’est parfait.',780,230,env(t,42,1.2));
+  paroleP(c,t,'Te voilà, ma chérie ! On tire les couples dans dix minutes.',640,140,23.4,1.6);
+  paroleP(c,t,'Le rouge est un peu de travers. Viens là.',640,140,24.9,1.4);
+  paroleP(c,t,'Un confirmé, un débutant. Le hasard décide !',640,120,26.9,1.7,30);
+  paroleP(c,t,'Et surtout, que tout le monde boive !',640,120,28.6,1.2,30);
+  paroleP(c,t,'Monsieur Ferrand, avec mademoiselle Pujol !',640,120,31.6,1.8,32);
+  paroleP(c,t,'Monsieur Delacroix…',640,120,34.6,1.2,34);
+  paroleP(c,t,'… avec mademoiselle Sarrail !',640,120,35.8,1.4,34);
+  paroleP(c,t,'Célestin.',780,250,39.3,1);paroleP(c,t,'Louise.',520,250,39.9,.9);
+  paroleP(c,t,'Vous dansez depuis longtemps, Louise ?',780,230,40.3,1.2);paroleP(c,t,'Trois mois.',520,250,41.5,.9);
+  paroleP(c,t,'C’est parfait.',780,230,42,1.2);
 }
 
 const OUVERTURE=[{s:'PURPAN · SAMEDI 14 DÉCEMBRE',y:300,f:"20px "+L.F.machine,c:'#b9a98c',ls:'6px'},{s:'Le soir du dîner. Le soir du concours.',y:380,f:"italic 46px "+L.F.texte}];
