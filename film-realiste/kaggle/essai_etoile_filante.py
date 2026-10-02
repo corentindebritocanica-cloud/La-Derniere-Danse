@@ -42,8 +42,7 @@ print("GPU :", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "
 
 
 def remplir(texte):
-    for cle, val in CFG["blocs"].items():
-        texte = texte.replace("{" + cle + "}", val)
+    texte = texte.replace("{SC}", CFG["style_court"]).replace("{SL}", CFG["style_long"])
     return texte
 
 
@@ -81,17 +80,14 @@ for p in plans:
     kw = {}
     if p["ref"]:
         if not ip_charge:
-            try:
-                pipe.load_ip_adapter("h94/IP-Adapter", subfolder="sdxl_models", weight_name="ip-adapter_sdxl.bin")
-                ip_charge = True
-            except Exception as e:  # on continue sans : visage guidé seulement par le texte et la graine
-                print("IP-Adapter indisponible, repli texte seul :", e)
-                ip_charge = None
+            pipe.load_ip_adapter("h94/IP-Adapter", subfolder="sdxl_models", weight_name="ip-adapter_sdxl.bin")
+            pipe.image_encoder.to("cuda")  # chargé après enable_model_cpu_offload : à placer sur le GPU à la main
+            ip_charge = True
         if ip_charge:
             pipe.set_ip_adapter_scale(p["ip_scale"])
             kw["ip_adapter_image"] = Image.open(REFS[p["ref"]]).convert("RGB")
     t0 = time.time()
-    img = pipe(prompt=remplir(p["image_prompt"]), negative_prompt=CFG["negatif_image"],
+    img = pipe(prompt=remplir(p["image_prompt"]), prompt_2=remplir(p["image_prompt_2"]), negative_prompt=CFG["negatif_image"],
                width=I["width"], height=I["height"], num_inference_steps=I["steps"],
                guidance_scale=I["guidance"], generator=torch.Generator("cpu").manual_seed(p["seed"]), **kw).images[0]
     img.save(sortie)
