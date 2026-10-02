@@ -23,8 +23,10 @@ h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,7vw,64px);lin
 .sub{margin:0;font-family:'La Belle Aurore',cursive;font-size:clamp(22px,4vw,30px);color:var(--gold)}
 .screen{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--edge);box-shadow:0 0 0 6px var(--frame),0 0 0 7px var(--edge),0 30px 80px rgba(0,0,0,.6)}
 .screen:fullscreen{border:0;box-shadow:none}
+.screen:-webkit-full-screen{width:100%;height:100%;border:0;box-shadow:none}
 canvas{display:block;width:100%;height:100%}
 .play{position:absolute;inset:0;margin:auto;width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:rgba(18,14,11,.72);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:transform .2s ease}
+.play[hidden]{display:none}
 .play:hover{transform:scale(1.06)}
 .play svg{width:30px;height:30px;margin-left:5px}
 .now{font-family:var(--type);font-size:13px;letter-spacing:.08em;color:var(--muted);text-align:center;min-height:1.4em}
@@ -130,11 +132,11 @@ function maj(t,i){
 }
 function pause(){
   if(!started){lancer(0);return}
-  if(playing){tP=now()-base;playing=false;if(ac)ac.suspend();$('pause').textContent='Lecture';cancelAnimationFrame(raf)}
-  else{if(ac)ac.resume();else base=now()-tP;playing=true;$('pause').textContent='Pause';raf=requestAnimationFrame(tick)}
+  if(playing){tP=now()-base;playing=false;if(ac)ac.suspend();$('pause').textContent='Lecture';$('play').hidden=false;$('play').setAttribute('aria-label','Reprendre');cancelAnimationFrame(raf)}
+  else{if(ac)ac.resume();else base=now()-tP;playing=true;$('pause').textContent='Pause';$('play').hidden=true;raf=requestAnimationFrame(tick)}
 }
 const actuel=()=>idx(playing?now()-base:tP);
-$('play').addEventListener('click',()=>lancer(0));
+$('play').addEventListener('click',()=>started?pause():lancer(0));
 $('pause').addEventListener('click',pause);
 $('prev').addEventListener('click',()=>{const i=started?actuel():0;const t=playing?now()-base:tP;lancer(t-OFF[i]>3||i===0?i:i-1)});
 $('next').addEventListener('click',()=>{const i=started?actuel():-1;if(i+1<P.length)lancer(i+1)});
@@ -142,7 +144,8 @@ $('bar').addEventListener('click',e=>{const r=$('bar').getBoundingClientRect();l
 $('bar').addEventListener('keydown',e=>{if(e.key==='ArrowRight')$('next').click();if(e.key==='ArrowLeft')$('prev').click()});
 document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('button,[role=slider]'))return;if(e.key===' '){e.preventDefault();pause()}});
 $('sound').addEventListener('click',()=>{muted=!muted;$('sound').textContent='Son : '+(muted?'coupé':'activé');$('sound').setAttribute('aria-pressed',String(!muted));if(master)master.gain.setValueAtTime(muted?0:1,ac.currentTime)});
-$('fs').addEventListener('click',()=>{const s=$('screen');try{const p=document.fullscreenElement?document.exitFullscreen():(s.requestFullscreen&&s.requestFullscreen());if(p&&p.catch)p.catch(()=>{})}catch(e){}});
+$('fs').addEventListener('click',()=>L.pleinEcran($('screen')));
+cv.addEventListener('click',()=>{if(started)pause()}); // toucher l'image = pause / reprise (utile en plein écran)
 /* marqueurs et liste des plans */
 OFF.slice(1).forEach(o=>{const m=document.createElement('s');m.style.left=(o/DUR*100)+'%';$('bar').appendChild(m)});
 META.forEach((m,i)=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';

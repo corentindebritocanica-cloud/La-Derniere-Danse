@@ -49,6 +49,24 @@ L.pellicule=function(c){
 };
 L.noir=function(c,a){if(a>0){c.fillStyle=`rgba(0,0,0,${Math.min(1,a)})`;c.fillRect(0,0,L.W,L.H)}};
 
+/* Plein écran : API standard, puis préfixe webkit (iPad), sinon plein écran « maison » en CSS (iPhone, où Safari
+   ne met en plein écran que les vidéos). Une croix permet d'en sortir ; Échap aussi. */
+L.pleinEcran=function(s){
+  const d=document,natif=d.fullscreenElement||d.webkitFullscreenElement;
+  if(!d.getElementById('ldd-pfs')){const st=d.createElement('style');st.id='ldd-pfs';st.textContent=
+    '.pseudo-fs{position:fixed!important;inset:0!important;z-index:9999;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;aspect-ratio:auto!important;margin:0!important;border:0!important;box-shadow:none!important;background:#000!important}'+
+    '.pseudo-fs canvas{object-fit:contain}.ldd-sortir{display:none}.pseudo-fs .ldd-sortir{display:grid;place-items:center;position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;border:1px solid rgba(241,231,211,.5);background:rgba(0,0,0,.45);color:#f1e7d3;font-size:22px;line-height:1;cursor:pointer;z-index:2}'+
+    'html.ldd-pfs-on,html.ldd-pfs-on body{overflow:hidden}';d.head.appendChild(st)}
+  if(!s.querySelector('.ldd-sortir')){const b=d.createElement('button');b.type='button';b.className='ldd-sortir';b.setAttribute('aria-label','Quitter le plein écran');b.textContent='×';
+    b.addEventListener('click',e=>{e.stopPropagation();L.pleinEcran(s)});s.appendChild(b);
+    d.addEventListener('keydown',e=>{if(e.key==='Escape'&&s.classList.contains('pseudo-fs'))L.pleinEcran(s)})}
+  if(s.classList.contains('pseudo-fs')){s.classList.remove('pseudo-fs');d.documentElement.classList.remove('ldd-pfs-on');return}
+  if(natif){try{const p=(d.exitFullscreen||d.webkitExitFullscreen).call(d);if(p&&p.catch)p.catch(()=>{})}catch(e){}return}
+  const req=s.requestFullscreen||s.webkitRequestFullscreen;
+  const maison=()=>{s.classList.add('pseudo-fs');d.documentElement.classList.add('ldd-pfs-on');try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};
+  if(req&&(d.fullscreenEnabled||d.webkitFullscreenEnabled)){try{const p=req.call(s);if(p&&p.catch)p.catch(maison)}catch(e){maison()}}else maison();
+};
+
 /* Lecteur : relie le canevas et les boutons de la page.
    opts = {duree, rendu(c,t), partition(ac,sortie,T), affiche, polices:[...]} */
 L.film=function(opts){
@@ -76,7 +94,7 @@ L.film=function(opts){
   document.getElementById('replay').addEventListener('click',play);
   const snd=document.getElementById('sound');
   snd.addEventListener('click',()=>{muted=!muted;snd.textContent='Son : '+(muted?'coupé':'activé');snd.setAttribute('aria-pressed',String(!muted));if(bus&&ac)bus.gain.setValueAtTime(muted?0:1,ac.currentTime)});
-  document.getElementById('fs').addEventListener('click',()=>{const s=document.getElementById('screen');try{const p=document.fullscreenElement?document.exitFullscreen():(s.requestFullscreen&&s.requestFullscreen());if(p&&p.catch)p.catch(()=>{})}catch(e){}});
+  document.getElementById('fs').addEventListener('click',()=>L.pleinEcran(document.getElementById('screen')));
   tc.textContent='00:00 / '+fmt(DUR);
   draw(opts.affiche);
   const fonts=opts.polices||["26px 'Limelight'","italic 22px 'Bodoni Moda'","20px 'Special Elite'","30px 'La Belle Aurore'"];
