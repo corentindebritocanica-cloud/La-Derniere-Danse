@@ -166,7 +166,9 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
 .bonus-film .titre{display:block;font-family:var(--f-title);font-size:24px;margin:6px 0 4px}
 .bonus-film .play{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-type);font-size:13px;color:#e3b23c}
 .bonus-film .play svg{width:14px;height:14px}
-.bonus-film:active{transform:scale(.98)}
+.bonus-film{max-width:360px !important;padding:14px 12px 12px !important}
+.bonus-film .ecran{position:relative;margin-top:10px;aspect-ratio:16/9;background:#000;border:1px solid #e3b23c}
+.bonus-film .ecran iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .bonus-contenu .petit{font-size:13px;opacity:.75}
 </style>
 </head>
@@ -505,11 +507,11 @@ function ouvrirBonus(){
       <p>Une dernière page, glissée entre les autres.</p>
       <div class="siecle">Toulouse, près d'un siècle plus tard.</div>
       <p>Les mêmes rues, la même Garonne, et une dernière danse qui, cette fois, ne s'arrête pas.</p>
-      <a class="bonus-film" href="film/film-complet.html?depuis=site">
+      <div class="bonus-film">
         <span class="sur">PROJECTION PRIVÉE</span>
         <span class="titre">La Dernière Danse</span>
-        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg>Voir le film · 20 min</span>
-      </a>
+        <div class="ecran"><iframe src="https://www.youtube-nocookie.com/embed/tou_-ctO06E?rel=0&modestbranding=1&playsinline=0" title="La Dernière Danse" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      </div>
       <p class="petit">Avec le son, téléphone à l'horizontale.</p>
     </div>`;
   feuilleFiche.querySelector('.ferm').addEventListener('click', fermerVoiles);
@@ -517,6 +519,7 @@ function ouvrirBonus(){
 }
 
 function fermerVoiles(){
+  feuilleFiche.querySelectorAll('iframe').forEach(f=>f.remove());
   champPass.blur();
   champPass.disabled = true;
   document.body.style.overflow = '';
