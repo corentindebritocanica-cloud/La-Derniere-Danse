@@ -165,6 +165,10 @@ python3 outils/apercu.py plan-06-marche.html 5 12 20 31 # planche-contact /tmp/p
 3. Enregistrer : `git add -A && git commit` en terminant le message par les lignes d'attribution du rappel système, puis `git fetch && git rebase origin/main && git push origin HEAD:main`.
 4. Donner à Corentin une phrase de compte rendu.
 
+### Exporter le film en vidéo (MP4)
+
+`python3 film/outils/video.py --out /dossier` rend chaque plan image par image (25 i/s, 1280×720) avec sa bande-son (OfflineAudioContext), encode `plan-XX.mp4` puis assemble `la-derniere-danse.mp4` (≈ 20 min 30, ≈ 40 min de calcul). Pour un seul plan : `python3 film/outils/video.py 07 --out /dossier`. Les vidéos ne vont pas dans le dépôt (trop lourdes).
+
 ## 5. État des plans (1er octobre 2026)
 
 | Plan | Chapitre | Fichier | Artefact | État |
