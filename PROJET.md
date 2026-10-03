@@ -2,7 +2,7 @@
 
 Cadeau des 2 ans de Corentin et Lisa. Ce fichier rassemble tout le projet pour ne rien perdre : le roman, les enveloppes, le site, le film.
 
-Dernière mise à jour : 1er octobre 2026.
+Dernière mise à jour : 3 octobre 2026.
 
 ---
 
@@ -12,7 +12,7 @@ Dernière mise à jour : 1er octobre 2026.
 - **Le roman** : 84 pages A5, *La Dernière Danse*, Toulouse, décembre 1925. Parti chez l'imprimeur, **on ne le modifie plus**.
 - **Les enveloppes** : enveloppes numérotées de 0 à 8, remplies d'artefacts d'époque, ouvertes par Lisa seule, à son rythme, à la fin de certains chapitres.
 - **Le site** : `index.html` de ce dépôt, ouvert par QR code depuis l'enveloppe 0. Galerie des personnages, débloquée au fil des enveloppes.
-- **Le film** (en cours) : court-métrage d'animation de ≈ 5 min en silhouettes art déco.
+- **Le film** : court-métrage d'animation en silhouettes art déco (≈ 20 min), mis en ligne sur YouTube (non répertorié) : https://youtu.be/LCQs5lkvuGU
 
 Canvas de tous les artefacts papier : https://claude.ai/artifact/SjfqppdwXW8aUq6ncz1XCA
 
@@ -120,7 +120,10 @@ Style : art déco années 20, cabaret de jazz, étoile rouge, soleil rayonnant.
 - Fichier unique autonome, pensé pour le téléphone, servi par GitHub Pages. Images des personnages dans `assets/`.
 - Uniquement les noms fictifs sur le site (jamais les vrais prénoms).
 - Au départ, seuls Célestin, Louise et le Cabaret des Étoiles sont visibles ; les autres sont des silhouettes « Vous ferez bientôt sa connaissance ».
-- Les mots de passe glissés dans les enveloppes débloquent les paliers. L'état est gardé dans le navigateur (`localStorage`, clés `ldd_tiers_debloques`, `ldd_nouveautes`, `ldd_bonus`).
+- Les codes glissés dans les enveloppes débloquent les paliers, via le bouton « Entrer un code » sous le titre (clavier numérique). Un code plus avancé débloque aussi les paliers précédents oubliés. L'état est gardé dans le navigateur (`localStorage`, clés `ldd_tiers_debloques`, `ldd_nouveautes`, `ldd_bonus`).
+- Chaque déblocage fait pulser les médaillons concernés ; une pastille ✦ rouge reste jusqu'à l'ouverture de la fiche (y compris les ajouts : l'étoile, le violon).
+- Page bonus : QR du carnet de bal (`…/La-Derniere-Danse/?cb=TOUJOURS`, ouverture directe) ou l'étoile rouge « il reste une page à découvrir » en bas de page (mot `TOUJOURS`). Une fois vue, une bulle « Près d'un siècle plus tard » apparaît en bas de la galerie.
+- Outils pour Corentin : 4 taps rapides sur « Étoiles » = tout débloquer (paliers 1 à 6) ; bouton ⟲ en bas à droite + code `0000` = tout réinitialiser.
 
 ### Paliers et mots de passe
 
@@ -140,7 +143,7 @@ Source : constantes `MOTS_DE_PASSE` et `MOT_BONUS` dans `index.html`.
 
 - [ ] Vérifier que chaque mot de passe figure discrètement sur l'artefact de son enveloppe (canvas).
 - [ ] QR code en artefact d'époque pour l'enveloppe 0.
-- [x] Le film complet est dans la page bonus (carnet de bal, mot `TOUJOURS` ou QR `?cb=TOUJOURS`) : bouton « Voir le film » → `film/film-complet.html?depuis=site`, avec retour au carnet.
+- [x] Le film est dans la page bonus (carnet de bal) : lecteur YouTube intégré, vidéo `LCQs5lkvuGU` (doit rester « non répertoriée », pas « privée »). `film/film-complet.html` reste dans le dépôt mais n'est plus relié au site.
 
 ---
 
