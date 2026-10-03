@@ -286,7 +286,8 @@ const ETOILE_TIER = 4; /* mise à jour Célestin/Louise : l'étoile filante */
 const AJOUT_ETOILE = `<p><strong>Cette nuit-là :</strong> une étoile filante, le 16 décembre à 0 h 48, au-dessus de Toulouse — et des conversations qui ont duré jusqu'à l'aube.</p>`;
 
 const MOTS_DE_PASSE = {1:'1412',2:'1899',3:'0714',4:'0048',5:'1897',6:'1925'};
-const MOT_BONUS = 'TOUJOURS';
+const MOTS_BONUS = ['TOUJOURS','CORENTIN'];
+const estMotBonus = v => MOTS_BONUS.includes(String(v||'').trim().toUpperCase());
 
 /* ===================== ÉTAT ===================== */
 const cle = 'ldd_tiers_debloques';
@@ -368,7 +369,7 @@ if(document.activeElement && document.activeElement.blur) document.activeElement
 
 (function(){
   const p = new URLSearchParams(location.search).get('cb');
-  if(p === MOT_BONUS){ setTimeout(()=> ouvrirBonus(), 400); }
+  if(estMotBonus(p)){ setTimeout(()=> ouvrirBonus(), 400); }
 })();
 
 /* ===================== FICHE PERSONNAGE ===================== */
@@ -461,7 +462,7 @@ function validerPass(){
     return;
   }
   if(modeBonus){
-    if(val===MOT_BONUS){ fermerVoiles(); ouvrirBonus(); }
+    if(estMotBonus(val)){ fermerVoiles(); ouvrirBonus(); }
     else erreurGraphique();
     return;
   }

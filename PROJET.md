@@ -122,7 +122,7 @@ Style : art déco années 20, cabaret de jazz, étoile rouge, soleil rayonnant.
 - Au départ, seuls Célestin, Louise et le Cabaret des Étoiles sont visibles ; les autres sont des silhouettes « Vous ferez bientôt sa connaissance ».
 - Les codes glissés dans les enveloppes débloquent les paliers, via le bouton « Entrer un code » sous le titre (clavier numérique). Un code plus avancé débloque aussi les paliers précédents oubliés. L'état est gardé dans le navigateur (`localStorage`, clés `ldd_tiers_debloques`, `ldd_nouveautes`, `ldd_bonus`).
 - Chaque déblocage fait pulser les médaillons concernés ; une pastille ✦ rouge reste jusqu'à l'ouverture de la fiche (y compris les ajouts : l'étoile, le violon).
-- Page bonus : QR du carnet de bal (`…/La-Derniere-Danse/?cb=TOUJOURS`, ouverture directe) ou l'étoile rouge « il reste une page à découvrir » en bas de page (mot `TOUJOURS`). Une fois vue, une bulle « Près d'un siècle plus tard » apparaît en bas de la galerie.
+- Page bonus : QR du carnet de bal (`…/La-Derniere-Danse/?cb=TOUJOURS`, ouverture directe) ou l'étoile rouge « il reste une page à découvrir » en bas de page (mot `TOUJOURS` ou `CORENTIN`, majuscules ou minuscules ; le lien du QR accepte aussi `?cb=CORENTIN`). Une fois vue, une bulle « Près d'un siècle plus tard » apparaît en bas de la galerie.
 - Outils pour Corentin : 4 taps rapides sur « Étoiles » = tout débloquer (paliers 1 à 6) ; bouton ⟲ en bas à droite + code `0000` = tout réinitialiser.
 
 ### Paliers et mots de passe
@@ -135,9 +135,9 @@ Style : art déco années 20, cabaret de jazz, étoile rouge, soleil rayonnant.
 | 4 | `0048` | Mise à jour des fiches de Célestin et Louise (l'étoile) |
 | 5 | `1897` | Jeanne |
 | 6 | `1925` | Le secret du violon du grand-père |
-| 8 | `TOUJOURS` | Page bonus « près d'un siècle plus tard » (dans le carnet de bal, après la demande) |
+| 8 | `TOUJOURS` ou `CORENTIN` (majuscules ou minuscules) | Page bonus « près d'un siècle plus tard » (dans le carnet de bal, après la demande) |
 
-Source : constantes `MOTS_DE_PASSE` et `MOT_BONUS` dans `index.html`.
+Source : constantes `MOTS_DE_PASSE` et `MOTS_BONUS` dans `index.html`.
 
 ### À faire
 
