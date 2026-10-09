@@ -12,7 +12,7 @@ Dernière mise à jour : 3 octobre 2026.
 - **Le roman** : 84 pages A5, *La Dernière Danse*, Toulouse, décembre 1925. Parti chez l'imprimeur, **on ne le modifie plus**.
 - **Les enveloppes** : enveloppes numérotées de 0 à 8, remplies d'artefacts d'époque, ouvertes par Lisa seule, à son rythme, à la fin de certains chapitres.
 - **Le site** : `index.html` de ce dépôt, ouvert par QR code depuis l'enveloppe 0. Galerie des personnages, débloquée au fil des enveloppes.
-- **Le film** : court-métrage d'animation en silhouettes art déco (≈ 20 min), mis en ligne sur YouTube (non répertorié) : https://youtu.be/LCQs5lkvuGU
+- **Le film** : court-métrage d'animation en silhouettes art déco (≈ 20 min), version silhouettes sur YouTube (non répertorié) : https://youtu.be/LCQs5lkvuGU ; version manga sonorisée (≈ 18 min) dans `animation/`, c'est elle que lit le site
 
 Canvas de tous les artefacts papier : https://claude.ai/artifact/SjfqppdwXW8aUq6ncz1XCA
 
@@ -143,7 +143,7 @@ Source : constantes `MOTS_DE_PASSE` et `MOTS_BONUS` dans `index.html`.
 
 - [ ] Vérifier que chaque mot de passe figure discrètement sur l'artefact de son enveloppe (canvas).
 - [ ] QR code en artefact d'époque pour l'enveloppe 0.
-- [x] Le film est dans la page bonus (carnet de bal) : lecteur YouTube intégré, vidéo `LCQs5lkvuGU` (doit rester « non répertoriée », pas « privée »). `film/film-complet.html` reste dans le dépôt mais n'est plus relié au site.
+- [x] Le film est dans la page bonus (carnet de bal) : lecteur vidéo intégré, fichier `animation/video/la-derniere-danse.mp4` (version manga sonorisée, remplace la vidéo YouTube `LCQs5lkvuGU`). `film/film-complet.html` reste dans le dépôt mais n'est plus relié au site.
 
 ---
 

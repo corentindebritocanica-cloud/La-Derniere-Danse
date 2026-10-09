@@ -149,10 +149,6 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .shake{animation:shk .4s}
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
-.film-manga{max-width:960px;margin:40px auto 0;padding:0 16px;text-align:center}
-.film-manga h3{font-family:var(--f-title);font-size:22px;letter-spacing:3px;margin:0;color:var(--encre)}
-.film-manga .film-sous{font-style:italic;font-size:13px;color:var(--brun);margin:4px 0 14px}
-.film-manga video{width:100%;aspect-ratio:16/9;background:var(--encre);border:1px solid var(--encre);box-shadow:0 0 0 4px var(--fond),0 0 0 5px var(--encre);display:block}
 footer{text-align:center;padding:34px 20px calc(34px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--brun);letter-spacing:1px}
 footer .etoile-secrete{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px;cursor:pointer;user-select:none}
 footer .etoile-secrete .symbole{font-size:26px;color:var(--rouge);animation:etoilePulse 2.6s ease-in-out infinite}
@@ -172,7 +168,7 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
 .bonus-film .play svg{width:14px;height:14px}
 .bonus-film{max-width:360px !important;padding:14px 12px 12px !important}
 .bonus-film .ecran{position:relative;margin-top:10px;aspect-ratio:16/9;background:#000;border:1px solid #e3b23c}
-.bonus-film .ecran iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.bonus-film .ecran iframe,.bonus-film .ecran video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
 .bonus-contenu .petit{font-size:13px;opacity:.75}
 </style>
 </head>
@@ -194,12 +190,6 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
 </div>
 
 <div class="grid" id="grille"></div>
-
-<section class="film-manga">
-  <h3>La Dernière Danse</h3>
-  <div class="film-sous">le film, à lire</div>
-  <video controls playsinline preload="metadata" src="animation/video/la-derniere-danse.mp4"></video>
-</section>
 
 <footer>
   1925 · Toulouse<br>
@@ -521,7 +511,7 @@ function ouvrirBonus(){
       <div class="bonus-film">
         <span class="sur">PROJECTION PRIVÉE</span>
         <span class="titre">La Dernière Danse</span>
-        <div class="ecran"><iframe src="https://www.youtube-nocookie.com/embed/LCQs5lkvuGU?rel=0&modestbranding=1&playsinline=0" title="La Dernière Danse" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <div class="ecran"><video src="animation/video/la-derniere-danse.mp4" controls playsinline preload="metadata" title="La Dernière Danse"></video></div>
       </div>
       <p class="petit">Avec le son, téléphone à l'horizontale.</p>
     </div>`;
@@ -531,6 +521,7 @@ function ouvrirBonus(){
 
 function fermerVoiles(){
   feuilleFiche.querySelectorAll('iframe').forEach(f=>f.remove());
+  feuilleFiche.querySelectorAll('video').forEach(v=>{v.pause();v.remove();});
   champPass.blur();
   champPass.disabled = true;
   document.body.style.overflow = '';
