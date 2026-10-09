@@ -2,7 +2,9 @@
 
 Le film refait d'après le script complet, en **16:9 (1920×1080, 24 i/s)**, dans une grammaire de manga de danse : cases qui glissent, trames, lignes de vitesse, gros plans aux grands yeux, onomatopées. Tout est original (personnages, décors, lettrage) : on emprunte la grammaire du genre, pas ses dessins.
 
-**Sans voix.** Les répliques passent par des bulles, la voix off par des récitatifs, et la musique se voit (notes dessinées). Pas de piste sonore : on peut en poser une au montage.
+**Sans voix, mais en musique.** Les répliques passent par des bulles et la voix off par des récitatifs. La bande-son (musique et bruitages) est entièrement synthétisée à partir des thèmes du premier film (`film/lib/musique.js`) : le morceau sans nom, la valse de la cuisine, le thème de Célestin à la trompette, celui de Louise au célesta, le violon du grand-père. Elle est calée plan par plan sur l'image.
+
+**Le film entier** est `video/la-derniere-danse.mp4` (une seule vidéo, ≈ 18 min, sous la limite de 100 Mo de GitHub). C'est elle que lit le site.
 
 ## Les morceaux (`video/`)
 
@@ -23,7 +25,7 @@ Le film refait d'après le script complet, en **16:9 (1920×1080, 24 i/s)**, dan
 | 12 | `12-la-derniere-danse.mp4` | Chapitre 12 |
 | 13 | `13-epilogue.mp4` | Près d'un siècle plus tard |
 
-Pour assembler le film entier (≈ 18 min) : `cd video && ffmpeg -f concat -safe 0 -i liste.txt -c copy film-complet.mp4` (le fichier complet dépasse la limite de GitHub, il reste en local).
+Les 14 morceaux restent disponibles séparément, avec leur part de bande-son.
 
 ## Refaire un morceau
 
@@ -33,6 +35,8 @@ pip install skia-python numpy pillow     # ffmpeg doit être installé
 python3 rendu.py 03                       # → ../video/03-le-concours.mp4
 python3 rendu.py 03 --apercu 10 42        # images de contrôle dans ../apercus/
 python3 rendu.py tout
+python3 film.py son                       # bande-son → ../video/bande-son.wav (non versionnée)
+python3 film.py video                     # une seule vidéo → ../video/la-derniere-danse.mp4
 ```
 
 | Fichier | Rôle |
@@ -42,6 +46,9 @@ python3 rendu.py tout
 | `decors.py` | Lieux de Toulouse 1925 et papiers d'époque repris des enveloppes (sans les codes) |
 | `scenes.py` | Caméra, couple de danse, ombres chinoises, gros plans |
 | `seqNN.py` | Un fichier par morceau, plan par plan, numérotés comme le script |
+| `son.py` | Synthétiseur : instruments du premier film portés en Python, bruitages |
+| `partition.py` | Musique et bruitages calés plan par plan |
+| `film.py` | Bande-son complète et assemblage en une seule vidéo |
 
 ## Écarts volontaires avec le script
 
