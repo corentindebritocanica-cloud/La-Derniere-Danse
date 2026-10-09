@@ -154,8 +154,12 @@ footer .etoile-secrete{display:flex;flex-direction:column;align-items:center;gap
 footer .etoile-secrete .symbole{font-size:26px;color:var(--rouge);animation:etoilePulse 2.6s ease-in-out infinite}
 footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:var(--rouge);opacity:.75}
 @keyframes etoilePulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
-.btn-reset{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:34px;height:34px;border-radius:50%;background:var(--papier);border:1px solid var(--brun);color:var(--brun);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.5;box-shadow:0 1px 4px var(--ombre);z-index:20}
-.btn-reset:active{opacity:.9}
+.btn-admin{display:block;margin:26px auto 0;background:none;border:1px solid var(--brun);color:var(--brun);font-family:var(--f-type);font-size:11px;letter-spacing:2px;padding:6px 14px;border-radius:2px;opacity:.55;cursor:pointer}
+.btn-admin:active{opacity:.9}
+.admin-feuille .admin-btn{display:block;width:100%;padding:12px;margin:10px 0 0;font-family:var(--f-title);letter-spacing:2px;font-size:14px;border-radius:2px;cursor:pointer}
+.admin-feuille .admin-ouvrir{background:var(--rouge);color:var(--papier);border:none}
+.admin-feuille .admin-fermer{background:none;color:var(--encre);border:1px solid var(--encre)}
+.admin-feuille .admin-etat{font-size:13px;color:var(--brun);font-style:italic;min-height:18px;margin-top:10px}
 
 /* ---------- Page bonus (carnet de bal) ---------- */
 .bonus-contenu{text-align:center;padding:10px 4px 4px}
@@ -197,8 +201,17 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
     <span class="symbole">✦</span>
     <span class="indice">il reste une page à découvrir</span>
   </span>
+  <button class="btn-admin" id="btnAdmin">admin</button>
 </footer>
-<button class="btn-reset" id="btnReset" aria-label="Réinitialiser">⟲</button>
+<div class="voile" id="voileAdmin">
+  <div class="feuille pass-feuille admin-feuille">
+    <button class="ferm" id="fermAdmin" aria-label="Fermer">×</button>
+    <h3 style="color:var(--brun)">Administration</h3>
+    <button class="admin-btn admin-ouvrir" id="adminTout">Tout déverrouiller</button>
+    <button class="admin-btn admin-fermer" id="adminRien">Tout verrouiller</button>
+    <div class="admin-etat" id="adminEtat"></div>
+  </div>
+</div>
 
 <div class="voile" id="voileFiche"><div class="feuille" id="feuilleFiche"></div></div>
 <div class="voile" id="voilePass">
@@ -301,18 +314,6 @@ function marquerNouveaute(ids){ const l=nouveautes(); ids.forEach(id=>{ if(!l.in
 function estNouveau(id){ return nouveautes().includes(id); }
 function retirerNouveaute(id){ const l=nouveautes().filter(x=>x!==id); localStorage.setItem(cleNouveau, JSON.stringify(l)); }
 
-let comptTaps = 0, tapsTimer = null;
-document.getElementById('titreEtoiles').addEventListener('click', ()=>{
-  comptTaps++;
-  clearTimeout(tapsTimer);
-  tapsTimer = setTimeout(()=>{ comptTaps = 0; }, 1500);
-  if(comptTaps >= 4){
-    comptTaps = 0;
-    localStorage.setItem(cle, JSON.stringify([0,1,2,3,4,5,6]));
-    rendreGrille();
-  }
-});
-
 /* ===================== RENDU GRILLE ===================== */
 const grille = document.getElementById('grille');
 function rendreGrille(){
@@ -405,12 +406,12 @@ const voilePass = document.getElementById('voilePass');
 const champPass = document.getElementById('champPass');
 const erreurPass = document.getElementById('erreurPass');
 let modeBonus = false;
-let modeReset = false;
+let modeAdmin = false;
 
 function ouvrirPass(bonus){
   document.body.style.overflow = 'hidden';
   modeBonus = !!bonus;
-  modeReset = false;
+  modeAdmin = false;
   champPass.value=''; erreurPass.textContent='';
   if(modeBonus){
     champPass.setAttribute('inputmode','text');
@@ -428,20 +429,46 @@ function ouvrirPass(bonus){
   champPass.disabled = false;
   voilePass.classList.add('show');
 }
-function ouvrirReset(){
+function ouvrirAdminCode(){
   document.body.style.overflow = 'hidden';
   modeBonus = false;
-  modeReset = true;
+  modeAdmin = true;
   champPass.value=''; erreurPass.textContent='';
   champPass.setAttribute('inputmode','numeric');
   champPass.setAttribute('maxlength','4');
   champPass.placeholder = '· · · ·';
-  document.getElementById('titrePass').textContent = 'Tout réinitialiser ?';
-  document.getElementById('textePass').textContent = "Entrez le code pour tout remettre à zéro.";
+  document.getElementById('titrePass').textContent = 'Accès admin';
+  document.getElementById('textePass').textContent = "Code administrateur.";
   champPass.disabled = false;
   voilePass.classList.add('show');
 }
-document.getElementById('btnReset').addEventListener('click', ouvrirReset);
+const voileAdmin = document.getElementById('voileAdmin');
+const adminEtat = document.getElementById('adminEtat');
+function ouvrirAdmin(){
+  document.body.style.overflow = 'hidden';
+  adminEtat.textContent = '';
+  voileAdmin.classList.add('show');
+}
+document.getElementById('btnAdmin').addEventListener('click', ouvrirAdminCode);
+document.getElementById('fermAdmin').addEventListener('click', fermerVoiles);
+document.getElementById('adminTout').addEventListener('click', ()=>{
+  try{
+    localStorage.setItem(cle, JSON.stringify([0,1,2,3,4,5,6]));
+    localStorage.setItem('ldd_bonus','1');
+    localStorage.removeItem(cleNouveau);
+  }catch(e){}
+  rendreGrille();
+  adminEtat.textContent = 'Tout est déverrouillé, page bonus comprise.';
+});
+document.getElementById('adminRien').addEventListener('click', ()=>{
+  try{
+    localStorage.removeItem(cle);
+    localStorage.removeItem(cleNouveau);
+    localStorage.removeItem('ldd_bonus');
+  }catch(e){}
+  rendreGrille();
+  adminEtat.textContent = 'Tout est verrouillé, comme au premier jour.';
+});
 document.getElementById('btnCode').addEventListener('click', ()=> ouvrirPass(false));
 document.getElementById('fermPass').addEventListener('click', fermerVoiles);
 
@@ -451,14 +478,9 @@ champPass.addEventListener('keydown', e=>{ if(e.key==='Enter') validerPass(); })
 function validerPass(){
   const val = champPass.value.trim().toUpperCase();
   if(!val){ return; }
-  if(modeReset){
-    if(val==='0000'){
-      localStorage.removeItem(cle);
-      localStorage.removeItem(cleNouveau);
-      localStorage.removeItem('ldd_bonus');
-      fermerVoiles();
-      rendreGrille();
-    } else erreurGraphique();
+  if(modeAdmin){
+    if(val==='0469'){ fermerVoiles(); ouvrirAdmin(); }
+    else erreurGraphique();
     return;
   }
   if(modeBonus){
@@ -527,11 +549,12 @@ function fermerVoiles(){
   document.body.style.overflow = '';
   voileFiche.classList.remove('show');
   voilePass.classList.remove('show');
+  voileAdmin.classList.remove('show');
 }
 voileFiche.addEventListener('click', e=>{ if(e.target===voileFiche) fermerVoiles(); });
 voilePass.addEventListener('click', e=>{ if(e.target===voilePass) fermerVoiles(); });
+voileAdmin.addEventListener('click', e=>{ if(e.target===voileAdmin) fermerVoiles(); });
 
-/* ===================== Bouton de réinitialisation (code 0000) ===================== */
 </script>
 </body>
 </html>

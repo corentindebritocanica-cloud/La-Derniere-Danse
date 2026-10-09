@@ -123,7 +123,7 @@ Style : art déco années 20, cabaret de jazz, étoile rouge, soleil rayonnant.
 - Les codes glissés dans les enveloppes débloquent les paliers, via le bouton « Entrer un code » sous le titre (clavier numérique). Un code plus avancé débloque aussi les paliers précédents oubliés. L'état est gardé dans le navigateur (`localStorage`, clés `ldd_tiers_debloques`, `ldd_nouveautes`, `ldd_bonus`).
 - Chaque déblocage fait pulser les médaillons concernés ; une pastille ✦ rouge reste jusqu'à l'ouverture de la fiche (y compris les ajouts : l'étoile, le violon).
 - Page bonus : QR du carnet de bal (`…/La-Derniere-Danse/?cb=TOUJOURS`, ouverture directe) ou l'étoile rouge « il reste une page à découvrir » en bas de page (mot `TOUJOURS` ou `CORENTIN`, majuscules ou minuscules ; le lien du QR accepte aussi `?cb=CORENTIN`). Une fois vue, une bulle « Près d'un siècle plus tard » apparaît en bas de la galerie.
-- Outils pour Corentin : 4 taps rapides sur « Étoiles » = tout débloquer (paliers 1 à 6) ; bouton ⟲ en bas à droite + code `0000` = tout réinitialiser.
+- Outils pour Corentin : bouton « admin » en bas de page, code `0469` → « Tout déverrouiller » (paliers 1 à 6 + page bonus) ou « Tout verrouiller ». Plus aucun autre raccourci (les 4 taps sur « Étoiles » et le bouton ⟲ ont été retirés).
 
 ### Paliers et mots de passe
 
