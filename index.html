@@ -149,6 +149,11 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .shake{animation:shk .4s}
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
+.film-manga{max-width:960px;margin:40px auto 0;padding:0 16px;text-align:center}
+.film-manga h3{font-family:var(--f-title);font-size:22px;letter-spacing:3px;margin:0;color:var(--encre)}
+.film-manga .film-sous{font-style:italic;font-size:13px;color:var(--brun);margin:4px 0 14px}
+.film-manga video{width:100%;aspect-ratio:16/9;background:var(--encre);border:1px solid var(--encre);box-shadow:0 0 0 4px var(--fond),0 0 0 5px var(--encre);display:block}
+.film-manga .film-chap{font-size:12px;letter-spacing:1px;color:var(--brun);margin-top:12px}
 footer{text-align:center;padding:34px 20px calc(34px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--brun);letter-spacing:1px}
 footer .etoile-secrete{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px;cursor:pointer;user-select:none}
 footer .etoile-secrete .symbole{font-size:26px;color:var(--rouge);animation:etoilePulse 2.6s ease-in-out infinite}
@@ -190,6 +195,27 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
 </div>
 
 <div class="grid" id="grille"></div>
+
+<section class="film-manga">
+  <h3>La Dernière Danse</h3>
+  <div class="film-sous">le film, à lire</div>
+  <video id="filmManga" controls playsinline preload="metadata" poster=""></video>
+  <div class="film-chap" id="filmChap"></div>
+</section>
+<script>
+(function(){
+  const M=[['00-prologue','Prologue'],['01-celestin','I · Célestin'],['02-louise','II · Louise'],['03-le-concours','III · Le concours'],
+    ['04-la-marche-jusqua-purpan','IV · La marche jusqu’à Purpan'],['05-le-portrait','V · Le portrait'],['06-le-diner-avec-henri','VI · Le dîner avec Henri'],
+    ['07-levasion-par-la-glycine','VII · L’évasion par la glycine'],['08-la-soiree-des-lendemains','VIII · La soirée des lendemains'],
+    ['09-letoile-filante','IX · L’étoile filante'],['10-la-semaine-volee','X · La semaine volée'],['11-le-violon','XI · Le violon'],
+    ['12-la-derniere-danse','XII · La dernière danse'],['13-epilogue','Épilogue']];
+  const v=document.getElementById('filmManga'), lab=document.getElementById('filmChap');
+  let i=0;
+  function charge(k,lire){i=k;v.src='animation/video/'+M[k][0]+'.mp4';lab.textContent=M[k][1]+'  ·  '+(k+1)+'/'+M.length;if(lire)v.play().catch(()=>{});}
+  v.addEventListener('ended',()=>{if(i<M.length-1)charge(i+1,true);});
+  charge(0,false);
+})();
+</script>
 
 <footer>
   1925 · Toulouse<br>
