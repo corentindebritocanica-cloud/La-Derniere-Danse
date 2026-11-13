@@ -188,6 +188,9 @@ footer .etoile-secrete .touchez{font-family:var(--f-type);font-size:11px;letter-
 .admin-feuille .admin-btn{display:block;width:100%;padding:12px;margin:10px 0 0;font-family:var(--f-title);letter-spacing:2px;font-size:14px;border-radius:2px;cursor:pointer}
 .admin-feuille .admin-ouvrir{background:var(--rouge);color:var(--papier);border:none}
 .admin-feuille .admin-fermer{background:none;color:var(--encre);border:1px solid var(--encre)}
+.admin-codes{margin-top:18px;border-top:1px dashed var(--brun);padding-top:12px;text-align:left;font-family:var(--f-type);font-size:14px;color:var(--encre)}
+.admin-codes div{display:flex;justify-content:space-between;padding:4px 0}
+.admin-codes b{color:var(--rouge);font-weight:400;letter-spacing:.08em}
 .admin-feuille .admin-etat{font-size:13px;color:var(--brun);font-style:italic;min-height:18px;margin-top:10px}
 
 /* ---------- Page bonus (carnet de bal) ---------- */
@@ -240,6 +243,7 @@ footer .etoile-secrete .touchez{font-family:var(--f-type);font-size:11px;letter-
     <button class="admin-btn admin-ouvrir" id="adminTout">Tout déverrouiller</button>
     <button class="admin-btn admin-fermer" id="adminRien">Tout verrouiller</button>
     <div class="admin-etat" id="adminEtat"></div>
+    <div class="admin-codes" id="adminCodes"></div>
   </div>
 </div>
 
@@ -479,6 +483,9 @@ const adminEtat = document.getElementById('adminEtat');
 function ouvrirAdmin(){
   document.body.style.overflow = 'hidden';
   adminEtat.textContent = '';
+  document.getElementById('adminCodes').innerHTML =
+    Object.entries(MOTS_DE_PASSE).map(([n,c])=>`<div><span>Enveloppe ${n}</span><b>${c}</b></div>`).join('') +
+    `<div><span>Enveloppe 8</span><b>${MOTS_BONUS.join(' / ')}</b></div><div><span>Admin</span><b>0469</b></div>`;
   voileAdmin.classList.add('show');
 }
 document.getElementById('btnAdmin').addEventListener('click', ouvrirAdminCode);
@@ -624,6 +631,7 @@ function fermerVoiles(){
   voileFiche.classList.remove('show');
   voilePass.classList.remove('show');
   voileAdmin.classList.remove('show');
+  document.getElementById('adminCodes').innerHTML = '';
 }
 voileFiche.addEventListener('click', e=>{ if(e.target===voileFiche) fermerVoiles(); });
 voilePass.addEventListener('click', e=>{ if(e.target===voilePass) fermerVoiles(); });
