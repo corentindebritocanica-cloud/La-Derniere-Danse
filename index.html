@@ -498,6 +498,8 @@ function validerPass(){
   }
   let tierTrouve = null;
   for(const t in MOTS_DE_PASSE){ if(!estDebloque(+t) && MOTS_DE_PASSE[t]===val){ tierTrouve=+t; break; } }
+  // Enveloppe 5 : 1925 imprimé par erreur (bon code 1897 au dos) → 1925 refusé tant que 1897 n'est pas activé
+  if(tierTrouve===6 && !estDebloque(5)) tierTrouve = null;
   if(tierTrouve){
     const idsTotal = [];
     for(let t=1; t<=tierTrouve; t++){
