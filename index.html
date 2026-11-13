@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Le Cabaret des Étoiles — Galerie, 1925</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
@@ -24,7 +24,8 @@
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);touch-action:manipulation}
+button,a,input{touch-action:manipulation}
 body{margin:0;background:var(--fond);color:var(--encre);font-family:var(--f-body);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.05;
   background-image:radial-gradient(circle at 20% 30%, #000 0, transparent 1px), radial-gradient(circle at 70% 60%, #000 0, transparent 1px), radial-gradient(circle at 40% 80%, #000 0, transparent 1px);
@@ -77,8 +78,10 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 .card .role{font-size:10px;font-style:italic;color:var(--brun);text-align:center;letter-spacing:.3px}
 
 .card.locked .medaillon{opacity:.55}
-.card.nouveau .medaillon::after{content:'✦';position:absolute;top:-4px;left:-4px;width:24px;height:24px;border-radius:50%;background:var(--rouge);color:var(--papier);font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px var(--ombre);animation:pulseBadge 1.6s ease-in-out infinite;z-index:3}
-@keyframes pulseBadge{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.card.nouveau .medaillon::after{content:'✦';position:absolute;top:-8px;left:-8px;width:38px;height:38px;border-radius:50%;background:var(--rouge);color:var(--papier);font-size:20px;display:flex;align-items:center;justify-content:center;border:2px solid var(--papier);box-shadow:0 2px 6px var(--ombre);animation:pulseBadge 1.4s ease-in-out infinite;z-index:3}
+@keyframes pulseBadge{0%,100%{transform:scale(1);box-shadow:0 2px 6px var(--ombre),0 0 0 0 rgba(168,32,26,.55)}50%{transform:scale(1.18);box-shadow:0 2px 6px var(--ombre),0 0 0 12px rgba(168,32,26,0)}}
+.card.nouveau .medaillon .frame circle{stroke:var(--rouge);stroke-width:3}
+.card.nouveau .nom::after{content:' ✦';color:var(--rouge)}
 .medaillon.eclat{animation:eclatAnim 1.2s ease}
 @keyframes eclatAnim{
   0%{box-shadow:0 0 0 0 rgba(168,32,26,.55);transform:scale(1)}
