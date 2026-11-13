@@ -158,9 +158,27 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opa
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
 footer{text-align:center;padding:34px 20px calc(34px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--brun);letter-spacing:1px}
-footer .etoile-secrete{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px;cursor:pointer;user-select:none}
-footer .etoile-secrete .symbole{font-size:26px;color:var(--rouge);animation:etoilePulse 2.6s ease-in-out infinite}
-footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:var(--rouge);opacity:.75}
+footer .etoile-secrete{display:none;flex-direction:column;align-items:center;gap:6px;margin:28px auto 0;max-width:300px;padding:18px 20px 16px;border:1px solid var(--rouge);border-top:3px solid var(--rouge);background:var(--papier);box-shadow:0 4px 14px var(--ombre);cursor:pointer;user-select:none;animation:cadrePulse 2.6s ease-in-out infinite}
+footer .etoile-secrete.visible{display:flex}
+footer .etoile-secrete .symbole{font-size:46px;line-height:1;color:var(--rouge);animation:etoilePulse 2.6s ease-in-out infinite}
+footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:24px;color:var(--rouge);letter-spacing:0}
+footer .etoile-secrete .touchez{font-family:var(--f-type);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brun)}
+@keyframes cadrePulse{0%,100%{box-shadow:0 4px 14px var(--ombre),0 0 0 0 rgba(168,32,26,.35)}50%{box-shadow:0 4px 14px var(--ombre),0 0 0 10px rgba(168,32,26,0)}}
+/* Carte d'annonce après un code */
+.annonce{position:fixed;inset:0;background:rgba(26,21,18,.62);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .35s}
+.annonce.show{opacity:1;pointer-events:auto}
+.annonce .c{background:var(--papier);max-width:360px;width:100%;max-height:92vh;overflow:auto;border:1px solid var(--brun);border-top:4px solid var(--rouge);padding:22px 18px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.4);transform:scale(.92);transition:transform .35s}
+.annonce.show .c{transform:scale(1)}
+.annonce .et{color:var(--rouge);font-size:24px}
+.annonce .sur{font-family:var(--f-type);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brun);margin:4px 0 8px}
+.annonce h3{font-family:var(--f-title);font-weight:400;font-size:23px;margin:0 0 6px}
+.annonce p{font-style:italic;margin:0 0 16px;font-size:15px;line-height:1.4}
+.annonce .seul img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--encre);box-shadow:0 0 0 3px var(--rouge);margin:6px 0 12px}
+.annonce .g{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 6px;margin-bottom:16px}
+.annonce .g button{width:23%;min-width:70px;background:none;border:none;padding:0;font-family:inherit;font-size:12px;line-height:1.15;color:var(--encre);cursor:pointer}
+.annonce .g img{width:62px;height:62px;border-radius:50%;object-fit:cover;border:2px solid var(--encre);display:block;margin:0 auto 4px;box-shadow:0 0 0 2px var(--rouge)}
+.annonce .b{background:var(--encre);color:var(--papier);border:none;font-family:var(--f-type);font-size:15px;padding:12px 22px;letter-spacing:.08em;cursor:pointer}
+.annonce .l{display:block;margin:12px auto 0;background:none;border:none;font-family:inherit;font-size:14px;color:var(--brun);text-decoration:underline;cursor:pointer}
 @keyframes etoilePulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
 .btn-admin{display:block;margin:26px auto 0;background:none;border:1px solid var(--brun);color:var(--brun);font-family:var(--f-type);font-size:11px;letter-spacing:2px;padding:6px 14px;border-radius:2px;opacity:.55;cursor:pointer}
 .btn-admin:active{opacity:.9}
@@ -208,6 +226,7 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
   <span class="etoile-secrete" id="etoileSecrete">
     <span class="symbole">✦</span>
     <span class="indice">il reste une page à découvrir</span>
+    <span class="touchez">touchez l'étoile</span>
   </span>
   <button class="btn-admin" id="btnAdmin">admin</button>
 </footer>
@@ -221,6 +240,7 @@ footer .etoile-secrete .indice{font-family:var(--f-hand);font-size:15px;color:va
   </div>
 </div>
 
+<div class="annonce" id="annonce"><div class="c" id="annonceCarte"></div></div>
 <div class="voile" id="voileFiche"><div class="feuille" id="feuilleFiche"></div></div>
 <div class="voile" id="voilePass">
   <div class="feuille pass-feuille">
@@ -326,6 +346,7 @@ function retirerNouveaute(id){ const l=nouveautes().filter(x=>x!==id); localStor
 const grille = document.getElementById('grille');
 function rendreGrille(){
   grille.innerHTML='';
+  document.getElementById('etoileSecrete').classList.toggle('visible', estDebloque(6));
   PERSONNAGES.forEach(p=>{
     const ouvert = estDebloque(p.tier);
     const carte = document.createElement('button');
@@ -513,12 +534,52 @@ function validerPass(){
     marquerNouveaute(idsTotal);
     fermerVoiles();
     rendreGrille();
+    afficherAnnonce(tierTrouve, idsTotal);
     idsTotal.forEach(id=>{
       const med = grille.querySelector('[data-id="'+id+'"] .medaillon');
       if(med){ med.classList.add('eclat'); setTimeout(()=>med.classList.remove('eclat'), 1300); }
     });
   }
   else erreurGraphique();
+}
+/* Carte d'annonce : ce que le code vient de dévoiler */
+const NOMS_COURTS = {grandparents:'Les Sarrail', fabre:'Mme Fabre', baylac:'M. Baylac', julien:'Julien', henri:'Henri', celestin:'Célestin', louise:'Louise'};
+const NOMBRES = ['','Un','Deux','Trois','Quatre','Cinq','Six','Sept','Huit','Neuf','Dix','Onze','Douze','Treize'];
+const annonce = document.getElementById('annonce');
+const annonceCarte = document.getElementById('annonceCarte');
+function fermerAnnonce(){ annonce.classList.remove('show'); }
+annonce.addEventListener('click', e=>{ if(e.target===annonce) fermerAnnonce(); });
+function afficherAnnonce(tier, ids){
+  ids = [...new Set(ids)];
+  const persos = ids.map(id=>PERSONNAGES.find(p=>p.id===id)).filter(Boolean);
+  if(!persos.length) return;
+  let sur = 'Enveloppe ' + tier, titre, texte;
+  const seulViolon = persos.length===1 && persos[0].ajoutTier===6 && tier===6;
+  const seuleEtoile = persos.every(p=>p.id==='celestin'||p.id==='louise');
+  if(seulViolon){ sur='Un secret se dévoile'; titre='Édouard Sarrail'; texte='Le grand-père cachait quelque chose…'; }
+  else if(seuleEtoile){ sur='Une nuit de décembre'; titre='L\u2019étoile filante'; texte='Leurs fiches ont changé. Touchez un portrait pour lire la suite.'; }
+  else if(persos.some(p=>p.id==='celestin'||p.id==='louise'||(p.ajoutTier && p.ajoutTier<=tier))){ titre='Du nouveau dans la galerie'; texte='Touchez un portrait pour lire sa fiche.'; }
+  else { titre = persos.length===1 ? 'Un nouveau visage' : (NOMBRES[persos.length]||persos.length)+' nouveaux visages'; texte = persos.length===1 ? '' : 'Touchez un portrait pour lire sa fiche.'; }
+  const img = p=>`<img src="${p.photo}" alt="" style="object-position:50% ${p.cadrage ?? 18}%">`;
+  let corps;
+  if(persos.length===1){
+    const p = persos[0];
+    corps = `<div class="seul">${img(p)}</div><h3>${seulViolon ? titre : p.nom}</h3>${seulViolon ? `<p>${texte}</p>` : `<p>${p.role}</p>`}
+      <button class="b" data-ouvre="${p.id}">Lire sa fiche</button><button class="l" data-ferme>Plus tard</button>`;
+    if(!seulViolon) sur = sur + ' · ' + titre;
+  } else {
+    corps = `<h3>${titre}</h3>${texte?`<p>${texte}</p>`:''}<div class="g">${persos.map(p=>`<button data-ouvre="${p.id}">${img(p)}${NOMS_COURTS[p.id]||p.nom}</button>`).join('')}</div>
+      <button class="b" data-ferme>Voir la galerie</button>`;
+  }
+  annonceCarte.innerHTML = `<div class="et">✦</div><div class="sur">${sur}</div>${corps}`;
+  annonceCarte.querySelectorAll('[data-ferme]').forEach(b=>b.addEventListener('click', fermerAnnonce));
+  annonceCarte.querySelectorAll('[data-ouvre]').forEach(b=>b.addEventListener('click', ()=>{
+    const p = PERSONNAGES.find(x=>x.id===b.dataset.ouvre);
+    const carte = grille.querySelector('[data-id="'+p.id+'"]');
+    fermerAnnonce();
+    if(p && carte){ carte.scrollIntoView({block:'center'}); ouvrirFiche(p, carte); }
+  }));
+  requestAnimationFrame(()=> annonce.classList.add('show'));
 }
 function erreurGraphique(){
   erreurPass.textContent = 'Ce mot ne correspond à aucun secret pour l\u2019instant.';
