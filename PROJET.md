@@ -134,7 +134,7 @@ Style : art déco années 20, cabaret de jazz, étoile rouge, soleil rayonnant.
 | 3 | `0714` | Henri Lasserre, la Mini, la glycine |
 | 4 | `0048` | Mise à jour des fiches de Célestin et Louise (l'étoile) |
 | 5 | `1897` | Jeanne |
-| 6 | `1925` | Le secret du violon du grand-père |
+| 6 | `1925` | Le secret du violon du grand-père (refusé tant que `1897` n'a pas été entré : 1925 est imprimé par erreur sur l'artefact de l'enveloppe 5, le bon code est écrit au dos) |
 | 8 | `TOUJOURS` ou `CORENTIN` (majuscules ou minuscules) | Page bonus « près d'un siècle plus tard » (dans le carnet de bal, après la demande) |
 
 Source : constantes `MOTS_DE_PASSE` et `MOTS_BONUS` dans `index.html`.
